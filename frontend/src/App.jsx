@@ -1,9 +1,8 @@
 import { Outlet } from 'react-router-dom';
 import { RiArrowDownSLine } from 'react-icons/ri';
-import { AiFillPlusCircle, AiOutlineMessage } from 'react-icons/ai';
-import { CiHome, CiTimer, CiUser, CiSettings } from 'react-icons/ci';
-import { PiDownload } from 'react-icons/pi';
+import { AiFillPlusCircle } from 'react-icons/ai';
 import Button from './components/Button';
+import Aside from './components/AsideBar/Aside';
 
 function App() {
   return (
@@ -27,32 +26,8 @@ function App() {
         </div>
       </div>
 
-      <main>
-        <aside className="bg-black flex flex-col w-10 pl-1 space-y-5 h-fscreen">
-          <div>
-            <div className="rounded-full bg-green-500">
-              <CiUser size="30" fill="white" />
-            </div>
-          </div>
-          <div>
-            <CiHome size="30" fill="white" />
-          </div>
-          <div>
-            <CiTimer size="30" fill="white" />
-          </div>
-          <div>
-            <AiFillPlusCircle size="30" fill="orange" />
-          </div>
-          <div>
-            <AiOutlineMessage size="30" fill="white" />
-          </div>
-          <div>
-            <CiSettings size="30" fill="white" />
-          </div>
-          <div>
-            <PiDownload size="30" fill="white" />
-          </div>
-        </aside>
+      <main className="flex h-fscreen">
+        <Aside />
         <Outlet />
       </main>
 
