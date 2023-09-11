@@ -1,4 +1,4 @@
 const AuthPage = () => {
-  return <div>Auth</div>;
+  return <div className="h-screen">Auth</div>;
 };
 export default AuthPage;
