@@ -2,14 +2,16 @@ import { useEffect, useState } from 'react';
 import { BiRefresh } from 'react-icons/bi';
 import { FaArrowRightFromBracket } from 'react-icons/fa6';
 import { TbMessageCircle2Filled } from 'react-icons/tb';
-import { MdOutlineHistory } from 'react-icons/md';
 
-import { formatDate, percentageDifference } from '../../utils/utilsFun';
+import { formatDate, percentageDifference } from '../utils/utilsFun';
 
-const ProductShopCellFull = ({ price, products_price, date }) => {
+const ProductShopCellFull = ({
+  price,
+  products_price,
+  date,
+  positionDivComment,
+}) => {
   const [styleCell, setStyleCell] = useState('');
-  const [comment, setComment] = useState('');
-  const [hideComment, setHideComment] = useState(false);
 
   useEffect(() => {
     let style = '';
@@ -20,8 +22,7 @@ const ProductShopCellFull = ({ price, products_price, date }) => {
 
   return (
     <td
-      className={`relative py-2 px-12 group text-white ${styleCell} ${
-        hideComment ? 'z-[1]' : ''
+      className={`relative py-2 px-12 group text-white ${styleCell}
       }`}
     >
       <div>
@@ -32,10 +33,7 @@ const ProductShopCellFull = ({ price, products_price, date }) => {
         <span className="group-[:not(.ist)]:text-[#acacac] absolute bottom-0 left-0 leading-none">
           {formatDate(date)}
         </span>
-        <div
-          className="group-hover:opacity-90 absolute w-full h-full top-0 left-0 bg-[#f9f8f9] opacity-0 flex items-center justify-center cursor-pointer"
-          onMouseLeave={() => setHideComment(false)}
-        >
+        <div className="group-hover:opacity-90 absolute w-full h-full top-0 left-0 bg-[#f9f8f9] opacity-0 flex items-center justify-center cursor-pointer">
           <BiRefresh size={30} color="green" title="refresh price" />
           <FaArrowRightFromBracket
             size={22}
@@ -47,31 +45,8 @@ const ProductShopCellFull = ({ price, products_price, date }) => {
             color="#f7c34a"
             className="rotate-y-180"
             title="add comment"
-            onClick={() => setHideComment(!hideComment)}
+            onClick={(e) => positionDivComment(e)}
           />
-          {hideComment && (
-            <div className="absolute top-9 right-0 z-20 rounded-lg border-2 border-solid border-white bg-[#d6d0cf] after:content-[''] after:absolute after:-top-[13px] after:right-[20px] after:w-[25px] after:h-[25px] after:bg-[#d7cdcc] after:border-2 after:border-b-transparent after:border-r-transparent after:-z-[1] after:rotate-z-45">
-              <div className="p-2.5 rounded-lg relative">
-                <div>
-                  <textarea
-                    cols="35"
-                    rows="10"
-                    value={comment}
-                    placeholder="write comment"
-                    className="resize-none bg-white rounded-lg text-black p-2.5 focus:outline-none"
-                    onChange={(e) => setComment(e.target.value)}
-                  />
-                  <button className="text-base bg-gradient-to-b from-yellow-300 to-yellow-500 py-1.5 px-5 rounded-md w-full">
-                    Добавить комментарий
-                  </button>
-                </div>
-                <div className="flex items-center justify-center text-black">
-                  <span className="hover:underline ">Посмотреть историю</span>
-                  <MdOutlineHistory size="30" />
-                </div>
-              </div>
-            </div>
-          )}
         </div>
       </div>
     </td>

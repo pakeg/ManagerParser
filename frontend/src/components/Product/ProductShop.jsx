@@ -1,7 +1,7 @@
 import ProductShopCellEmpty from './ProductShopCellEmpty.jsx';
 import ProductShopCellFull from './ProductShopCellFull.jsx';
 
-const ProductShop = ({ prices }) => {
+const ProductShop = ({ prices, positionDivComment }) => {
   return (
     <tr className="bg-[#dfdfdf]">
       <td>
@@ -18,6 +18,7 @@ const ProductShop = ({ prices }) => {
               price={item.price}
               products_price={item.products_price}
               date={item.date}
+              positionDivComment={positionDivComment}
             />
           ) : (
             <ProductShopCellEmpty key={i} />

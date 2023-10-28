@@ -13,7 +13,6 @@ const AuthPage = () => {
         <div className="grow-[5]"></div>
         <div className="w-64 text-center">
           <div className="mb-14">
-            {/*display: flex; justify-content: space-evenly; padding: 10px; background-color: white;*/}
             <h1 className="first-letter:text-5xl text-3xl tracking-widest">
               PARCERMANN
             </h1>
