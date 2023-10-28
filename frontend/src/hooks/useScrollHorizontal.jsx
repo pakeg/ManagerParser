@@ -19,6 +19,18 @@ const useScrollHorizontal = () => {
         Math.floor(boxScroll.current.offsetWidth / scaleButtonScrollWidth) +
         'px';
 
+      // parent absolute positionated
+      const rect = boxScroll.current.getBoundingClientRect();
+      buttonScroll.current.parentElement.style.width =
+        boxScroll.current.offsetWidth + 'px';
+      buttonScroll.current.parentElement.style.top =
+        rect.y +
+        boxScroll.current.offsetParent.offsetParent.offsetHeight +
+        5 +
+        'px';
+      // 4 border-spacing of table
+      buttonScroll.current.parentElement.style.left = rect.x + 4 + 'px';
+
       let savePosition = 0;
       let endScroll =
         boxScroll.current.offsetWidth - buttonScroll.current.offsetWidth;

@@ -6,8 +6,17 @@ import ModalAddShop from './components/Modals/ModalAddShop.jsx';
 import ModalComments from './components/Modals/ModalComments.jsx';
 
 import { useEffect, useState } from 'react';
+import useScroll from './hooks/useScroll.jsx';
+import useScrollHorizontal from './hooks/useScrollHorizontal';
 
 const Home = () => {
+  const { isScroll, boxScroll, buttonScroll } = useScroll();
+  const {
+    isScroll: isScrollHor,
+    boxScroll: boxScrollHor,
+    buttonScroll: buttonScrollHor,
+  } = useScrollHorizontal();
+
   const [products, setProducts] = useState({
     products: [],
     uniqueStores: [],
@@ -151,16 +160,45 @@ const Home = () => {
   return (
     <div>
       <div className="flex">
-        {/* -------Table N. 1--------- */}
-        <PartMainOne products={products.products} />
-        {/* -------Table N. 2--------- */}
-        <PartMainTwo
-          uniqueStores={products.uniqueStores}
-          storeTableRows={products.storeTableRows}
-        />
-        {/* -------Table N. 2--------- */}
-        <PartMainThree products={products.products} />
-        {/*----------------------------*/}
+        <div className="overflow-hidden">
+          <div
+            ref={boxScroll}
+            className={`max-h-[300px] overflow-y-auto overflow-x-hidden ${
+              isScroll && '-mr-[17px]'
+            }`}
+          >
+            <div className="flex">
+              {/* -------Table N. 1--------- */}
+              <PartMainOne products={products.products} />
+              {/* -------Table N. 2--------- */}
+              <PartMainTwo
+                uniqueStores={products.uniqueStores}
+                storeTableRows={products.storeTableRows}
+                boxScrollHor={boxScrollHor}
+              />
+              {/* -------Table N. 2--------- */}
+              <PartMainThree products={products.products} />
+              {/*----------------------------*/}
+            </div>
+          </div>
+        </div>
+        <div className="bg-[#c1c1c1] rounded-3xl shadow-[inset_0px_0px_1px_0px_black]">
+          <div
+            className={` bg-[#e1e1e1] rounded-3xl cursor-grabbing ${
+              !isScroll ? 'opacity-0 invisible' : 'w-3.5 opacity-100 visible'
+            }`}
+            ref={buttonScroll}
+          ></div>
+        </div>
+
+        <div className="bg-[#c1c1c1] rounded-3xl shadow-[inset_0px_0px_1px_0px_black] absolute h-max">
+          <div
+            className={` bg-[#e1e1e1] rounded-3xl cursor-grabbing ${
+              !isScrollHor ? 'opacity-0 invisible' : 'h-3.5 opacity-100 visible'
+            }`}
+            ref={buttonScrollHor}
+          ></div>
+        </div>
       </div>
       <ModalShop />
       <ModalAddShop

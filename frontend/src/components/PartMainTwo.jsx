@@ -4,10 +4,7 @@ import { MdOutlineHistory } from 'react-icons/md';
 import ProductShop from './ProductShop.jsx';
 import MenuItemShop from './MenuItemShop.jsx';
 
-import useScrollHorizontal from '../hooks/useScrollHorizontal';
-
-const PartMainTwo = ({ uniqueStores, storeTableRows }) => {
-  const { isScroll, boxScroll, buttonScroll } = useScrollHorizontal();
+const PartMainTwo = ({ uniqueStores, storeTableRows, boxScrollHor }) => {
   const commentPopUp = useRef(null);
 
   const [comment, setComment] = useState('');
@@ -25,8 +22,11 @@ const PartMainTwo = ({ uniqueStores, storeTableRows }) => {
 
   return (
     <div className="relative">
-      <div className="overflow-hidden max-w-[416.1px]">
-        <div className="overflow-auto -mb-[17px]" ref={boxScroll}>
+      <div className="overflow-hidden">
+        <div
+          className="max-w-[416.1px] overflow-auto -mb-[17px]"
+          ref={boxScrollHor}
+        >
           <table className="text-center border-separate text-black font-semibold text-xs border-spacing-1">
             <thead>
               <tr className="bg-[#c1c1c1]">
@@ -53,14 +53,6 @@ const PartMainTwo = ({ uniqueStores, storeTableRows }) => {
             </tbody>
           </table>
         </div>
-      </div>
-      <div className="bg-[#c1c1c1] rounded-3xl shadow-[inset_0px_0px_1px_0px_black] absolute -bottom-[17px] w-full">
-        <div
-          className={` bg-[#e1e1e1] rounded-3xl cursor-grabbing ${
-            !isScroll ? 'opacity-0 invisible' : 'h-3.5 opacity-100 visible'
-          }`}
-          ref={buttonScroll}
-        ></div>
       </div>
       {/* -----Comment Pop-up History */}
 
