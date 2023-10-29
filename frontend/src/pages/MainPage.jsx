@@ -1,7 +1,7 @@
 import PartMainOne from './components/PartMainOne.jsx';
 import PartMainTwo from './components/PartMainTwo.jsx';
 import PartMainThree from './components/PartMainThree.jsx';
-import ModalShop from './components/Modals/ModalShop.jsx';
+import ModalDelete from './components/Modals/ModalDelete.jsx';
 import ModalAddShop from './components/Modals/ModalAddShop.jsx';
 import ModalComments from './components/Modals/ModalComments.jsx';
 
@@ -200,7 +200,7 @@ const Home = () => {
           ></div>
         </div>
       </div>
-      <ModalShop />
+      <ModalDelete />
       <ModalAddShop
         uniqueStores={[
           ...products.uniqueStores,

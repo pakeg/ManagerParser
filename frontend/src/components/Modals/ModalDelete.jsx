@@ -3,7 +3,7 @@ import { GoAlertFill } from 'react-icons/go';
 
 import Modal from './Modal.jsx';
 
-const ModalShop = ({ shop }) => {
+const ModalDelete = ({ shop }) => {
   const [isOpen, setIsOpen] = useState(false);
   return (
     <Modal isOpen={isOpen} setIsOpen={setIsOpen}>
@@ -32,4 +32,4 @@ const ModalShop = ({ shop }) => {
     </Modal>
   );
 };
-export default ModalShop;
+export default ModalDelete;
