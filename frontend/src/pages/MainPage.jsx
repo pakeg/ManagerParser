@@ -1,9 +1,9 @@
-import PartMainOne from './components/PartMainOne.jsx';
-import PartMainTwo from './components/PartMainTwo.jsx';
-import PartMainThree from './components/PartMainThree.jsx';
-import ModalDelete from './components/Modals/ModalDelete.jsx';
-import ModalAddShop from './components/Modals/ModalAddShop.jsx';
-import ModalComments from './components/Modals/ModalComments.jsx';
+import PartMainOne from '../components/PartMainOne.jsx';
+import PartMainTwo from '../components/PartMainTwo.jsx';
+import PartMainThree from '../components/PartMainThree.jsx';
+import ModalDelete from '../components/Modals/ModalDelete.jsx';
+import ModalAddShop from '../components/Modals/ModalAddShop.jsx';
+import ModalComments from '../components/Modals/ModalComments.jsx';
 
 import { useEffect, useState } from 'react';
 import useScroll from './hooks/useScroll.jsx';

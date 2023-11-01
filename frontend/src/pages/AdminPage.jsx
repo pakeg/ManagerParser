@@ -1,6 +1,6 @@
-import MenuItem from './components/MenuItem.jsx';
-import User from './components/User.jsx';
-import ModalAdmin from './components/Modals/ModalAdmin.jsx';
+import MenuItem from '../components/Menu/MenuItem.jsx';
+import User from '../components/User.jsx';
+import ModalAdmin from '../components/Modals/ModalAdmin.jsx';
 
 import { BiSortDown } from 'react-icons/bi';
 import { AiOutlineFieldNumber } from 'react-icons/ai';

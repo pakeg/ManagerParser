@@ -1,8 +1,6 @@
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useRef } from 'react';
 
-const useScroll = () => {
-  const [isScroll, setScroll] = useState(false);
-
+const useScroll = (isOpen) => {
   const boxScroll = useRef(null);
   const buttonScroll = useRef(null);
 
@@ -12,7 +10,6 @@ const useScroll = () => {
     };
 
     if (boxScroll?.current?.scrollHeight > boxScroll?.current?.offsetHeight) {
-      setScroll(true);
       const scaleButtonScrollHeight =
         boxScroll.current.scrollHeight / boxScroll.current.offsetHeight;
       buttonScroll.current.style.height =
@@ -46,16 +43,14 @@ const useScroll = () => {
       };
 
       document.addEventListener('mouseup', mouseupEvent);
-    } else {
-      setScroll(false);
     }
 
     return () => {
       document.removeEventListener('mouseup', mouseupEvent);
     };
-  }, [boxScroll?.current?.scrollHeight]);
+  }, [isOpen]);
 
-  return { isScroll, boxScroll, buttonScroll };
+  return { boxScroll, buttonScroll };
 };
 
 export default useScroll;
