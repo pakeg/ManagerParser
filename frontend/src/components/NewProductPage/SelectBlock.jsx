@@ -3,7 +3,15 @@ import { BsFillPlusCircleFill } from 'react-icons/bs';
 
 import useScroll from '../../hooks/useScroll';
 
-const SelectBlock = ({ items, placeholder, setNewProduct, field }) => {
+const SelectBlock = ({
+  items,
+  placeholder,
+  setNewProduct,
+  field,
+  setIsOpen: setIsOpenModal,
+  setDone,
+  setChoosedElement,
+}) => {
   const [isOpen, setIsOpen] = useState(false);
   const [values, setValues] = useState(null);
   const { boxScroll, buttonScroll } = useScroll(isOpen);
@@ -12,6 +20,12 @@ const SelectBlock = ({ items, placeholder, setNewProduct, field }) => {
     setNewProduct((state) => ({ ...state, [field]: e.target.dataset.id }));
     setValues(e.target.textContent);
     setIsOpen(!isOpen);
+  };
+
+  const addNewChooseElement = (field) => {
+    setChoosedElement(field);
+    setDone(null);
+    setIsOpenModal(true);
   };
 
   return (
@@ -25,24 +39,25 @@ const SelectBlock = ({ items, placeholder, setNewProduct, field }) => {
       <div className="cursor-pointer bg-[#c1c1c1] w-[21px] flex items-center justify-center">
         <div className={`${!isOpen ? '-rotate-90' : 'rotate-90'}`}>{'<'}</div>
       </div>
-      <div className="absolute top-1/2 -right-[36px] -mt-[9.5px] cursor-pointer">
+      <div
+        className="absolute top-1/2 -right-[36px] -mt-[9.5px] cursor-pointer"
+        onClick={() => addNewChooseElement(field)}
+      >
         <BsFillPlusCircleFill color="#b4b4b4" />
       </div>
 
       {isOpen && (
-        <div
-          className="absolute z-10 flex w-full bg-[#c1c1c1] top-[25px] text-sm"
-          onClick={(e) => chooseElement(e)}
-        >
+        <div className="absolute z-10 flex w-full bg-[#c1c1c1] top-[25px] text-sm">
           <div className="grow overflow-hidden">
             <div
               className="max-h-[100px] overflow-auto -mr-[17px] cursor-pointer"
               ref={boxScroll}
+              onClick={(e) => chooseElement(e)}
             >
               {items &&
                 items.map((a, b) => (
                   <div className="pl-4 hover:bg-white" key={b} data-id={b}>
-                    {placeholder} --- {b}
+                    {placeholder} --- {a}
                   </div>
                 ))}
             </div>

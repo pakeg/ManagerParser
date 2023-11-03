@@ -33,7 +33,7 @@ const ModalAdmin = ({ isOpen, setIsOpen, user }) => {
             {user ? (
               <>
                 <LiaUserCogSolid size={25} className="mr-4" />
-                <p>Редактирование пользователя</p>{' '}
+                <p>Редактирование пользователя</p>
               </>
             ) : (
               <>

@@ -1,16 +1,21 @@
 import { useEffect, useState } from 'react';
 import { MdOutlineDone } from 'react-icons/md';
 
-import SelectBlock from '../components/NewProductPage/SelectBlock.jsx';
-import InputBlock from '../components/NewProductPage/InputBlock.jsx';
+import SelectBlock from './components/NewProductPage/SelectBlock.jsx';
+import InputBlock from './components/NewProductPage/InputBlock.jsx';
+import ModalNewProduct from './components/Modals/ModalNewProduct.jsx';
 
 const NewProductPage = () => {
   const [data, setData] = useState(null);
+  const [isOpen, setIsOpen] = useState(false);
+  const [choosedElement, setChoosedElement] = useState(null);
+  const [done, setDone] = useState(null);
+
   const [newProduct, setNewProduct] = useState({
     title: '',
-    category: null,
-    manufacture: null,
-    project: null,
+    categories: null,
+    manufacturers: null,
+    projects: null,
     purchase_price: 0,
     price: 0,
     shopsUrl: '',
@@ -21,20 +26,39 @@ const NewProductPage = () => {
       if (element[0] == 'shopsUrl') return true;
       return element[1];
     });
-    console.log(disabled, 'disabled');
-    console.log(newProduct, 'addNewProduct');
+    if (disabled) {
+      console.log(disabled, 'disabled');
+      console.log(newProduct, 'addNewProduct');
+
+      // set flag after adding new product for ModalNewProduct
+      setDone({
+        is: true,
+        title: newProduct.title,
+        projects: data.projects[newProduct.projects],
+      });
+      //open modal
+      setIsOpen(!isOpen);
+      //clear data of new product
+      setNewProduct({
+        title: '',
+        categories: null,
+        manufacturers: null,
+        projects: null,
+        purchase_price: 0,
+        price: 0,
+        shopsUrl: '',
+      });
+    }
   };
 
   useEffect(() => {
-    const data = [
-      {
-        categories: Array(6).fill(0),
-        manufacturers: Array(10).fill(0),
-        projects: Array(13).fill(0),
-      },
-    ];
+    const data = {
+      categories: Array(6).fill(0),
+      manufacturers: Array(10).fill(0),
+      projects: Array(13).fill(0),
+    };
 
-    setData(...data);
+    setData(data);
   }, []);
 
   return (
@@ -55,19 +79,28 @@ const NewProductPage = () => {
           items={data?.categories}
           placeholder="Категория"
           setNewProduct={setNewProduct}
-          field="category"
+          field="categories"
+          setIsOpen={setIsOpen}
+          setDone={setDone}
+          setChoosedElement={setChoosedElement}
         />
         <SelectBlock
           items={data?.manufacturers}
           placeholder="Производитель"
           setNewProduct={setNewProduct}
-          field="manufacture"
+          field="manufacturers"
+          setIsOpen={setIsOpen}
+          setDone={setDone}
+          setChoosedElement={setChoosedElement}
         />
         <SelectBlock
           items={data?.projects}
           placeholder="Проэкт"
           setNewProduct={setNewProduct}
-          field="project"
+          field="projects"
+          setIsOpen={setIsOpen}
+          setDone={setDone}
+          setChoosedElement={setChoosedElement}
         />
 
         <InputBlock
@@ -98,7 +131,6 @@ const NewProductPage = () => {
         </div>
 
         <div className="flex justify-end text-white">
-          // redirect
           <button
             className="border border-black text-xs px-3 py-1 rounded mr-4"
             onClick={() => {}}
@@ -114,6 +146,14 @@ const NewProductPage = () => {
           </div>
         </div>
       </div>
+      <ModalNewProduct
+        isOpen={isOpen}
+        setIsOpen={setIsOpen}
+        choosedElement={choosedElement}
+        done={done}
+        setDone={setDone}
+        setData={setData}
+      />
     </div>
   );
 };
