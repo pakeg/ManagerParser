@@ -8,4 +8,14 @@ const percentageDifference = (a, b) => {
   return percentageDifference.toFixed(0);
 };
 
-export { formatDate, percentageDifference };
+const formatSize = (length) => {
+  var i = 0,
+    type = ['b', 'kb', 'mb', 'gb', 'tb', 'pb'];
+  while ((length / 1000) | 0 && i < type.length - 1) {
+    length /= 1024;
+    i++;
+  }
+  return length.toFixed(2) + type[i];
+};
+
+export { formatDate, percentageDifference, formatSize };
