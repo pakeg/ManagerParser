@@ -1,15 +1,20 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 const useScroll = (isOpen) => {
   const boxScroll = useRef(null);
   const buttonScroll = useRef(null);
+  const [isScroll, setScroll] = useState(false);
 
   useEffect(() => {
+    setScroll(
+      boxScroll?.current?.scrollHeight > boxScroll?.current?.offsetHeight
+    );
+
     const mouseupEvent = () => {
       buttonScroll.current.parentElement.onmousemove = null;
     };
 
-    if (boxScroll?.current?.scrollHeight > boxScroll?.current?.offsetHeight) {
+    if (isScroll) {
       const scaleButtonScrollHeight =
         boxScroll.current.scrollHeight / boxScroll.current.offsetHeight;
       buttonScroll.current.style.height =
@@ -21,10 +26,8 @@ const useScroll = (isOpen) => {
         boxScroll.current.offsetHeight - buttonScroll.current.offsetHeight;
 
       boxScroll.current.onscroll = (e) => {
-        savePosition = e.target.scrollTop / scaleButtonScrollHeight;
-        buttonScroll.current.style.transform = `translateY(${Math.ceil(
-          savePosition
-        )}px)`;
+        savePosition = Math.ceil(e.target.scrollTop / scaleButtonScrollHeight);
+        buttonScroll.current.style.transform = `translateY(${savePosition}px)`;
       };
       buttonScroll.current.onmousedown = (e) => {
         let startPosition = e.pageY - savePosition;
@@ -35,9 +38,10 @@ const useScroll = (isOpen) => {
           if (offsetY >= endScroll) offsetY = endScroll;
 
           buttonScroll.current.style.transform = `translateY(${offsetY}px)`;
-          boxScroll.current.scrollTop = Math.floor(
+          boxScroll.current.scrollTop = Math.ceil(
             offsetY * scaleButtonScrollHeight
           );
+
           savePosition = offsetY;
         };
       };
@@ -48,9 +52,9 @@ const useScroll = (isOpen) => {
     return () => {
       document.removeEventListener('mouseup', mouseupEvent);
     };
-  }, [isOpen]);
+  }, [boxScroll.current, isScroll, isOpen]);
 
-  return { boxScroll, buttonScroll };
+  return { boxScroll, buttonScroll, isScroll };
 };
 
 export default useScroll;
