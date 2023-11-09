@@ -9,7 +9,7 @@ import { useEffect, useState } from 'react';
 const AdminPanel = () => {
   const [users, setUsers] = useState(null);
   const [editAbleUser, setEditAbleUser] = useState(null);
-  const [isOpen, setIsOpen] = useState(true);
+  const [isOpen, setIsOpen] = useState(false);
 
   const setEditUser = (user) => {
     setEditAbleUser(user);
