@@ -14,7 +14,7 @@ const useScroll = (isOpen) => {
       buttonScroll.current.parentElement.onmousemove = null;
     };
 
-    if (isScroll) {
+    if (isScroll && isOpen) {
       const scaleButtonScrollHeight =
         boxScroll.current.scrollHeight / boxScroll.current.offsetHeight;
       buttonScroll.current.style.height =
@@ -51,6 +51,7 @@ const useScroll = (isOpen) => {
 
     return () => {
       document.removeEventListener('mouseup', mouseupEvent);
+      setScroll(false);
     };
   }, [boxScroll.current, isScroll, isOpen]);
 

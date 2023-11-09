@@ -26,6 +26,7 @@ const NewProductPage = () => {
       if (element[0] == 'shopsUrl') return true;
       return element[1];
     });
+
     if (disabled) {
       console.log(disabled, 'disabled');
       console.log(newProduct, 'addNewProduct');
@@ -74,10 +75,10 @@ const NewProductPage = () => {
           setNewProduct={setNewProduct}
           field="title"
         />
-
         <SelectBlock
           items={data?.categories}
           placeholder="Категория"
+          value={newProduct.categories}
           setNewProduct={setNewProduct}
           field="categories"
           setIsOpen={setIsOpen}
@@ -87,6 +88,7 @@ const NewProductPage = () => {
         <SelectBlock
           items={data?.manufacturers}
           placeholder="Производитель"
+          value={newProduct.manufacturers}
           setNewProduct={setNewProduct}
           field="manufacturers"
           setIsOpen={setIsOpen}
@@ -96,6 +98,7 @@ const NewProductPage = () => {
         <SelectBlock
           items={data?.projects}
           placeholder="Проэкт"
+          value={newProduct.projects}
           setNewProduct={setNewProduct}
           field="projects"
           setIsOpen={setIsOpen}
@@ -151,7 +154,6 @@ const NewProductPage = () => {
         setIsOpen={setIsOpen}
         choosedElement={choosedElement}
         done={done}
-        setDone={setDone}
         setData={setData}
       />
     </div>

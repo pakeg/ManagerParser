@@ -60,7 +60,7 @@ const ModalNewProduct = ({
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
               />
-              <div className={`${!done.is ? 'text-center' : 'text-end'}`}>
+              <div className={`${!done?.is ? 'text-center' : 'text-end'}`}>
                 <button
                   className="px-10 mt-5 bg-[#cccccc] rounded shadow-xl"
                   onClick={addChooseElement}

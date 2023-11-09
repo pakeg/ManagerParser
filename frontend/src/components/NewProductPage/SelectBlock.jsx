@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { BsFillPlusCircleFill } from 'react-icons/bs';
 
 import useScroll from '../../hooks/useScroll';
@@ -6,6 +6,7 @@ import useScroll from '../../hooks/useScroll';
 const SelectBlock = ({
   items,
   placeholder,
+  value,
   setNewProduct,
   field,
   setIsOpen: setIsOpenModal,
@@ -13,12 +14,10 @@ const SelectBlock = ({
   setChoosedElement,
 }) => {
   const [isOpen, setIsOpen] = useState(false);
-  const [values, setValues] = useState(null);
   const { boxScroll, buttonScroll } = useScroll(isOpen);
 
   const chooseElement = (e) => {
     setNewProduct((state) => ({ ...state, [field]: e.target.dataset.id }));
-    setValues(e.target.textContent);
     setIsOpen(!isOpen);
   };
 
@@ -28,13 +27,17 @@ const SelectBlock = ({
     setIsOpenModal(true);
   };
 
+  const selectedValue = useMemo(() => {
+    return items?.find((item, b) => b == value);
+  }, [value]);
+
   return (
     <div className="flex items-center border border-black relative">
       <p
         className="focus:outline-none cursor-pointer bg-[#dfdfdf] placeholder:text-black placeholder:text-sm w-full pl-4"
         onClick={() => setIsOpen(!isOpen)}
       >
-        {!values ? placeholder : values}
+        {!value ? placeholder : selectedValue}
       </p>
       <div className="cursor-pointer bg-[#c1c1c1] w-[21px] flex items-center justify-center">
         <div className={`${!isOpen ? '-rotate-90' : 'rotate-90'}`}>{'<'}</div>

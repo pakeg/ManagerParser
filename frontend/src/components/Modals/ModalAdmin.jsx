@@ -2,7 +2,7 @@ import Modal from './Modal.jsx';
 import { LiaUserPlusSolid, LiaUserCogSolid } from 'react-icons/lia';
 import { useEffect, useState } from 'react';
 
-const ModalAdmin = ({ isOpen, setIsOpen, user }) => {
+const ModalAdmin = ({ isOpen, setIsOpen, user, setUsers }) => {
   const [dataUsers, setDataUsers] = useState({
     nickname: '',
     name: '',
@@ -19,10 +19,16 @@ const ModalAdmin = ({ isOpen, setIsOpen, user }) => {
 
   const createUser = () => {
     console.log(dataUsers, 'create');
+    const req = { id: Math.random(), ...dataUsers };
+    if (true) {
+      setIsOpen(!isOpen);
+      setUsers((state) => [...state, req]);
+    }
   };
 
   const changeUser = () => {
     console.log(dataUsers, 'changeUser');
+    setIsOpen(!isOpen);
   };
 
   return (
@@ -169,11 +175,11 @@ const ModalAdmin = ({ isOpen, setIsOpen, user }) => {
             </label>
           </div>
           {user ? (
-            <div onClick={() => changeUser()}>
+            <div onClick={changeUser}>
               <button>Готово!</button>
             </div>
           ) : (
-            <div onClick={() => createUser()}>
+            <div onClick={createUser}>
               <button>Готово!</button>
             </div>
           )}

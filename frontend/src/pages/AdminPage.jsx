@@ -1,12 +1,12 @@
-import MenuItem from '../components/Menu/MenuItem.jsx';
-import User from '../components/User.jsx';
-import ModalAdmin from '../components/Modals/ModalAdmin.jsx';
+import MenuItem from './components/MenuItem.jsx';
+import User from './components/User.jsx';
+import ModalAdmin from './components/Modals/ModalAdmin.jsx';
 
 import { BiSortDown } from 'react-icons/bi';
 import { AiOutlineFieldNumber } from 'react-icons/ai';
 import { useEffect, useState } from 'react';
 
-const AdminPage = () => {
+const AdminPanel = () => {
   const [users, setUsers] = useState(null);
   const [editAbleUser, setEditAbleUser] = useState(null);
   const [isOpen, setIsOpen] = useState(true);
@@ -51,9 +51,14 @@ const AdminPage = () => {
             ))}
         </tbody>
       </table>
-      <ModalAdmin isOpen={isOpen} setIsOpen={setIsOpen} user={editAbleUser} />
+      <ModalAdmin
+        isOpen={isOpen}
+        setIsOpen={setIsOpen}
+        user={editAbleUser}
+        setUsers={setUsers}
+      />
     </div>
   );
 };
 
-export default AdminPage;
+export default AdminPanel;
