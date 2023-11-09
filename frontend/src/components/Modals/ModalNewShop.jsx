@@ -1,36 +1,24 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Modal from './Modal.jsx';
 
 import { GoAlertFill } from 'react-icons/go';
 
-const fields = {
-  categories: 'категории',
-  manufacturers: 'производителя',
-  projects: 'проэкта',
-};
-
-const ModalNewProduct = ({
-  isOpen,
-  setIsOpen,
-  choosedElement,
-  done,
-  setData,
-}) => {
+const ModalNewShop = ({ isOpen, setIsOpen, done, setDone, addShop }) => {
   const [title, setTitle] = useState('');
 
-  const addChooseElement = () => {
-    console.log(choosedElement, ' = ', title, 'addChooseElement');
-
-    const req = title;
-    if (true) {
-      setIsOpen(!isOpen);
+  useEffect(() => {
+    if (done) {
       setTitle('');
-      setData((state) => ({
-        ...state,
-        [choosedElement]: [...state[choosedElement], req],
-      }));
+      const timer = setTimeout(() => {
+        setDone(null);
+        setIsOpen(!isOpen);
+      }, 5000);
+
+      return () => {
+        clearTimeout(timer);
+      };
     }
-  };
+  }, [done]);
 
   return (
     <Modal isOpen={isOpen} setIsOpen={setIsOpen}>
@@ -56,14 +44,14 @@ const ModalNewProduct = ({
                 type="text"
                 name="title"
                 className="w-full bg-white pl-5 py-2.5 rounded-md"
-                placeholder={`Введите название ${fields[choosedElement]} ...`}
+                placeholder={`Введите название ...`}
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
               />
-              <div className={`${!done.is ? 'text-center' : 'text-end'}`}>
+              <div className={`${!done ? 'text-center' : 'text-end'}`}>
                 <button
                   className="px-10 mt-5 bg-[#cccccc] rounded shadow-xl"
-                  onClick={addChooseElement}
+                  onClick={addShop.bind(null, title)}
                 >
                   OK
                 </button>
@@ -71,8 +59,8 @@ const ModalNewProduct = ({
             </>
           ) : (
             <>
-              <p className="text-center">{`Товар "${done.title}" добавлен в проэкт "${done.projects}"`}</p>
-              <div className={`${!done.is ? 'text-center' : 'text-end'}`}>
+              <p className="text-center">{`Магазин "${done.title}" добавлен.`}</p>
+              <div className={`${!done ? 'text-center' : 'text-end'}`}>
                 <button
                   className="px-10 mt-5 bg-[#cccccc] rounded shadow-xl"
                   onClick={() => setIsOpen(!isOpen)}
@@ -88,4 +76,4 @@ const ModalNewProduct = ({
   );
 };
 
-export default ModalNewProduct;
+export default ModalNewShop;

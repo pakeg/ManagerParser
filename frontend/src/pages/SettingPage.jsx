@@ -2,10 +2,33 @@ import { useEffect, useState } from 'react';
 import { LuCross } from 'react-icons/lu';
 
 import useScroll from './hooks/useScroll';
+import ModalNewShop from './components/Modals/ModalNewShop.jsx';
 
 const SettingPage = () => {
   const [shops, setShops] = useState(null);
+  const [isOpen, setIsOpen] = useState(false);
+  const [done, setDone] = useState(null);
   const { boxScroll, buttonScroll, isScroll } = useScroll(false);
+
+  const deleteShops = (id) => {
+    // if delete from server
+    if (true) {
+      setShops((state) => state.filter((shop) => shop.id != id));
+      console.log('shop deleted');
+    }
+  };
+
+  const addShop = (title) => {
+    console.log(title, 'create new Shop');
+    if (title.length > 1) {
+      const req = { id: Math.random(), title };
+      setShops((state) => [...state, req]);
+      setDone({
+        is: true,
+        title,
+      });
+    }
+  };
 
   useEffect(() => {
     const data = [
@@ -44,7 +67,10 @@ const SettingPage = () => {
           <div className="pl-6 mb-2">
             <div className="flex items-center">
               <p className="underline mr-5 font-semibold">Добавить магазин</p>
-              <div className="hover:bg-[#a1a1a1] bg-black rounded-sm cursor-pointer border border-white p-0.5">
+              <div
+                className="hover:bg-[#a1a1a1] bg-black rounded-sm cursor-pointer border border-white p-0.5"
+                onClick={() => setIsOpen(!isOpen)}
+              >
                 <LuCross
                   size={10}
                   strokeWidth="1"
@@ -69,7 +95,10 @@ const SettingPage = () => {
                       className="hover:bg-[#959595] hover:text-white mt-1.5 pl-6 pr-3 flex items-center justify-between"
                     >
                       <p>{item.title}</p>
-                      <div className="hover:bg-red-500 bg-[#a1a1a1] rounded-sm cursor-pointer border border-white p-0.5">
+                      <div
+                        className="hover:bg-red-500 bg-[#a1a1a1] rounded-sm cursor-pointer border border-white p-0.5"
+                        onClick={deleteShops.bind(null, item.id)}
+                      >
                         <LuCross
                           size={10}
                           strokeWidth="1"
@@ -77,7 +106,7 @@ const SettingPage = () => {
                           style={{
                             transform: 'rotateZ(45deg)',
                           }}
-                          title="cancel"
+                          title="deleteShops"
                         />
                       </div>
                     </div>
@@ -99,6 +128,13 @@ const SettingPage = () => {
           <div className="border-2 border-[#5e5e5e] bg-[#dfdfdf] min-h-[550px]"></div>
         </div>
       </div>
+      <ModalNewShop
+        isOpen={isOpen}
+        setIsOpen={setIsOpen}
+        done={done}
+        setDone={setDone}
+        addShop={addShop}
+      />
     </div>
   );
 };
