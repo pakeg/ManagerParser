@@ -154,7 +154,7 @@ const ModalAdmin = ({ isOpen, setIsOpen, user, setUsers }) => {
             <input
               id="password"
               className="focus:outline-none border bg-white w-full py-2 pl-4 peer placeholder-transparent"
-              type="text"
+              type="password"
               name="password"
               placeholder={dataUsers.nickname}
               value={dataUsers.password}

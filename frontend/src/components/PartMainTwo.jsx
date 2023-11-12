@@ -7,10 +7,11 @@ import MenuItemShop from './MenuItemShop.jsx';
 const PartMainTwo = ({ uniqueStores, storeTableRows, boxScrollHor }) => {
   const commentPopUp = useRef(null);
 
-  const [comment, setComment] = useState('');
+  const [comment, setComment] = useState({ id: null, comment: '' });
   const [isPopUpOpen, setIsPopUpOpen] = useState(false);
 
-  const positionDivComment = useCallback((e) => {
+  const positionDivComment = useCallback((e, id) => {
+    setComment((state) => ({ ...state, id }));
     const coor = e.target.getBoundingClientRect();
     // 15 - width SVg element, 20 - position right ::after, 12.5 - width ::after
     commentPopUp.current.style.left =
@@ -19,6 +20,14 @@ const PartMainTwo = ({ uniqueStores, storeTableRows, boxScrollHor }) => {
     commentPopUp.current.style.top = coor.y + coor.height + 17.5 + 'px';
     setIsPopUpOpen(!isPopUpOpen);
   }, []);
+
+  const addNewProductsComment = () => {
+    if (true) {
+      console.log(comment, 'comment');
+      setComment({ id: null, comment: '' });
+      setIsPopUpOpen(!isPopUpOpen);
+    }
+  };
 
   return (
     <div className="relative">
@@ -67,12 +76,17 @@ const PartMainTwo = ({ uniqueStores, storeTableRows, boxScrollHor }) => {
             <textarea
               cols="35"
               rows="10"
-              value={comment}
+              value={comment.comment}
               placeholder="write comment"
               className="resize-none bg-white rounded-lg text-black p-2.5 focus:outline-none"
-              onChange={(e) => setComment(e.target.value)}
+              onChange={(e) =>
+                setComment((state) => ({ ...state, comment: e.target.value }))
+              }
             />
-            <button className="text-base bg-gradient-to-b from-yellow-300 to-yellow-500 py-1.5 px-5 rounded-md w-full">
+            <button
+              className="text-base bg-gradient-to-b from-yellow-300 to-yellow-500 py-1.5 px-5 rounded-md w-full"
+              onClick={addNewProductsComment}
+            >
               Добавить комментарий
             </button>
           </div>

@@ -17,6 +17,7 @@ const ProductShop = ({ prices, positionDivComment }) => {
               key={i}
               price={item.price}
               products_price={item.products_price}
+              id={i}
               date={item.date}
               positionDivComment={positionDivComment}
             />

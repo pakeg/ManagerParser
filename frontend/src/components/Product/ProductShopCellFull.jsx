@@ -8,6 +8,7 @@ import { formatDate, percentageDifference } from '../utils/utilsFun';
 const ProductShopCellFull = ({
   price,
   products_price,
+  id,
   date,
   positionDivComment,
 }) => {
@@ -45,7 +46,7 @@ const ProductShopCellFull = ({
             color="#f7c34a"
             className="rotate-y-180"
             title="add comment"
-            onClick={(e) => positionDivComment(e)}
+            onClick={(e) => positionDivComment(e, id)}
           />
         </div>
       </div>

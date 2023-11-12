@@ -39,7 +39,7 @@ const User = ({ user, setEditUser }) => {
         <span>{user.name}</span>
       </td>
       <td className="w-52">
-        <span>{user.surmane}</span>
+        <span>{user.surname}</span>
       </td>
       <td className="w-80">
         <span>{user.email}</span>

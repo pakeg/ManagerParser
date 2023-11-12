@@ -8,7 +8,7 @@ import Modal from './Modal.jsx';
 const ModalAddShop = ({ uniqueStores }) => {
   const [isOpen, setIsOpen] = useState(false);
 
-  const { isScroll, boxScroll, buttonScroll } = useScroll();
+  const { isScroll, boxScroll, buttonScroll } = useScroll(true);
 
   return (
     <Modal isOpen={isOpen} setIsOpen={setIsOpen}>
@@ -19,7 +19,9 @@ const ModalAddShop = ({ uniqueStores }) => {
         <div className="min-h-[300px] p-4 pr-1 flex">
           <div className="grow overflow-hidden">
             <div
-              className="max-h-[300px] overflow-auto -mr-[17px]"
+              className={`max-h-[300px] overflow-auto ${
+                isScroll && '-mr-[17px]'
+              }`}
               ref={boxScroll}
             >
               <div className="text-black pr-2 space-y-1">

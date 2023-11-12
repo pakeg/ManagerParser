@@ -9,7 +9,7 @@ import ModalCommentsScrollCell from './ModalComments/ModalCommentsScrollCell.jsx
 const ModalComments = ({ productComments }) => {
   const [isOpen, setIsOpen] = useState(false);
 
-  const { isScroll, boxScroll, buttonScroll } = useScroll();
+  const { isScroll, boxScroll, buttonScroll } = useScroll(true);
 
   return (
     <Modal isOpen={isOpen} setIsOpen={setIsOpen}>

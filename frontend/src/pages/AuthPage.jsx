@@ -46,7 +46,7 @@ const AuthPage = () => {
                 <input
                   id="password"
                   className="focus:outline-none bg-white py-3 peer placeholder-transparent"
-                  type="text"
+                  type="password"
                   name="password"
                   placeholder="password"
                   value={password}
