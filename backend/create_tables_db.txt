@@ -1,3 +1,5 @@
+//ps = zrQn3j7#Nks?jKb
+
 CREATE TYPE ROLES AS ENUM ('admin', 'manager', 'user');
 CREATE TYPE ACTIVE_STATUS AS ENUM ('0', '1');
 
