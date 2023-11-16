@@ -1,0 +1,14 @@
+CREATE TYPE ROLES AS ENUM ('admin', 'manager', 'user');
+CREATE TYPE ACTIVE_STATUS AS ENUM ('0', '1');
+
+CREATE TABLE users (
+	id serial PRIMARY KEY,
+  nickname VARCHAR ( 50 ) UNIQUE NOT NULL,
+	name VARCHAR ( 50 ) NOT NULL,
+  surname VARCHAR ( 50 ) NOT NULL,  
+	email VARCHAR ( 255 ) UNIQUE NOT NULL,
+	password CHAR ( 72 ) NOT NULL,
+  role ROLES DEFAULT 'user',
+  active_status ACTIVE_STATUS DEFAULT '1',
+	created_on DATE NOT NULL DEFAULT CURRENT_DATE
+);
