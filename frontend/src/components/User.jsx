@@ -1,5 +1,3 @@
-import { useState } from 'react';
-
 import { TiEdit } from 'react-icons/ti';
 import { ImSwitch } from 'react-icons/im';
 
