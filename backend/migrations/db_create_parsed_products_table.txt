@@ -1,0 +1,9 @@
+CREATE TABLE parsed_products (
+	id serial PRIMARY KEY,
+  product_id INT NOT NULL,
+	shop_id INT NOT NULL,
+	link VARCHAR ( 250 ) NOT NULL,
+	created_on DATE NOT NULL DEFAULT CURRENT_DATE,
+	FOREIGN KEY (product_id) REFERENCES products (id) ON DELETE CASCADE,
+	FOREIGN KEY (shop_id) REFERENCES shops (id) ON DELETE CASCADE
+);

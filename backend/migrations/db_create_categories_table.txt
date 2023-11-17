@@ -1,0 +1,5 @@
+CREATE TABLE categories (
+	id serial PRIMARY KEY,
+  title VARCHAR ( 100 ) UNIQUE NOT NULL,
+	created_on DATE NOT NULL DEFAULT CURRENT_DATE
+);
