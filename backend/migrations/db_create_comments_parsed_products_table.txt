@@ -1,0 +1,8 @@
+CREATE TABLE comments_parsed_products (
+	id serial PRIMARY KEY,
+  comment_id INT NOT NULL,
+	parsed_product_id INT NOT NULL,
+	created_on DATE NOT NULL DEFAULT CURRENT_DATE,
+	FOREIGN KEY (comment_id) REFERENCES comments (id) ON DELETE CASCADE,
+	FOREIGN KEY (parsed_product_id) REFERENCES parsed_products (id) ON DELETE CASCADE
+);
