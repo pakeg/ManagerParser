@@ -18,17 +18,30 @@ const ModalNewProduct = ({
 }) => {
   const [title, setTitle] = useState('');
 
-  const addChooseElement = () => {
+  const addChooseElement = async () => {
     console.log(choosedElement, ' = ', title, 'addChooseElement');
 
-    const req = title;
-    if (true) {
+    const req = await fetch(`https://cmh7wy-${3000}.csb.app`, {
+      method: 'POST',
+      mode: 'cors',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json;charset=utf-8',
+      },
+      body: JSON.stringify({ choosedElement, title }),
+    });
+
+    if (req.ok) {
+      const res = await req.text();
+      console.log('--------------', res);
       setIsOpen(!isOpen);
       setTitle('');
       setData((state) => ({
         ...state,
-        [choosedElement]: [...state[choosedElement], req],
+        [choosedElement]: [...state[choosedElement], res],
       }));
+    } else {
+      console.log('Ошибка ' + req.status);
     }
   };
 
