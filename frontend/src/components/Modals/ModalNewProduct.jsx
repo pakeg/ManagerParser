@@ -2,6 +2,7 @@ import { useState } from 'react';
 import Modal from './Modal.jsx';
 
 import { GoAlertFill } from 'react-icons/go';
+import createNewItemCategory from '../../actions/createNewItemCategory.js';
 
 const fields = {
   categories: 'категории',
@@ -19,26 +20,15 @@ const ModalNewProduct = ({
   const [title, setTitle] = useState('');
 
   const addChooseElement = async () => {
-    console.log(choosedElement, ' = ', title, 'addChooseElement');
-
-    const req = await fetch(`https://cmh7wy-${3000}.csb.app`, {
-      method: 'POST',
-      mode: 'cors',
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json;charset=utf-8',
-      },
-      body: JSON.stringify({ choosedElement, title }),
-    });
+    const req = await createNewItemCategory({ choosedElement, title });
 
     if (req.ok) {
-      const res = await req.text();
-      console.log('--------------', res);
+      const res = await req.json();
       setIsOpen(!isOpen);
       setTitle('');
       setData((state) => ({
         ...state,
-        [choosedElement]: [...state[choosedElement], res],
+        [choosedElement]: [...state[choosedElement], ...res],
       }));
     } else {
       console.log('Ошибка ' + req.status);

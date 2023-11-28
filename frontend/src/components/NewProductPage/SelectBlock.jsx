@@ -21,6 +21,7 @@ const SelectBlock = ({
     setIsOpen(!isOpen);
   };
 
+  //create new Category, Manufacture, Project
   const addNewChooseElement = (field) => {
     setChoosedElement(field);
     setDone(null);
@@ -28,7 +29,7 @@ const SelectBlock = ({
   };
 
   const selectedValue = useMemo(() => {
-    return items?.find((item, b) => b == value);
+    return items?.find((item) => item.id == value);
   }, [value]);
 
   return (
@@ -37,7 +38,7 @@ const SelectBlock = ({
         className="focus:outline-none cursor-pointer bg-[#dfdfdf] placeholder:text-black placeholder:text-sm w-full pl-4"
         onClick={() => setIsOpen(!isOpen)}
       >
-        {!value ? placeholder : selectedValue}
+        {!value ? placeholder : selectedValue.title}
       </p>
       <div className="cursor-pointer bg-[#c1c1c1] w-[21px] flex items-center justify-center">
         <div className={`${!isOpen ? '-rotate-90' : 'rotate-90'}`}>{'<'}</div>
@@ -58,9 +59,13 @@ const SelectBlock = ({
               onClick={(e) => chooseElement(e)}
             >
               {items &&
-                items.map((a, b) => (
-                  <div className="pl-4 hover:bg-white" key={b} data-id={b}>
-                    {placeholder} --- {a}
+                items.map((a) => (
+                  <div
+                    className="pl-4 hover:bg-white"
+                    key={a.id}
+                    data-id={a.id}
+                  >
+                    {a.title}
                   </div>
                 ))}
             </div>

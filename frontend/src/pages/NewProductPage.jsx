@@ -10,11 +10,10 @@ const NewProductPage = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [choosedElement, setChoosedElement] = useState(null);
   const [done, setDone] = useState(null);
-
   const [newProduct, setNewProduct] = useState({
     title: '',
     categories: null,
-    manufacturers: null,
+    manufactures: null,
     projects: null,
     purchase_price: 0,
     price: 0,
@@ -43,7 +42,7 @@ const NewProductPage = () => {
       setNewProduct({
         title: '',
         categories: null,
-        manufacturers: null,
+        manufactures: null,
         projects: null,
         purchase_price: 0,
         price: 0,
@@ -54,9 +53,15 @@ const NewProductPage = () => {
 
   useEffect(() => {
     const data = {
-      categories: Array(6).fill(0),
-      manufacturers: Array(10).fill(0),
-      projects: Array(13).fill(0),
+      categories: Array(6)
+        .fill(0)
+        .map((x, i) => ({ id: Math.random(), title: 'categories-' + i })),
+      manufactures: Array(10)
+        .fill(0)
+        .map((x, i) => ({ id: Math.random(), title: 'manufactures-' + i })),
+      projects: Array(13)
+        .fill(0)
+        .map((x, i) => ({ id: Math.random(), title: 'projects-' + i })),
     };
 
     setData(data);
@@ -86,11 +91,11 @@ const NewProductPage = () => {
           setChoosedElement={setChoosedElement}
         />
         <SelectBlock
-          items={data?.manufacturers}
+          items={data?.manufactures}
           placeholder="Производитель"
-          value={newProduct.manufacturers}
+          value={newProduct.manufactures}
           setNewProduct={setNewProduct}
-          field="manufacturers"
+          field="manufactures"
           setIsOpen={setIsOpen}
           setDone={setDone}
           setChoosedElement={setChoosedElement}
