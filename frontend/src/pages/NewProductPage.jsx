@@ -4,6 +4,7 @@ import { MdOutlineDone } from 'react-icons/md';
 import SelectBlock from './components/NewProductPage/SelectBlock.jsx';
 import InputBlock from './components/NewProductPage/InputBlock.jsx';
 import ModalNewProduct from './components/Modals/ModalNewProduct.jsx';
+import createNewProduct from './actions/createNewProduct.js';
 
 const NewProductPage = () => {
   const [data, setData] = useState(null);
@@ -15,39 +16,46 @@ const NewProductPage = () => {
     categories: null,
     manufactures: null,
     projects: null,
+    part_number: '',
     purchase_price: 0,
     price: 0,
     shopsUrl: '',
   });
 
-  const addNewProduct = () => {
+  const addNewProduct = async () => {
     const disabled = Object.entries(newProduct).every((element) => {
       if (element[0] == 'shopsUrl') return true;
       return element[1];
     });
 
     if (disabled) {
-      console.log(disabled, 'disabled');
       console.log(newProduct, 'addNewProduct');
-
-      // set flag after adding new product for ModalNewProduct
-      setDone({
-        is: true,
-        title: newProduct.title,
-        projects: data.projects[newProduct.projects],
-      });
-      //open modal
-      setIsOpen(!isOpen);
-      //clear data of new product
-      setNewProduct({
-        title: '',
-        categories: null,
-        manufactures: null,
-        projects: null,
-        purchase_price: 0,
-        price: 0,
-        shopsUrl: '',
-      });
+      const req = await createNewProduct(newProduct);
+      if (req.ok) {
+        // set flag after adding new product for ModalNewProduct
+        setDone({
+          is: req.ok,
+          title: newProduct.title,
+          projects: data.projects.find(
+            (project) => project.id == newProduct.projects
+          ),
+        });
+        //open modal
+        setIsOpen(!isOpen);
+        //clear data of new product
+        setNewProduct({
+          title: '',
+          categories: null,
+          manufactures: null,
+          projects: null,
+          part_number: '',
+          purchase_price: 0,
+          price: 0,
+          shopsUrl: '',
+        });
+      } else {
+        console.log('Ошибка ' + req.status);
+      }
     }
   };
 
@@ -109,6 +117,14 @@ const NewProductPage = () => {
           setIsOpen={setIsOpen}
           setDone={setDone}
           setChoosedElement={setChoosedElement}
+        />
+
+        <InputBlock
+          placeholder="Артикул товара"
+          type="text"
+          value={newProduct.part_number}
+          setNewProduct={setNewProduct}
+          field="part_number"
         />
 
         <InputBlock
