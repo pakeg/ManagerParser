@@ -3,7 +3,7 @@ CREATE TABLE products (
   category_id INT NULL,
 	manufacture_id INT NULL,
 	title VARCHAR ( 250 ) NOT NULL,
-	part_number INT NOT NULL,
+	part_number INT UNIQUE NOT NULL,
 	purchase INT NOT NULL,	
 	price INT NOT NULL,
 	img_src VARCHAR ( 250 ) NULL DEFAULT NULL,
