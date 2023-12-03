@@ -42,43 +42,64 @@ const createNewProduct = async function ({
       (${productId}, ${project_id})
     returning id
   `;
-  // https://dragonwinch.com.ua/ua/lebedky/elektricheskaya-lebedka-dlya-kvadrotsikla-dwm-2000-st, https://130.com.ua/uk/product/lifter-winch-dragon-winch-dwm-2000-st-maverick-series, https://avtozvuk.ua/ua/dragon-winch-maverick-dwm-2000-st-12v/p58364
-  // if (shopsUrl.length > 0) {
-  //   const urls = shopsUrl.split(",").map((url) => new URL(url.trim()).origin);
-  //   console.log(urls, "urls");
 
-  //   const shops = await sql`
-  //     select
-  //       id, link
-  //     from shops
-  //     where link in ${sql(urls)}
-  //   `;
+  if (shopsUrl.length > 0) {
+    const urls = shopsUrl.split(',').map((url) => {
+      const uri = new URL(url);
+      return {
+        link: uri.origin,
+        title: uri.hostname,
+        href: uri.href,
+      };
+    });
+    console.log(urls, '--------urls----------');
 
-  //   let newShop = [];
-  //   let notFoundedUrls = [];
-  //   if (shops.length > 0) {
-  //     notFoundedUrls = urls.filter((url) => {
-  //       shops.forEach((shop) => {
-  //         if (shop.link == url) return false;
-  //         return true;
-  //       });
-  //     });
-  //   }
+    const shops = await sql`
+      select
+        id, link
+      from shops
+      where link in ${sql(urls.map((uri) => uri.link))}
+    `;
+    console.log(shops, '--------shops----------');
+    let newShop = [];
+    let notFoundedShops = [];
+    if (shops.length < urls.length) {
+      notFoundedShops = urls
+        .filter((url) => {
+          return shops.find((shop) => shop.link == url.link) ? false : true;
+        })
+        .sort((a, b) => {
+          if (a.title > b.title) return 1;
+          else if (a.title < b.title) return -1;
+          return 0;
+        })
+        .reduce((c, n) => {
+          if (!c.length) return [n];
+          if (c[c.length - 1].link == n.link) return c;
+          return [...c, n];
+        }, []);
+    }
 
-  //   if (notFoundedUrls.lenght > 0) {
-  //     notFoundedUrls.map((url) => ({
-  //       title: new URL(url).hostname,
-  //       link: url,
-  //     }));
+    if (notFoundedShops.length > 0) {
+      newShop = await sql`insert into shops ${sql(
+        notFoundedShops,
+        'title',
+        'link'
+      )} returning id, link`;
+    }
 
-  //     console.log(notFoundedUrls, "notFoundedUrls");
-  //     newShop = await sql`insert into shops ${sql(
-  //       notFoundedUrls,
-  //     )} returning id, link`;
-  //   }
+    const final = urls.map((uri) => {
+      const shop = [...shops, ...newShop].find((shop) => shop.link == uri.link);
+      return { product_id: productId, shop_id: shop.id, link: uri.href };
+    });
 
-  //   await sql`insert into parsed_products ${sql()}`;
-  // }
+    await sql`insert into parsed_products ${sql(
+      final,
+      'product_id',
+      'shop_id',
+      'link'
+    )}`;
+  }
   return projectId;
 };
 

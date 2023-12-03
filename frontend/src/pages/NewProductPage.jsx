@@ -11,25 +11,30 @@ const NewProductPage = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [choosedElement, setChoosedElement] = useState(null);
   const [done, setDone] = useState(null);
+  const [errors, setErrors] = useState(null);
   const [newProduct, setNewProduct] = useState({
     title: '',
     categories: null,
     manufactures: null,
     projects: null,
     part_number: '',
-    purchase_price: 0,
-    price: 0,
+    purchase_price: '',
+    price: '',
     shopsUrl: '',
   });
 
   const addNewProduct = async () => {
-    const disabled = Object.entries(newProduct).every((element) => {
-      if (element[0] == 'shopsUrl') return true;
-      return element[1];
-    });
+    const tempErrors = {};
+    for (let item in newProduct) {
+      if (item == 'shopsUrl') continue;
 
+      const error = Boolean(newProduct[item]);
+      tempErrors[item] = error;
+    }
+    const disabled = Object.values(tempErrors).every((item) => Boolean(item));
     if (disabled) {
-      console.log(newProduct, 'addNewProduct');
+      setErrors(null);
+
       const req = await createNewProduct(newProduct);
       if (req.ok) {
         // set flag after adding new product for ModalNewProduct
@@ -56,6 +61,8 @@ const NewProductPage = () => {
       } else {
         console.log('Ошибка ' + req.status);
       }
+    } else {
+      setErrors(tempErrors);
     }
   };
 
@@ -87,6 +94,7 @@ const NewProductPage = () => {
           value={newProduct.title}
           setNewProduct={setNewProduct}
           field="title"
+          errors={errors}
         />
         <SelectBlock
           items={data?.categories}
@@ -97,6 +105,7 @@ const NewProductPage = () => {
           setIsOpen={setIsOpen}
           setDone={setDone}
           setChoosedElement={setChoosedElement}
+          errors={errors}
         />
         <SelectBlock
           items={data?.manufactures}
@@ -107,6 +116,7 @@ const NewProductPage = () => {
           setIsOpen={setIsOpen}
           setDone={setDone}
           setChoosedElement={setChoosedElement}
+          errors={errors}
         />
         <SelectBlock
           items={data?.projects}
@@ -117,6 +127,7 @@ const NewProductPage = () => {
           setIsOpen={setIsOpen}
           setDone={setDone}
           setChoosedElement={setChoosedElement}
+          errors={errors}
         />
 
         <InputBlock
@@ -125,6 +136,7 @@ const NewProductPage = () => {
           value={newProduct.part_number}
           setNewProduct={setNewProduct}
           field="part_number"
+          errors={errors}
         />
 
         <InputBlock
@@ -133,6 +145,7 @@ const NewProductPage = () => {
           value={newProduct.purchase_price}
           setNewProduct={setNewProduct}
           field="purchase_price"
+          errors={errors}
         />
         <InputBlock
           placeholder="Базовая цена"
@@ -140,6 +153,7 @@ const NewProductPage = () => {
           value={newProduct.price}
           setNewProduct={setNewProduct}
           field="price"
+          errors={errors}
         />
 
         <div>

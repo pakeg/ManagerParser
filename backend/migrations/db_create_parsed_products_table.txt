@@ -3,6 +3,7 @@ CREATE TABLE parsed_products (
   product_id INT NOT NULL,
 	shop_id INT NOT NULL,
 	link VARCHAR ( 250 ) NULL DEFAULT NULL,
+	parsed_price INT DEFAULT NULL,
 	created_on DATE DEFAULT CURRENT_DATE,
 	FOREIGN KEY (product_id) REFERENCES products (id) ON DELETE CASCADE,
 	FOREIGN KEY (shop_id) REFERENCES shops (id) ON DELETE CASCADE

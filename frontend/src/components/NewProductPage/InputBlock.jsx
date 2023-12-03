@@ -1,6 +1,17 @@
-const InputBlock = ({ placeholder, type, value, setNewProduct, field }) => {
+const InputBlock = ({
+  placeholder,
+  type,
+  value,
+  setNewProduct,
+  field,
+  errors,
+}) => {
   return (
-    <div className="border border-black">
+    <div
+      className={`border border-black ${
+        errors && !errors[field] && 'shadow-[0_0px_4px_2px] shadow-red-500'
+      }`}
+    >
       <input
         type={type}
         name="title"

@@ -12,6 +12,7 @@ const SelectBlock = ({
   setIsOpen: setIsOpenModal,
   setDone,
   setChoosedElement,
+  errors,
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const { boxScroll, buttonScroll } = useScroll(isOpen);
@@ -33,7 +34,11 @@ const SelectBlock = ({
   }, [value]);
 
   return (
-    <div className="flex items-center border border-black relative">
+    <div
+      className={`flex items-center border border-black relative ${
+        errors && !errors[field] && 'shadow-[0_0px_4px_2px] shadow-red-500'
+      }`}
+    >
       <p
         className="focus:outline-none cursor-pointer bg-[#dfdfdf] placeholder:text-black placeholder:text-sm w-full pl-4"
         onClick={() => setIsOpen(!isOpen)}
