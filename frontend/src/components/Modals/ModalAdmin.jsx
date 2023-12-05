@@ -1,6 +1,8 @@
 import Modal from './Modal.jsx';
 import { LiaUserPlusSolid, LiaUserCogSolid } from 'react-icons/lia';
 import { useEffect, useState } from 'react';
+import createNewUser from '../../actions/createNewUser.js';
+import updateUser from '../../actions/updateUser.js';
 
 const ModalAdmin = ({ isOpen, setIsOpen, user, setUsers }) => {
   const [dataUsers, setDataUsers] = useState({
@@ -17,18 +19,47 @@ const ModalAdmin = ({ isOpen, setIsOpen, user, setUsers }) => {
     }
   }, [user]);
 
-  const createUser = () => {
-    console.log(dataUsers, 'create');
-    const req = { id: Math.random(), ...dataUsers };
-    if (true) {
+  const createUser = async () => {
+    const req = await createNewUser(dataUsers);
+
+    if (req.ok) {
+      const [res] = await req.json();
       setIsOpen(!isOpen);
-      setUsers((state) => [...state, req]);
+      setUsers((state) => [...state, res]);
+      setDataUsers({
+        nickname: '',
+        name: '',
+        surname: '',
+        email: '',
+        password: '',
+      });
+    } else {
+      console.log('Ошибка ' + req.status);
     }
   };
 
-  const changeUser = () => {
-    console.log(dataUsers, 'changeUser');
-    setIsOpen(!isOpen);
+  const changeUser = async () => {
+    const req = await updateUser(dataUsers);
+
+    if (req.ok) {
+      const [res] = await req.json();
+      setIsOpen(!isOpen);
+      setUsers((state) =>
+        state.map((item) => {
+          if (item.id == res.id) return res;
+          return item;
+        })
+      );
+      setDataUsers({
+        nickname: '',
+        name: '',
+        surname: '',
+        email: '',
+        password: '',
+      });
+    } else {
+      console.log('Ошибка ' + req.status);
+    }
   };
 
   return (

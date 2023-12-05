@@ -5,15 +5,35 @@ import ModalAdmin from './components/Modals/ModalAdmin.jsx';
 import { BiSortDown } from 'react-icons/bi';
 import { AiOutlineFieldNumber } from 'react-icons/ai';
 import { useEffect, useState } from 'react';
+import updateUser from './actions/updateUser.js';
 
 const AdminPanel = () => {
   const [users, setUsers] = useState(null);
   const [editAbleUser, setEditAbleUser] = useState(null);
-  const [isOpen, setIsOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(true);
 
   const setEditUser = (user) => {
     setEditAbleUser(user);
     setIsOpen(!isOpen);
+  };
+
+  const changeActiveStatus = async (data) => {
+    const status = [1, 0];
+    data.active_status = status[data.active_status];
+    const req = await updateUser(data);
+
+    if (req.ok) {
+      const [res] = await req.json();
+      console.log(res, 'status-changed');
+      setUsers((state) =>
+        state.map((item) => {
+          if (item.id == res.id) return res;
+          return item;
+        })
+      );
+    } else {
+      console.log('Ошибка ' + req.status);
+    }
   };
 
   useEffect(() => {
@@ -25,7 +45,7 @@ const AdminPanel = () => {
         name: 'Adfasdf',
         surname: 'Dbsfddfg',
         email: 'gmail@gmail.com',
-        active: Math.round(Math.random()),
+        active_status: Math.round(Math.random()),
       }));
     setUsers(data);
   }, []);
@@ -47,7 +67,12 @@ const AdminPanel = () => {
         <tbody>
           {users &&
             users.map((user) => (
-              <User key={user.id} user={user} setEditUser={setEditUser} />
+              <User
+                key={user.id}
+                user={user}
+                setEditUser={setEditUser}
+                changeActiveStatus={changeActiveStatus}
+              />
             ))}
         </tbody>
       </table>

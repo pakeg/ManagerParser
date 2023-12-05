@@ -2,7 +2,12 @@ import express from 'express';
 import helmet from 'helmet';
 import compression from 'compression';
 import cors from 'cors';
-import { createNewItemCategory, createNewProduct } from './actions.mjs';
+import {
+  createNewItemCategory,
+  createNewProduct,
+  createNewUser,
+  updateUserData,
+} from './actions.mjs';
 
 const app = express();
 const port = 3000;
@@ -32,13 +37,23 @@ app.use(helmet());
 
 app.post('/api/new-category', async function (req, res) {
   const newItem = await createNewItemCategory(req.body);
-  res.status(200).json(newItem);
+  res.status(201).json(newItem);
 });
 
 app.post('/api/new-product', async function (req, res) {
   const isNewProduct = await createNewProduct(req.body);
   if (isNewProduct) res.sendStatus(201);
   else res.sendStatus(500);
+});
+
+app.post('/api/new-user', async function (req, res) {
+  const user = await createNewUser(req.body);
+  res.status(201).json(user);
+});
+
+app.post('/api/update-user', async function (req, res) {
+  const updatedUser = await updateUserData(req.body);
+  res.status(201).json(updatedUser);
 });
 
 app.listen(port, () => {

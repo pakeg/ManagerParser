@@ -1,4 +1,5 @@
 import sql from './db.mjs';
+import bcrypt from 'bcryptjs';
 
 const createNewItemCategory = async function ({ choosedElement, title }) {
   const newItem = await sql`
@@ -52,7 +53,6 @@ const createNewProduct = async function ({
         href: uri.href,
       };
     });
-    console.log(urls, '--------urls----------');
 
     const shops = await sql`
       select
@@ -60,7 +60,7 @@ const createNewProduct = async function ({
       from shops
       where link in ${sql(urls.map((uri) => uri.link))}
     `;
-    console.log(shops, '--------shops----------');
+
     let newShop = [];
     let notFoundedShops = [];
     if (shops.length < urls.length) {
@@ -103,4 +103,45 @@ const createNewProduct = async function ({
   return projectId;
 };
 
-export { createNewItemCategory, createNewProduct };
+const createNewUser = async function ({
+  nickname,
+  name,
+  surname,
+  email,
+  password,
+}) {
+  const salt = bcrypt.genSaltSync(10);
+  password = bcrypt.hashSync(password, salt);
+
+  const newUser = await sql`
+    insert into users
+      (nickname, name, surname, email, password)
+    values
+      (${nickname}, ${name}, ${surname}, ${email}, ${password})
+    returning id, nickname, name, surname, email, active_status
+  `;
+  return newUser;
+};
+
+const updateUserData = async function (user) {
+  if (Object.hasOwn(user, 'password')) {
+    const salt = bcrypt.genSaltSync(10);
+    user.password = bcrypt.hashSync(user.password, salt);
+  }
+
+  const columns = Object.keys(user).filter((item) => item != 'id');
+  const updatedUser = await sql`
+  update users set ${sql(user, columns)}
+  where id = ${user.id}
+  returning id, nickname, name, surname, email, active_status
+`;
+
+  return updatedUser;
+};
+
+export {
+  createNewItemCategory,
+  createNewProduct,
+  createNewUser,
+  updateUserData,
+};

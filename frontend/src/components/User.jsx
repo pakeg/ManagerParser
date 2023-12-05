@@ -1,11 +1,7 @@
 import { TiEdit } from 'react-icons/ti';
 import { ImSwitch } from 'react-icons/im';
 
-const User = ({ user, setEditUser }) => {
-  const changeActiveStatus = (user) => {
-    console.log(user, 'status');
-  };
-
+const User = ({ user, setEditUser, changeActiveStatus }) => {
   return (
     <tr className="bg-[#dfdfdf]">
       <td>
@@ -20,9 +16,14 @@ const User = ({ user, setEditUser }) => {
             </div>
             <div
               className={`${
-                user.active ? 'bg-green-500' : 'bg-red-500'
+                +user.active_status ? 'bg-green-500' : 'bg-red-500'
               } text-white rounded-md`}
-              onClick={() => changeActiveStatus(user.id)}
+              onClick={() =>
+                changeActiveStatus({
+                  id: user.id,
+                  active_status: user.active_status,
+                })
+              }
             >
               <ImSwitch
                 size={11}
