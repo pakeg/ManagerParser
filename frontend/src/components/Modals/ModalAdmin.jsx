@@ -3,6 +3,8 @@ import { LiaUserPlusSolid, LiaUserCogSolid } from 'react-icons/lia';
 import { useEffect, useState } from 'react';
 import createNewUser from '../../actions/createNewUser.js';
 import updateUser from '../../actions/updateUser.js';
+import useErrors from '../../hooks/useErrors.jsx';
+import InputTrans from '../InputTrans.jsx';
 
 const ModalAdmin = ({ isOpen, setIsOpen, user, setUsers }) => {
   const [dataUsers, setDataUsers] = useState({
@@ -12,6 +14,7 @@ const ModalAdmin = ({ isOpen, setIsOpen, user, setUsers }) => {
     email: '',
     password: '',
   });
+  const { getError, cleanError, isErrors } = useErrors();
 
   useEffect(() => {
     if (user) {
@@ -20,21 +23,25 @@ const ModalAdmin = ({ isOpen, setIsOpen, user, setUsers }) => {
   }, [user]);
 
   const createUser = async () => {
-    const req = await createNewUser(dataUsers);
+    const disabled = isErrors(dataUsers);
+    if (disabled) {
+      cleanError();
+      const req = await createNewUser(dataUsers);
 
-    if (req.ok) {
-      const [res] = await req.json();
-      setIsOpen(!isOpen);
-      setUsers((state) => [...state, res]);
-      setDataUsers({
-        nickname: '',
-        name: '',
-        surname: '',
-        email: '',
-        password: '',
-      });
-    } else {
-      console.log('Ошибка ' + req.status);
+      if (req.ok) {
+        const [res] = await req.json();
+        setIsOpen(!isOpen);
+        setUsers((state) => [...state, res]);
+        setDataUsers({
+          nickname: '',
+          name: '',
+          surname: '',
+          email: '',
+          password: '',
+        });
+      } else {
+        console.log('Ошибка ' + req.status);
+      }
     }
   };
 
@@ -85,126 +92,46 @@ const ModalAdmin = ({ isOpen, setIsOpen, user, setUsers }) => {
               X
             </p>
           </div>
-          <div className="relative text-black px-8">
-            <input
-              id="nickname"
-              className="focus:outline-none border bg-white w-full py-2 pl-4 peer placeholder-transparent"
-              type="text"
-              name="nickname"
-              placeholder={dataUsers.nickname}
-              value={dataUsers.nickname}
-              onChange={(e) =>
-                setDataUsers((state) => ({
-                  ...state,
-                  nickname: e.target.value,
-                }))
-              }
-            />
-            <label
-              className="absolute text-[#e1e1e1] text-xs transition-all left-12 peer-placeholder-shown:text-base 
-                  peer-placeholder-shown:top-1/2 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:text-[#e6e6e6]
-                  peer-focus:text-xs peer-focus:text-[#e1e1e1] peer-focus:top-0 peer-focus:translate-y-0"
-              htmlFor="nickname"
-            >
-              Имя пользователя
-            </label>
-          </div>
-          <div className="relative text-black px-8">
-            <input
-              id="name"
-              className="focus:outline-none border bg-white w-full py-2 pl-4 peer placeholder-transparent"
-              type="text"
-              name="name"
-              placeholder={dataUsers.nickname}
-              value={dataUsers.name}
-              onChange={(e) =>
-                setDataUsers((state) => ({
-                  ...state,
-                  name: e.target.value,
-                }))
-              }
-            />
-            <label
-              className="absolute text-[#e1e1e1] text-xs transition-all left-12 peer-placeholder-shown:text-base 
-                  peer-placeholder-shown:top-1/2 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:text-[#e6e6e6]
-                  peer-focus:text-xs peer-focus:text-[#e1e1e1] peer-focus:top-0 peer-focus:translate-y-0"
-              htmlFor="name"
-            >
-              Имя
-            </label>
-          </div>
-          <div className="relative text-black px-8">
-            <input
-              id="surname"
-              className="focus:outline-none border bg-white w-full py-2 pl-4 peer placeholder-transparent"
-              type="text"
-              name="surname"
-              placeholder={dataUsers.nickname}
-              value={dataUsers.surname}
-              onChange={(e) =>
-                setDataUsers((state) => ({
-                  ...state,
-                  surname: e.target.value,
-                }))
-              }
-            />
-            <label
-              className="absolute text-[#e1e1e1] text-xs transition-all left-12 peer-placeholder-shown:text-base 
-                  peer-placeholder-shown:top-1/2 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:text-[#e6e6e6]
-                  peer-focus:text-xs peer-focus:text-[#e1e1e1] peer-focus:top-0 peer-focus:translate-y-0"
-              htmlFor="surname"
-            >
-              Фамилия
-            </label>
-          </div>
-          <div className="relative text-black px-8">
-            <input
-              id="email"
-              className="focus:outline-none border bg-white w-full py-2 pl-4 peer placeholder-transparent"
-              type="email"
-              name="email"
-              placeholder={dataUsers.nickname}
-              value={dataUsers.email}
-              onChange={(e) =>
-                setDataUsers((state) => ({
-                  ...state,
-                  email: e.target.value,
-                }))
-              }
-            />
-            <label
-              className="absolute text-[#e1e1e1] text-xs transition-all left-12 peer-placeholder-shown:text-base 
-                  peer-placeholder-shown:top-1/2 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:text-[#e6e6e6]
-                  peer-focus:text-xs peer-focus:text-[#e1e1e1] peer-focus:top-0 peer-focus:translate-y-0"
-              htmlFor="email"
-            >
-              Електронная почта
-            </label>
-          </div>
-          <div className="relative text-black px-8">
-            <input
-              id="password"
-              className="focus:outline-none border bg-white w-full py-2 pl-4 peer placeholder-transparent"
-              type="password"
-              name="password"
-              placeholder={dataUsers.nickname}
-              value={dataUsers.password}
-              onChange={(e) =>
-                setDataUsers((state) => ({
-                  ...state,
-                  password: e.target.value,
-                }))
-              }
-            />
-            <label
-              className="absolute text-[#e1e1e1] text-xs transition-all left-12 peer-placeholder-shown:text-base 
-                  peer-placeholder-shown:top-1/2 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:text-[#e6e6e6]
-                  peer-focus:text-xs peer-focus:text-[#e1e1e1] peer-focus:top-0 peer-focus:translate-y-0"
-              htmlFor="password"
-            >
-              Пароль
-            </label>
-          </div>
+          <InputTrans
+            label={'Имя пользователя'}
+            type={'text'}
+            name={'nickname'}
+            value={dataUsers.nickname}
+            setDataUsers={setDataUsers}
+            errors={getError()}
+          />
+          <InputTrans
+            label={'Имя'}
+            type={'text'}
+            name={'name'}
+            value={dataUsers.name}
+            setDataUsers={setDataUsers}
+            errors={getError()}
+          />
+          <InputTrans
+            label={'Фамилия'}
+            type={'text'}
+            name={'surname'}
+            value={dataUsers.surname}
+            setDataUsers={setDataUsers}
+            errors={getError()}
+          />
+          <InputTrans
+            label={'Електронная почта'}
+            type={'email'}
+            name={'email'}
+            value={dataUsers.email}
+            setDataUsers={setDataUsers}
+            errors={getError()}
+          />
+          <InputTrans
+            label={'Пароль'}
+            type={'password'}
+            name={'password'}
+            value={dataUsers.password}
+            setDataUsers={setDataUsers}
+            errors={getError()}
+          />
           {user ? (
             <div onClick={changeUser}>
               <button>Готово!</button>

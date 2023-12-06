@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import useErrors from './hooks/useErrors.jsx';
 import { MdOutlineDone } from 'react-icons/md';
 
 import SelectBlock from './components/NewProductPage/SelectBlock.jsx';
@@ -11,7 +12,7 @@ const NewProductPage = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [choosedElement, setChoosedElement] = useState(null);
   const [done, setDone] = useState(null);
-  const [errors, setErrors] = useState(null);
+  const { getError, cleanError, isErrors } = useErrors();
   const [newProduct, setNewProduct] = useState({
     title: '',
     categories: null,
@@ -24,16 +25,10 @@ const NewProductPage = () => {
   });
 
   const addNewProduct = async () => {
-    const tempErrors = {};
-    for (let item in newProduct) {
-      if (item == 'shopsUrl') continue;
+    const disabled = isErrors(newProduct);
 
-      const error = Boolean(newProduct[item]);
-      tempErrors[item] = error;
-    }
-    const disabled = Object.values(tempErrors).every((item) => Boolean(item));
     if (disabled) {
-      setErrors(null);
+      cleanError();
 
       const req = await createNewProduct(newProduct);
       if (req.ok) {
@@ -61,8 +56,6 @@ const NewProductPage = () => {
       } else {
         console.log('Ошибка ' + req.status);
       }
-    } else {
-      setErrors(tempErrors);
     }
   };
 
@@ -94,7 +87,7 @@ const NewProductPage = () => {
           value={newProduct.title}
           setNewProduct={setNewProduct}
           field="title"
-          errors={errors}
+          errors={getError()}
         />
         <SelectBlock
           items={data?.categories}
@@ -105,7 +98,7 @@ const NewProductPage = () => {
           setIsOpen={setIsOpen}
           setDone={setDone}
           setChoosedElement={setChoosedElement}
-          errors={errors}
+          errors={getError()}
         />
         <SelectBlock
           items={data?.manufactures}
@@ -116,7 +109,7 @@ const NewProductPage = () => {
           setIsOpen={setIsOpen}
           setDone={setDone}
           setChoosedElement={setChoosedElement}
-          errors={errors}
+          errors={getError()}
         />
         <SelectBlock
           items={data?.projects}
@@ -127,7 +120,7 @@ const NewProductPage = () => {
           setIsOpen={setIsOpen}
           setDone={setDone}
           setChoosedElement={setChoosedElement}
-          errors={errors}
+          errors={getError()}
         />
 
         <InputBlock
@@ -136,7 +129,7 @@ const NewProductPage = () => {
           value={newProduct.part_number}
           setNewProduct={setNewProduct}
           field="part_number"
-          errors={errors}
+          errors={getError()}
         />
 
         <InputBlock
@@ -145,7 +138,7 @@ const NewProductPage = () => {
           value={newProduct.purchase_price}
           setNewProduct={setNewProduct}
           field="purchase_price"
-          errors={errors}
+          errors={getError()}
         />
         <InputBlock
           placeholder="Базовая цена"
@@ -153,7 +146,7 @@ const NewProductPage = () => {
           value={newProduct.price}
           setNewProduct={setNewProduct}
           field="price"
-          errors={errors}
+          errors={getError()}
         />
 
         <div>
