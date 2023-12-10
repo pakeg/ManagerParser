@@ -9,6 +9,7 @@ import {
   actionCreateNewUser,
   loaderGetAllUsers,
 } from './actions/actionAdminPanel';
+import { loaderGetCategoriesItem } from './actions/actionsNewProductPage';
 
 const router = createBrowserRouter([
   {

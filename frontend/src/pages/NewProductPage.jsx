@@ -7,8 +7,10 @@ import InputBlock from './components/NewProductPage/InputBlock.jsx';
 import ModalNewProduct from './components/Modals/ModalNewProduct.jsx';
 import createNewProduct from './actions/createNewProduct.js';
 
+import { useLoaderData, useFetcher, useLocation } from 'react-router-dom';
+
 const NewProductPage = () => {
-  const [data, setData] = useState(null);
+  const [data, setData] = useState(useLoaderData());
   const [isOpen, setIsOpen] = useState(false);
   const [choosedElement, setChoosedElement] = useState(null);
   const [done, setDone] = useState(null);
@@ -58,22 +60,6 @@ const NewProductPage = () => {
       }
     }
   };
-
-  useEffect(() => {
-    const data = {
-      categories: Array(6)
-        .fill(0)
-        .map((x, i) => ({ id: Math.random(), title: 'categories-' + i })),
-      manufactures: Array(10)
-        .fill(0)
-        .map((x, i) => ({ id: Math.random(), title: 'manufactures-' + i })),
-      projects: Array(13)
-        .fill(0)
-        .map((x, i) => ({ id: Math.random(), title: 'projects-' + i })),
-    };
-
-    setData(data);
-  }, []);
 
   return (
     <div>

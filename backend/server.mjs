@@ -5,6 +5,7 @@ import cors from 'cors';
 import {
   createNewItemCategory,
   createNewProduct,
+  getCategoriesProduct,
   createNewUser,
   updateUserData,
   getAllUser,
@@ -36,6 +37,7 @@ const corsOptions = {
 app.use(cors(corsOptions));
 app.use(helmet());
 
+// new product page
 app.post('/api/new-category', async function (req, res) {
   const newItem = await createNewItemCategory(req.body);
   res.status(201).json(newItem);
@@ -47,6 +49,13 @@ app.post('/api/new-product', async function (req, res) {
   else res.sendStatus(500);
 });
 
+app.post('/api/getcategories-product', async function (req, res) {
+  const items = await getCategoriesProduct();
+  if (items) res.status(201).json(items);
+  else res.sendStatus(500);
+});
+//-----------------
+// AdminPanel
 app.post('/api/create-new-user', async function (req, res) {
   const user = await createNewUser(req.body);
   res.status(201).json(user);
@@ -61,6 +70,7 @@ app.post('/api/getall-user', async function (req, res) {
   const users = await getAllUser();
   res.status(201).json(users);
 });
+//---------------------
 
 app.listen(port, () => {
   console.log(`App listening on port ${port}`);

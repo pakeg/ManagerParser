@@ -103,6 +103,24 @@ const createNewProduct = async function ({
   return projectId;
 };
 
+const getCategoriesProduct = async function () {
+  const data = await sql`
+    select  id, title, 'categories' as source from categories
+        union all
+    select  id, title, 'manufactures' as source from manufactures
+        union all
+    select  id, title, 'projects' as source from projects
+    `;
+
+  const items = data.reduce((c, n) => {
+    if (!Object.hasOwn(c, n.source)) c[n.source] = [];
+    c[n.source].push({ id: n.id, title: n.title });
+    return c;
+  }, {});
+
+  return items;
+};
+
 const createNewUser = async function ({
   nickname,
   name,
@@ -139,9 +157,18 @@ const updateUserData = async function (user) {
   return updatedUser;
 };
 
+const getAllUser = async function () {
+  const users =
+    await sql`select id, nickname, name, surname, email, active_status from users order by id`;
+
+  return users;
+};
+
 export {
   createNewItemCategory,
   createNewProduct,
+  getCategoriesProduct,
   createNewUser,
   updateUserData,
+  getAllUser,
 };
