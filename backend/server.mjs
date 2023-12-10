@@ -7,6 +7,7 @@ import {
   createNewProduct,
   createNewUser,
   updateUserData,
+  getAllUser,
 } from './actions.mjs';
 
 const app = express();
@@ -46,7 +47,7 @@ app.post('/api/new-product', async function (req, res) {
   else res.sendStatus(500);
 });
 
-app.post('/api/new-user', async function (req, res) {
+app.post('/api/create-new-user', async function (req, res) {
   const user = await createNewUser(req.body);
   res.status(201).json(user);
 });
@@ -54,6 +55,11 @@ app.post('/api/new-user', async function (req, res) {
 app.post('/api/update-user', async function (req, res) {
   const updatedUser = await updateUserData(req.body);
   res.status(201).json(updatedUser);
+});
+
+app.post('/api/getall-user', async function (req, res) {
+  const users = await getAllUser();
+  res.status(201).json(users);
 });
 
 app.listen(port, () => {
