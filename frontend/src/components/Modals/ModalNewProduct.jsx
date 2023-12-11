@@ -1,8 +1,8 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { GoAlertFill } from 'react-icons/go';
 import Modal from './Modal.jsx';
 
-import { GoAlertFill } from 'react-icons/go';
-import createNewItemCategory from '../../actions/createNewItemCategory.js';
+import { useFetcher, useLocation } from 'react-router-dom';
 
 const fields = {
   categories: 'категории',
@@ -18,20 +18,31 @@ const ModalNewProduct = ({
   setData,
 }) => {
   const [title, setTitle] = useState('');
+  const fetcher = useFetcher();
+  const location = useLocation();
 
-  const addChooseElement = async () => {
-    const req = await createNewItemCategory({ choosedElement, title });
+  useEffect(() => {
+    if (typeof fetcher.data !== 'undefined' && fetcher.data !== null) {
+      const category = fetcher.data;
 
-    if (req.ok) {
-      const res = await req.json();
-      setIsOpen(!isOpen);
       setTitle('');
+      setIsOpen(!isOpen);
       setData((state) => ({
         ...state,
-        [choosedElement]: [...state[choosedElement], ...res],
+        [choosedElement]: [...state[choosedElement], category],
       }));
-    } else {
-      console.log('Ошибка ' + req.status);
+    }
+  }, [fetcher.data]);
+
+  const addChooseElement = () => {
+    if (title.length >= 0) {
+      fetcher.submit(
+        { choosedElement, title },
+        {
+          method: 'post',
+          action: location.pathname + '/new-category',
+        }
+      );
     }
   };
 
@@ -74,7 +85,7 @@ const ModalNewProduct = ({
             </>
           ) : (
             <>
-              <p className="text-center">{`Товар "${done.title}" добавлен в проэкт "${done.projects}"`}</p>
+              <p className="text-center">{`Товар "${done.title}" добавлен в проэкт "${done.projects.title}"`}</p>
               <div className={`${!done.is ? 'text-center' : 'text-end'}`}>
                 <button
                   className="px-10 mt-5 bg-[#cccccc] rounded shadow-xl"

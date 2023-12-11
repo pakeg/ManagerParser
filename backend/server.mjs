@@ -40,13 +40,14 @@ app.use(helmet());
 // new product page
 app.post('/api/new-category', async function (req, res) {
   const newItem = await createNewItemCategory(req.body);
-  res.status(201).json(newItem);
+  if (!newItem?.error) res.status(201).json(newItem);
+  else res.status(400).send(newItem.error);
 });
 
 app.post('/api/new-product', async function (req, res) {
   const isNewProduct = await createNewProduct(req.body);
-  if (isNewProduct) res.sendStatus(201);
-  else res.sendStatus(500);
+  if (!isNewProduct?.error) res.sendStatus(201);
+  else res.status(400).send(isNewProduct.error);
 });
 
 app.post('/api/getcategories-product', async function (req, res) {

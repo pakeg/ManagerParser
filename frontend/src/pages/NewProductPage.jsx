@@ -5,12 +5,13 @@ import { MdOutlineDone } from 'react-icons/md';
 import SelectBlock from './components/NewProductPage/SelectBlock.jsx';
 import InputBlock from './components/NewProductPage/InputBlock.jsx';
 import ModalNewProduct from './components/Modals/ModalNewProduct.jsx';
-import createNewProduct from './actions/createNewProduct.js';
 
 import { useLoaderData, useFetcher, useLocation } from 'react-router-dom';
 
 const NewProductPage = () => {
   const [data, setData] = useState(useLoaderData());
+  const fetcher = useFetcher();
+  const location = useLocation();
   const [isOpen, setIsOpen] = useState(false);
   const [choosedElement, setChoosedElement] = useState(null);
   const [done, setDone] = useState(null);
@@ -26,38 +27,44 @@ const NewProductPage = () => {
     shopsUrl: '',
   });
 
-  const addNewProduct = async () => {
+  useEffect(() => {
+    if (typeof fetcher.data !== 'undefined' && fetcher.data !== null) {
+      const isNew = fetcher.data;
+
+      // set flag after adding new product for ModalNewProduct
+      setDone({
+        is: isNew,
+        title: newProduct.title,
+        projects: data.projects.find(
+          (project) => project.id == newProduct.projects
+        ),
+      });
+      //open modal
+      setIsOpen(!isOpen);
+      //clear data of new product
+      setNewProduct({
+        title: '',
+        categories: null,
+        manufactures: null,
+        projects: null,
+        part_number: '',
+        purchase_price: 0,
+        price: 0,
+        shopsUrl: '',
+      });
+    }
+  }, [fetcher.data]);
+
+  const addNewProduct = () => {
     const disabled = isErrors(newProduct);
 
     if (disabled) {
       cleanError();
 
-      const req = await createNewProduct(newProduct);
-      if (req.ok) {
-        // set flag after adding new product for ModalNewProduct
-        setDone({
-          is: req.ok,
-          title: newProduct.title,
-          projects: data.projects.find(
-            (project) => project.id == newProduct.projects
-          ),
-        });
-        //open modal
-        setIsOpen(!isOpen);
-        //clear data of new product
-        setNewProduct({
-          title: '',
-          categories: null,
-          manufactures: null,
-          projects: null,
-          part_number: '',
-          purchase_price: 0,
-          price: 0,
-          shopsUrl: '',
-        });
-      } else {
-        console.log('Ошибка ' + req.status);
-      }
+      fetcher.submit(newProduct, {
+        method: 'post',
+        action: location.pathname,
+      });
     }
   };
 

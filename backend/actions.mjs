@@ -2,14 +2,18 @@ import sql from './db.mjs';
 import bcrypt from 'bcryptjs';
 
 const createNewItemCategory = async function ({ choosedElement, title }) {
-  const newItem = await sql`
+  try {
+    const newItem = await sql`
     insert into ${sql(choosedElement)}
       (title)
     values
       (${title})
     returning id, title
   `;
-  return newItem;
+    return newItem;
+  } catch (e) {
+    return { error: e.detail };
+  }
 };
 
 const createNewProduct = async function ({
@@ -22,7 +26,8 @@ const createNewProduct = async function ({
   price,
   shopsUrl,
 }) {
-  const [{ id: productId }] = await sql`
+  try {
+    const [{ id: productId }] = await sql`
     insert into products
       ( category_id,
         manufacture_id,
@@ -35,7 +40,7 @@ const createNewProduct = async function ({
     returning id
   `;
 
-  const [{ id: projectId }] = await sql`
+    const [{ id: projectId }] = await sql`
     insert into products_projects
       ( product_id,
         project_id)
@@ -44,63 +49,67 @@ const createNewProduct = async function ({
     returning id
   `;
 
-  if (shopsUrl.length > 0) {
-    const urls = shopsUrl.split(',').map((url) => {
-      const uri = new URL(url);
-      return {
-        link: uri.origin,
-        title: uri.hostname,
-        href: uri.href,
-      };
-    });
+    if (shopsUrl.length > 0) {
+      const urls = shopsUrl.split(',').map((url) => {
+        const uri = new URL(url);
+        return {
+          link: uri.origin,
+          title: uri.hostname,
+          href: uri.href,
+        };
+      });
 
-    const shops = await sql`
+      const shops = await sql`
       select
         id, link
       from shops
       where link in ${sql(urls.map((uri) => uri.link))}
     `;
 
-    let newShop = [];
-    let notFoundedShops = [];
-    if (shops.length < urls.length) {
-      notFoundedShops = urls
-        .filter((url) => {
-          return shops.find((shop) => shop.link == url.link) ? false : true;
-        })
-        .sort((a, b) => {
-          if (a.title > b.title) return 1;
-          else if (a.title < b.title) return -1;
-          return 0;
-        })
-        .reduce((c, n) => {
-          if (!c.length) return [n];
-          if (c[c.length - 1].link == n.link) return c;
-          return [...c, n];
-        }, []);
-    }
+      let newShop = [];
+      let notFoundedShops = [];
+      if (shops.length < urls.length) {
+        notFoundedShops = urls
+          .filter((url) => {
+            return shops.find((shop) => shop.link == url.link) ? false : true;
+          })
+          .sort((a, b) => {
+            if (a.title > b.title) return 1;
+            else if (a.title < b.title) return -1;
+            return 0;
+          })
+          .reduce((c, n) => {
+            if (!c.length) return [n];
+            if (c[c.length - 1].link == n.link) return c;
+            return [...c, n];
+          }, []);
+      }
 
-    if (notFoundedShops.length > 0) {
-      newShop = await sql`insert into shops ${sql(
-        notFoundedShops,
-        'title',
+      if (notFoundedShops.length > 0) {
+        newShop = await sql`insert into shops ${sql(
+          notFoundedShops,
+          'title',
+          'link'
+        )} returning id, link`;
+      }
+
+      const shopsList = [...shops, ...newShop];
+      const final = urls.map((uri) => {
+        const shop = shopsList.find((shop) => shop.link == uri.link);
+        return { product_id: productId, shop_id: shop.id, link: uri.href };
+      });
+
+      await sql`insert into parsed_products ${sql(
+        final,
+        'product_id',
+        'shop_id',
         'link'
-      )} returning id, link`;
+      )}`;
     }
-
-    const final = urls.map((uri) => {
-      const shop = [...shops, ...newShop].find((shop) => shop.link == uri.link);
-      return { product_id: productId, shop_id: shop.id, link: uri.href };
-    });
-
-    await sql`insert into parsed_products ${sql(
-      final,
-      'product_id',
-      'shop_id',
-      'link'
-    )}`;
+    return projectId;
+  } catch (e) {
+    return { error: e.detail };
   }
-  return projectId;
 };
 
 const getCategoriesProduct = async function () {
