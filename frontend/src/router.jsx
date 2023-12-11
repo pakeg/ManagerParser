@@ -9,7 +9,11 @@ import {
   actionCreateNewUser,
   loaderGetAllUsers,
 } from './actions/actionAdminPanel';
-import { loaderGetCategoriesItem } from './actions/actionsNewProductPage';
+import {
+  loaderGetCategoriesItem,
+  actionCreateNewItemCategory,
+  actionCreateNewProduct,
+} from './actions/actionsNewProductPage';
 
 const router = createBrowserRouter([
   {
@@ -54,13 +58,18 @@ const router = createBrowserRouter([
             },
           },
           {
-            path: 'add',
+            path: 'new-product',
+            loader: loaderGetCategoriesItem,
+            action: actionCreateNewProduct,
             async lazy() {
               let { NewProductPage } = await import('./pages/NewProductPage');
               return {
                 Component: NewProductPage,
               };
             },
+            children: [
+              { path: 'new-category', action: actionCreateNewItemCategory },
+            ],
           },
           {
             path: 'comments',
