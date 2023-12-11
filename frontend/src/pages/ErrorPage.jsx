@@ -6,7 +6,9 @@ export default function ErrorPage() {
 
   return (
     <div className="flex flex-col items-center h-screen justify-center">
-      <h1 className="mb-4 text-6xl font-semibold text-red-500">Oops! 404</h1>
+      <h1 className="mb-4 text-6xl font-semibold text-red-500">
+        Oops! {error.status}
+      </h1>
       <p className="mb-4 text-gray-600">
         Sorry, an unexpected error has occurred.
       </p>
