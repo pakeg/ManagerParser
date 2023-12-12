@@ -1,10 +1,10 @@
 import { useEffect, useState } from 'react';
-import useErrors from './hooks/useErrors.jsx';
+import useErrors from '../hooks/useErrors.jsx';
 import { MdOutlineDone } from 'react-icons/md';
 
-import SelectBlock from './components/NewProductPage/SelectBlock.jsx';
-import InputBlock from './components/NewProductPage/InputBlock.jsx';
-import ModalNewProduct from './components/Modals/ModalNewProduct.jsx';
+import SelectBlock from '../components/NewProductPage/SelectBlock.jsx';
+import InputBlock from '../components/NewProductPage/InputBlock.jsx';
+import ModalNewProduct from '../components/Modals/ModalNewProduct.jsx';
 
 import { useLoaderData, useFetcher, useLocation } from 'react-router-dom';
 

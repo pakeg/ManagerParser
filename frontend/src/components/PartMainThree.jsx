@@ -1,7 +1,7 @@
 import { BsSortNumericDown } from 'react-icons/bs';
 
-import ProductShopAmountFounded from './ProductShopAmountFounded.jsx';
-import MenuItem from './MenuItem.jsx';
+import ProductShopAmountFounded from './Product/ProductShopAmountFounded';
+import MenuItem from './Menu/MenuItem.jsx';
 
 const PartMainThree = ({ products }) => {
   return (

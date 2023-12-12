@@ -2,8 +2,8 @@ import { MdOutlineDone, MdKeyboardArrowDown } from 'react-icons/md';
 import { BiSortDown, BiSearchAlt2 } from 'react-icons/bi';
 import { BsSortNumericDown } from 'react-icons/bs';
 
-import Product from './Product.jsx';
-import MenuItem from './MenuItem.jsx';
+import Product from './Product/Product.jsx';
+import MenuItem from './Menu/MenuItem.jsx';
 import { useCallback, useRef } from 'react';
 
 const PartMainOne = ({ products }) => {

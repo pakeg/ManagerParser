@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { formatSize } from './utils/utilsFun';
+import { formatSize } from '../utils/utilsFun';
 
 import { PiDownloadSimpleBold } from 'react-icons/pi';
 

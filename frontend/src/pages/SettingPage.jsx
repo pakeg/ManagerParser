@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
 import { LuCross } from 'react-icons/lu';
 
-import useScroll from './hooks/useScroll';
-import ModalNewShop from './components/Modals/ModalNewShop.jsx';
+import useScroll from '../hooks/useScroll';
+import ModalNewShop from '../components/Modals/ModalNewShop.jsx';
 
 const SettingPage = () => {
   const [shops, setShops] = useState(null);

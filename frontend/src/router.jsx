@@ -14,6 +14,7 @@ import {
   actionCreateNewItemCategory,
   actionCreateNewProduct,
 } from './actions/actionsNewProductPage';
+import { actionSignIn } from './actions/actionsAuthPage';
 
 const router = createBrowserRouter([
   {
@@ -104,6 +105,7 @@ const router = createBrowserRouter([
   },
   {
     path: '/authorization',
+    action: actionSignIn,
     async lazy() {
       let { AuthPage } = await import('./pages/AuthPage');
       return {

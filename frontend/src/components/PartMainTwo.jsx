@@ -1,8 +1,8 @@
 import { useCallback, useRef, useState } from 'react';
 import { MdOutlineHistory } from 'react-icons/md';
 
-import ProductShop from './ProductShop.jsx';
-import MenuItemShop from './MenuItemShop.jsx';
+import ProductShop from './Product/ProductShop.jsx';
+import MenuItemShop from './Menu/MenuItemShop.jsx';
 
 const PartMainTwo = ({ uniqueStores, storeTableRows, boxScrollHor }) => {
   const commentPopUp = useRef(null);

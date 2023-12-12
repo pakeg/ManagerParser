@@ -3,7 +3,7 @@ import { BiRefresh } from 'react-icons/bi';
 import { FaArrowRightFromBracket } from 'react-icons/fa6';
 import { TbMessageCircle2Filled } from 'react-icons/tb';
 
-import { formatDate, percentageDifference } from '../utils/utilsFun';
+import { formatDate, percentageDifference } from '../../utils/utilsFun';
 
 const ProductShopCellFull = ({
   price,

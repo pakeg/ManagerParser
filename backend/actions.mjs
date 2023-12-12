@@ -1,6 +1,25 @@
 import sql from './db.mjs';
 import bcrypt from 'bcryptjs';
 
+const authorize = async function ({ nickname, password }) {
+  try {
+    const [user] = await sql`select * from users where nickname = ${nickname}`;
+    if (typeof user === 'undefined') {
+      return { redirect: false };
+    }
+
+    const redirect = bcrypt.compareSync(password, user.password.trim());
+    if (redirect) {
+      const salt = bcrypt.genSaltSync(10);
+      const hash = bcrypt.hashSync(user.nickname + user.email, salt);
+      return { redirect, cookie: hash };
+    }
+    return { redirect };
+  } catch (e) {
+    return { error: e.detail };
+  }
+};
+
 const createNewItemCategory = async function ({ choosedElement, title }) {
   try {
     const newItem = await sql`
@@ -174,6 +193,7 @@ const getAllUser = async function () {
 };
 
 export {
+  authorize,
   createNewItemCategory,
   createNewProduct,
   getCategoriesProduct,

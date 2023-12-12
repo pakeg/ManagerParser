@@ -1,13 +1,13 @@
-import PartMainOne from './components/PartMainOne.jsx';
-import PartMainTwo from './components/PartMainTwo.jsx';
-import PartMainThree from './components/PartMainThree.jsx';
-import ModalDelete from './components/Modals/ModalDelete.jsx';
-import ModalAddShop from './components/Modals/ModalAddShop.jsx';
-import ModalComments from './components/Modals/ModalComments.jsx';
-
 import { useEffect, useState } from 'react';
-import useScroll from './hooks/useScroll.jsx';
-import useScrollHorizontal from './hooks/useScrollHorizontal';
+import PartMainOne from '../components/PartMainOne.jsx';
+import PartMainTwo from '../components/PartMainTwo.jsx';
+import PartMainThree from '../components/PartMainThree.jsx';
+import ModalDelete from '../components/Modals/ModalDelete.jsx';
+import ModalAddShop from '../components/Modals/ModalAddShop.jsx';
+import ModalComments from '../components/Modals/ModalComments.jsx';
+
+import useScroll from '../hooks/useScroll.jsx';
+import useScrollHorizontal from '../hooks/useScrollHorizontal';
 
 const Home = () => {
   const { isScroll, boxScroll, buttonScroll } = useScroll(true);

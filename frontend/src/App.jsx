@@ -5,7 +5,7 @@ import Button from './components/Button';
 import Aside from './components/AsideBar/Aside';
 
 function App() {
-  const jwt = false;
+  const jwt = true;
 
   if (!jwt) return <Navigate to="/authorization" replace={true} />;
 
@@ -26,7 +26,6 @@ function App() {
         </div>
         <div className="flex space-x-4">
           <Button text="Добавить товар" icon={AiFillPlusCircle} />
-          <Button text="Задать цену" />
         </div>
       </div>
 
