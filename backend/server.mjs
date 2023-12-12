@@ -38,8 +38,8 @@ const whitelist = [
 //     }
 //   },
 // };
-app.use(cors());
-app.use(helmet());
+// app.use(cors());
+// app.use(helmet());
 
 app.use(function (req, res, next) {
   console.log('Time: %d', Date.now());
