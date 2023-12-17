@@ -1,7 +1,10 @@
+// if not exist CREATE TYPE ACTIVE_STATUS AS ENUM ('0', '1');
+
 CREATE TABLE shops (
 	id serial PRIMARY KEY,
   title VARCHAR ( 100 ) UNIQUE NOT NULL,
 	link VARCHAR ( 250 ) UNIQUE NOT NULL,
+	active_status ACTIVE_STATUS DEFAULT '1',
 	img_src VARCHAR ( 250 ) DEFAULT NULL,
 	created_on DATE NOT NULL DEFAULT CURRENT_DATE
 );
