@@ -9,6 +9,7 @@ export const actionCreateNewUser = async function ({ request }) {
       Accept: 'application/json',
       'Content-Type': 'application/json;charset=utf-8',
     },
+    credentials: 'include',
     body: JSON.stringify(data),
   });
 
@@ -40,6 +41,7 @@ export const actionUpdateUser = async ({ request }) => {
       Accept: 'application/json',
       'Content-Type': 'application/json;charset=utf-8',
     },
+    credentials: 'include',
     body: JSON.stringify(data),
   });
   if (!req.ok) {
@@ -61,6 +63,7 @@ export const loaderGetAllUsers = async ({ request }) => {
     headers: {
       Accept: 'application/json',
     },
+    credentials: 'include',
   });
 
   if (!req.ok) {

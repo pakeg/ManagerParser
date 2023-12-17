@@ -8,6 +8,7 @@ export const loaderGetCategoriesItem = async ({ request }) => {
       headers: {
         Accept: 'application/json',
       },
+      credentials: 'include',
     }
   );
 
@@ -33,6 +34,7 @@ export const actionCreateNewItemCategory = async function ({ request }) {
       Accept: 'application/json',
       'Content-Type': 'application/json;charset=utf-8',
     },
+    credentials: 'include',
     body: JSON.stringify(data),
   });
 
@@ -59,6 +61,7 @@ export const actionCreateNewProduct = async function ({ request }) {
       Accept: 'application/json',
       'Content-Type': 'application/json;charset=utf-8',
     },
+    credentials: 'include',
     body: JSON.stringify(data),
   });
 

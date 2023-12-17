@@ -1,24 +1,18 @@
-import { useState, useEffect } from 'react';
+import { useRef, useState } from 'react';
 import { FaUserCircle } from 'react-icons/fa';
 import { IoIosLock } from 'react-icons/io';
 
-import useErrors from '../hooks/useErrors.jsx';
-import { useFetcher, useLocation } from 'react-router-dom';
+import useErrors from './hooks/useErrors.jsx';
+import { Navigate, useFetcher, useLocation } from 'react-router-dom';
 
 const AuthPage = () => {
   const [nickname, setNickname] = useState('');
   const [password, setPassword] = useState('');
   const [remember, setRemember] = useState(false);
+  const session = useRef(sessionStorage.getItem('authorized'));
   const fetcher = useFetcher();
   const location = useLocation();
   const { getError, cleanError, isErrors } = useErrors();
-
-  useEffect(() => {
-    if (typeof fetcher.data !== 'undefined' && fetcher.data !== null) {
-      const redirect = fetcher.data;
-      console.log(redirect, '---------redirect----------');
-    }
-  }, [fetcher.data]);
 
   const signIn = () => {
     const disabled = isErrors({ nickname, password });
@@ -35,6 +29,7 @@ const AuthPage = () => {
     }
   };
 
+  if (session.current !== null) return <Navigate to="/" replace={true} />;
   return (
     <div>
       <div className="flex justify-end items-center bg-[url('assets/auth.jpg')] h-screen w-screen bg-cover">

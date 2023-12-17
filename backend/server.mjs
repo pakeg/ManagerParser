@@ -27,41 +27,63 @@ app.use(
 );
 const whitelist = [
   `https://cmh7wy-${5173}.csb.app`,
+  `https://cmh7wy-${5173}.csb.app/`,
   `https://cmh7wy-${port}.csb.app`,
+  `https://cmh7wy-${port}.csb.app/`,
 ];
-// const corsOptions = {
-//   origin: (origin, cb) => {
-//     if (whitelist.indexOf(origin) > -1) {
-//       cb(null, true);
-//     } else {
-//       cb(new Error(`Origin not allowed: ${origin}`));
-//     }
-//   },
-// };
-// app.use(cors());
-// app.use(helmet());
+const corsOptions = {
+  origin: (origin, cb) => {
+    if (whitelist.indexOf(origin) > -1 || !origin) {
+      cb(null, true);
+    } else {
+      cb(new Error('Запрещено CORS'));
+    }
+  },
+  credentials: true,
+  methods: ['OPTIONS'],
+};
+app.use(cors(corsOptions));
+app.use(helmet());
 
 app.use(function (req, res, next) {
-  console.log('Time: %d', Date.now());
-  console.log(req.cookies, 'req.cookies.authorization');
-  console.log(res.cookies, 'res.cookies.authorization');
-  next();
+  if (
+    typeof req.cookies.authorized === 'undefined' &&
+    req.path != '/api/authorization'
+  ) {
+    res.status(401).json({
+      path: '/authorization',
+      msg: 'Not allowed',
+      statusText: 'Unauthorized',
+    });
+  } else next();
 });
 
 // authorization
+app.get('/api/authorization', async function (req, res) {
+  if (typeof req.cookies.authorized !== 'undefined') {
+    res.status(200).json({ authorized: req.cookies.authorized });
+  } else res.status(200).json({ authorized: false });
+});
+
 app.post('/api/authorization', async function (req, res) {
   const user = await authorize(req.body);
   if (!user?.error) {
     if (user.redirect) {
       const options = {
+        secure: true,
+        httpOnly: false,
         sameSite: 'None',
-        expires: +req.body.remember ? new Date(Date.now() + 360000) : 0,
-        maxAge: 360000, // 60sec
+        expires: +req.body.remember ? new Date(Date.now() + 60000) : 0,
       };
-      res.cookie('authorization', user.cookie, options);
-    }
-    res.status(201).send({ redirect: user.redirect });
-  } else res.status(400).send(user.error);
+      res.cookie('authorized', user.cookie, options);
+      res.status(201).json({ authorized: user.cookie });
+    } else
+      res.status(400).json({
+        path: '/authorization',
+        msg: 'Authorization failed',
+        statusText: 'Credentials wrong',
+      });
+  } else res.status(500).send(user.error);
 });
 
 //------------

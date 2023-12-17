@@ -16,7 +16,7 @@ const authorize = async function ({ nickname, password }) {
     }
     return { redirect };
   } catch (e) {
-    return { error: e.detail };
+    return { error: e?.detail ?? 'Something went wrong. Please, try later' };
   }
 };
 
