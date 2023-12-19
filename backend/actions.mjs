@@ -192,6 +192,85 @@ const getAllUser = async function () {
   return users;
 };
 
+const getAllProductsInformation = async function () {
+  try {
+    const shops = await sql`select id, title, active_status from shops`;
+    const products = await sql`select
+    products.id,
+    categories.title as category,
+    manufactures.title as manufacture,
+    products.title,
+    part_number,
+    purchase,
+    price,
+    shops.title as shop,
+    parsed_price,
+    parsed_products.created_on as date
+  from
+    products
+    left join categories on (categories.id = category_id)
+    left join manufactures on (manufactures.id = manufacture_id)
+    left join parsed_products on (parsed_products.product_id = products.id)
+    left join shops on (shops.id = shop_id and shops.active_status != '0')
+    order by id`;
+    const groupProductsById = products.reduce((c, n) => {
+      if (!Object.hasOwn(c, n.id)) c[n.id] = { products: [] };
+      c[n.id].products.push(n);
+      return c;
+    }, {});
+
+    const AddInfoProduct = await sql`select
+    product_id,
+    count(product_id),
+    min(parsed_price),
+    max(parsed_price)
+  from
+    parsed_products
+    left join products on (parsed_products.product_id = products.id)
+  where product_id in ${sql(Object.keys(groupProductsById))}
+  group by
+    product_id`;
+    AddInfoProduct.forEach((info) => {
+      groupProductsById[info.product_id].info = {
+        count: info.count,
+        min: info.min,
+        max: info.max,
+      };
+    });
+
+    const storeTableRows = Object.keys(groupProductsById).map((id) => {
+      const row = [];
+      shops.forEach((shop) => {
+        if (shop.active_status != '0') {
+          const finded = groupProductsById[id].products.find(
+            (prod) => prod.shop === shop.title
+          );
+          row.push(
+            finded
+              ? {
+                  shop: finded.shop,
+                  price: finded.price,
+                  parsed_price: finded.parsed_price,
+                  date: finded.date,
+                }
+              : null
+          );
+        }
+      });
+
+      return row;
+    });
+
+    const resultedProducts = Object.entries(groupProductsById).map(
+      ([_, value]) => ({ ...value.products[0], ...value.info })
+    );
+
+    return { products: resultedProducts, shops, storeTableRows };
+  } catch (e) {
+    return { error: e?.detail ?? 'Something went wrong. Please, try later' };
+  }
+};
+
 export {
   authorize,
   createNewItemCategory,
@@ -200,4 +279,5 @@ export {
   createNewUser,
   updateUserData,
   getAllUser,
+  getAllProductsInformation,
 };

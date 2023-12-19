@@ -26,11 +26,11 @@ const Product = ({ product, checkMainInput }) => {
     <tr className="bg-[#dfdfdf]">
       <td>
         <label
-          htmlFor={`checkbox${product.code}`}
+          htmlFor={`checkbox${product.id}`}
           className="block relative w-8 h-8 cursor-pointer"
         >
           <input
-            id={`checkbox${product.code}`}
+            id={`checkbox${product.id}`}
             className="opacity-0 select-none peer"
             type="checkbox"
             value={product.id}
@@ -48,10 +48,10 @@ const Product = ({ product, checkMainInput }) => {
         <span>{product.category}</span>
       </td>
       <td>
-        <span>{product.manufactory}</span>
+        <span>{product.manufacture}</span>
       </td>
       <td>
-        <span>{product.code}</span>
+        <span>{product.part_number}</span>
       </td>
       <td>
         <span>{product.title}</span>

@@ -12,6 +12,7 @@ import {
   createNewUser,
   updateUserData,
   getAllUser,
+  getAllProductsInformation,
 } from './actions.mjs';
 
 const app = express();
@@ -30,6 +31,8 @@ const whitelist = [
   `https://cmh7wy-${5173}.csb.app/`,
   `https://cmh7wy-${port}.csb.app`,
   `https://cmh7wy-${port}.csb.app/`,
+  'https://codesandbox.io/',
+  'https://codesandbox.io',
 ];
 const corsOptions = {
   origin: (origin, cb) => {
@@ -120,6 +123,14 @@ app.post('/api/update-user', async function (req, res) {
 app.post('/api/getall-user', async function (req, res) {
   const users = await getAllUser();
   res.status(201).json(users);
+});
+//---------------------
+//------main page-----------
+app.post('/api/get-all-information', async function (req, res) {
+  const data = await getAllProductsInformation();
+  if (!data?.error) {
+    res.status(201).json(data);
+  } else res.status(500).send(data.error);
 });
 //---------------------
 

@@ -8,6 +8,7 @@ import ModalComments from '../components/Modals/ModalComments.jsx';
 
 import useScroll from '../hooks/useScroll.jsx';
 import useScrollHorizontal from '../hooks/useScrollHorizontal';
+import { useLoaderData, useFetcher, useLocation } from 'react-router-dom';
 
 const Home = () => {
   const { isScroll, boxScroll, buttonScroll } = useScroll(true);
@@ -16,146 +17,7 @@ const Home = () => {
     boxScroll: boxScrollHor,
     buttonScroll: buttonScrollHor,
   } = useScrollHorizontal();
-
-  const [products, setProducts] = useState({
-    products: [],
-    uniqueStores: [],
-    storeTableRows: [],
-  });
-
-  useEffect(() => {
-    const data = {
-      products: [
-        {
-          id: 0,
-          category: 'Высшая',
-          manufactory: 'ГуньЦи',
-          code: 1234315,
-          title: 'Шарики',
-          purchase: 750,
-          price: 1200,
-          amount: 124,
-          min: 3,
-          max: 43,
-        },
-        {
-          id: 1,
-          category: 'Высшая1',
-          manufactory: 'ГуньЦи1',
-          code: 12334315,
-          title: 'Шар',
-          purchase: 550,
-          price: 6200,
-          amount: 124,
-          min: 12,
-          max: 40,
-        },
-        {
-          id: 2,
-          category: 'Высшая3',
-          manufactory: 'ГуньЦи2',
-          code: 12434315,
-          title: 'Шарии',
-          purchase: 750,
-          price: 1200,
-          amount: 124,
-          min: 12,
-          max: 40,
-        },
-        {
-          id: 3,
-          category: 'Высшая3',
-          manufactory: 'ГуньЦи2',
-          code: 1243434315,
-          title: 'Шариик красный',
-          purchase: 750,
-          price: 800,
-          amount: 124,
-          min: 12,
-          max: 40,
-        },
-      ],
-      storePrices: [
-        {
-          productId: 0,
-          store: 'Store C',
-          price: 1200,
-          date: 1637557941000,
-        },
-        {
-          productId: 1,
-          store: 'Store A',
-          price: 1200,
-          date: 1697736328000,
-        },
-        {
-          productId: 1,
-          store: 'Store B',
-          price: 1400,
-          date: 1697557941,
-        },
-        {
-          productId: 1,
-          store: 'Store C',
-          price: 1000,
-          date: 1697557941,
-        },
-        {
-          productId: 2,
-          store: 'Store D',
-          price: 1000,
-          date: 1697557941,
-        },
-        {
-          productId: 2,
-          store: 'Store A',
-          price: 1000,
-          date: 1697557941,
-        },
-        {
-          productId: 0,
-          store: 'Store D',
-          price: 1000,
-          date: 1697557941,
-        },
-        {
-          productId: 3,
-          store: 'Store A',
-          price: 1000,
-          date: 1697557941,
-        },
-        {
-          productId: 3,
-          store: 'Store B',
-          price: 1000,
-          date: 1697557941,
-        },
-        {
-          productId: 3,
-          store: 'Store Z',
-          price: 2544,
-          date: 1697557941,
-        },
-      ],
-    };
-
-    const uniqueStores = Array.from(
-      new Set(data.storePrices.map((item) => item.store))
-    );
-
-    const storeTableRows = data.products.map((product) => {
-      const productPrices = data.storePrices.filter(
-        (item) => item.productId === product.id
-      );
-      const row = [];
-      uniqueStores.forEach((store) => {
-        const finded = productPrices.find((item) => item.store === store);
-        row.push(finded ? { ...finded, products_price: product.price } : null);
-      });
-      return row;
-    });
-    setProducts({ products: data.products, uniqueStores, storeTableRows });
-  }, []);
+  const [data, setData] = useState(useLoaderData());
 
   return (
     <div>
@@ -169,15 +31,15 @@ const Home = () => {
           >
             <div className="flex">
               {/* -------Table N. 1--------- */}
-              <PartMainOne products={products.products} />
+              <PartMainOne products={data.products} />
               {/* -------Table N. 2--------- */}
-              <PartMainTwo
-                uniqueStores={products.uniqueStores}
+              {/* <PartMainTwo
+                stores={products.stores}
                 storeTableRows={products.storeTableRows}
                 boxScrollHor={boxScrollHor}
-              />
+              />*/}
               {/* -------Table N. 2--------- */}
-              <PartMainThree products={products.products} />
+              {/* <PartMainThree products={products.products} /> */}
               {/*----------------------------*/}
             </div>
           </div>
@@ -201,16 +63,7 @@ const Home = () => {
         </div>
       </div>
       <ModalDelete />
-      <ModalAddShop
-        uniqueStores={[
-          ...products.uniqueStores,
-          'asdasdf',
-          'asdfasdf',
-          'asdfasdgasdg',
-          'asdfasdfd',
-          'asdfa1e',
-        ]}
-      />
+      {/* <ModalAddShop stores={[...products.stores]} /> */}
 
       {/* {
             id: 0,

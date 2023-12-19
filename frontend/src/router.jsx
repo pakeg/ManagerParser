@@ -15,6 +15,7 @@ import {
   actionCreateNewProduct,
 } from './actions/actionsNewProductPage';
 import { actionSignIn } from './actions/actionsAuthPage';
+import { loaderGetAllInformation } from './actions/actionsMainPage';
 
 const isAuthorized = async ({ request }) => {
   const path = new URL(request.url).pathname;
@@ -58,7 +59,11 @@ const router = createBrowserRouter([
       {
         errorElement: <ErrorPage />,
         children: [
-          { index: true, element: <MainPage /> },
+          {
+            index: true,
+            loader: loaderGetAllInformation,
+            element: <MainPage />,
+          },
           {
             path: '/authorization',
             action: actionSignIn,
