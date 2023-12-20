@@ -1,15 +1,15 @@
-import { useRef, useState } from 'react';
-import { FaUserCircle } from 'react-icons/fa';
-import { IoIosLock } from 'react-icons/io';
+import { useRef, useState } from "react";
+import { FaUserCircle } from "react-icons/fa";
+import { IoIosLock } from "react-icons/io";
 
-import useErrors from './hooks/useErrors.jsx';
-import { Navigate, useFetcher, useLocation } from 'react-router-dom';
+import useErrors from "../hooks/useErrors.jsx";
+import { Navigate, useFetcher, useLocation } from "react-router-dom";
 
-const AuthPage = () => {
-  const [nickname, setNickname] = useState('');
-  const [password, setPassword] = useState('');
+export const AuthPage = () => {
+  const [nickname, setNickname] = useState("");
+  const [password, setPassword] = useState("");
   const [remember, setRemember] = useState(false);
-  const session = useRef(sessionStorage.getItem('authorized'));
+  const session = useRef(sessionStorage.getItem("authorized"));
   const fetcher = useFetcher();
   const location = useLocation();
   const { getError, cleanError, isErrors } = useErrors();
@@ -22,9 +22,9 @@ const AuthPage = () => {
       fetcher.submit(
         { nickname, password, remember: remember ? 1 : 0 },
         {
-          method: 'post',
+          method: "post",
           action: location.pathname,
-        }
+        },
       );
     }
   };
@@ -44,8 +44,8 @@ const AuthPage = () => {
             <div
               className={`flex items-center justify-evenly bg-white ${
                 getError() &&
-                !getError()['nickname'] &&
-                'shadow-[0_0px_4px_2px] shadow-red-500'
+                !getError()["nickname"] &&
+                "shadow-[0_0px_4px_2px] shadow-red-500"
               }`}
             >
               <FaUserCircle fill="#67d6d0" size={25} />
@@ -72,8 +72,8 @@ const AuthPage = () => {
             <div
               className={`flex items-center justify-evenly bg-white ${
                 getError() &&
-                !getError()['password'] &&
-                'shadow-[0_0px_4px_2px] shadow-red-500'
+                !getError()["password"] &&
+                "shadow-[0_0px_4px_2px] shadow-red-500"
               }`}
             >
               <IoIosLock fill="#cdcdcd" size={30} />
@@ -125,5 +125,3 @@ const AuthPage = () => {
     </div>
   );
 };
-
-export default AuthPage;

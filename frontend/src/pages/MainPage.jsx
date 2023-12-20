@@ -1,14 +1,14 @@
-import { useEffect, useState } from 'react';
-import PartMainOne from '../components/PartMainOne.jsx';
-import PartMainTwo from '../components/PartMainTwo.jsx';
-import PartMainThree from '../components/PartMainThree.jsx';
-import ModalDelete from '../components/Modals/ModalDelete.jsx';
-import ModalAddShop from '../components/Modals/ModalAddShop.jsx';
-import ModalComments from '../components/Modals/ModalComments.jsx';
+import { useEffect, useState } from "react";
+import PartMainOne from "../components/PartMainOne.jsx";
+import PartMainTwo from "../components/PartMainTwo.jsx";
+import PartMainThree from "../components/PartMainThree.jsx";
+import ModalDelete from "../components/Modals/ModalDelete.jsx";
+import ModalAddShop from "../components/Modals/ModalAddShop.jsx";
+import ModalComments from "../components/Modals/ModalComments.jsx";
 
-import useScroll from '../hooks/useScroll.jsx';
-import useScrollHorizontal from '../hooks/useScrollHorizontal';
-import { useLoaderData, useFetcher, useLocation } from 'react-router-dom';
+import useScroll from "../hooks/useScroll.jsx";
+import useScrollHorizontal from "../hooks/useScrollHorizontal";
+import { useLoaderData, useFetcher, useLocation } from "react-router-dom";
 
 const Home = () => {
   const { isScroll, boxScroll, buttonScroll } = useScroll(true);
@@ -26,12 +26,12 @@ const Home = () => {
           <div
             ref={boxScroll}
             className={`max-h-[300px] overflow-y-auto overflow-x-hidden ${
-              isScroll && '-mr-[17px]'
+              isScroll && "-mr-[17px]"
             }`}
           >
             <div className="flex">
               {/* -------Table N. 1--------- */}
-              {/* <PartMainOne products={data.products} /> */}
+              <PartMainOne products={data.products} />
               {/* -------Table N. 2--------- */}
               <PartMainTwo
                 shops={data.shops}
@@ -47,7 +47,7 @@ const Home = () => {
         <div className="bg-[#c1c1c1] rounded-3xl shadow-[inset_0px_0px_1px_0px_black]">
           <div
             className={` bg-[#e1e1e1] rounded-3xl cursor-grabbing ${
-              !isScroll ? 'opacity-0 invisible' : 'w-3.5 opacity-100 visible'
+              !isScroll ? "opacity-0 invisible" : "w-3.5 opacity-100 visible"
             }`}
             ref={buttonScroll}
           ></div>
@@ -56,7 +56,7 @@ const Home = () => {
         <div className="bg-[#c1c1c1] rounded-3xl shadow-[inset_0px_0px_1px_0px_black] absolute h-max">
           <div
             className={` bg-[#e1e1e1] rounded-3xl cursor-grabbing ${
-              !isScrollHor ? 'opacity-0 invisible' : 'h-3.5 opacity-100 visible'
+              !isScrollHor ? "opacity-0 invisible" : "h-3.5 opacity-100 visible"
             }`}
             ref={buttonScrollHor}
           ></div>

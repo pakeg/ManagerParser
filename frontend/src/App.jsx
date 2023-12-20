@@ -1,14 +1,10 @@
-import { Outlet, Navigate } from 'react-router-dom';
-import { RiArrowDownSLine } from 'react-icons/ri';
-import { AiFillPlusCircle } from 'react-icons/ai';
-import Button from './components/Button';
-import Aside from './components/AsideBar/Aside';
+import { Outlet, Navigate } from "react-router-dom";
+import { RiArrowDownSLine } from "react-icons/ri";
+import { AiFillPlusCircle } from "react-icons/ai";
+import Button from "./components/Button";
+import Aside from "./components/AsideBar/Aside";
 
 function App() {
-  const jwt = true;
-
-  if (!jwt) return <Navigate to="/authorization" replace={true} />;
-
   return (
     <div className="h-screen">
       <div className="bg-black py-3 flex items-center space-x-28">

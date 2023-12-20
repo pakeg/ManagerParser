@@ -2,7 +2,7 @@
   "name": "node-starter",
   "version": "0.0.0",
   "scripts": {
-    "start": "node ./server.mjs"
+    "dev": "nodemon server.mjs"
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",
