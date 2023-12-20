@@ -238,7 +238,7 @@ const getAllProductsInformation = async function () {
       };
     });
 
-    const storeTableRows = Object.keys(groupProductsById).map((id) => {
+    const shopsTableRows = Object.keys(groupProductsById).map((id) => {
       const row = [];
       shops.forEach((shop) => {
         if (shop.active_status != '0') {
@@ -265,7 +265,7 @@ const getAllProductsInformation = async function () {
       ([_, value]) => ({ ...value.products[0], ...value.info })
     );
 
-    return { products: resultedProducts, shops, storeTableRows };
+    return { products: resultedProducts, shops, shopsTableRows };
   } catch (e) {
     return { error: e?.detail ?? 'Something went wrong. Please, try later' };
   }

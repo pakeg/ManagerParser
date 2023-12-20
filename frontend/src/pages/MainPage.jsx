@@ -31,15 +31,15 @@ const Home = () => {
           >
             <div className="flex">
               {/* -------Table N. 1--------- */}
-              <PartMainOne products={data.products} />
+              {/* <PartMainOne products={data.products} /> */}
               {/* -------Table N. 2--------- */}
-              {/* <PartMainTwo
-                stores={products.stores}
-                storeTableRows={products.storeTableRows}
+              <PartMainTwo
+                shops={data.shops}
+                shopsTableRows={data.shopsTableRows}
                 boxScrollHor={boxScrollHor}
-              />*/}
+              />
               {/* -------Table N. 2--------- */}
-              {/* <PartMainThree products={products.products} /> */}
+              <PartMainThree products={data.products} />
               {/*----------------------------*/}
             </div>
           </div>

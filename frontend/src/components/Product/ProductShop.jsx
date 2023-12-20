@@ -10,15 +10,15 @@ const ProductShop = ({ prices, positionDivComment }) => {
           <span className="hover:bg-[#dfdfdf]">{'<'}</span>
         </div>
       </td>
-      {prices &&
-        prices.map((item, i) =>
-          item ? (
+      {rows.length > 0 &&
+        rows.map((row, i) =>
+          row ? (
             <ProductShopCellFull
-              key={i}
-              price={item.price}
-              products_price={item.products_price}
+              key={row.shop + '_' + i}
+              price={row.parsed_price}
+              products_price={row.price}
               id={i}
-              date={item.date}
+              date={row.date}
               positionDivComment={positionDivComment}
             />
           ) : (

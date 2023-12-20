@@ -44,18 +44,20 @@ const PartMainTwo = ({ uniqueStores, storeTableRows, boxScrollHor }) => {
                     <span>+</span>
                   </div>
                 </td>
-                {uniqueStores &&
-                  uniqueStores.map((store) => (
-                    <MenuItemShop key={store} title={store} />
-                  ))}
+                {shops.length > 0 &&
+                  shops
+                    .filter((shop) => shop.active_status != '0')
+                    .map((shop) => (
+                      <MenuItemShop key={shop.id} title={shop.title} />
+                    ))}
               </tr>
             </thead>
             <tbody>
-              {storeTableRows &&
-                storeTableRows.map((items, i) => (
+              {shopsTableRows &&
+                shopsTableRows.map((items, i) => (
                   <ProductShop
                     key={i}
-                    prices={items}
+                    rows={items}
                     positionDivComment={positionDivComment}
                   />
                 ))}

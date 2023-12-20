@@ -69,11 +69,11 @@ const PartMainOne = ({ products }) => {
         </tr>
       </thead>
       <tbody ref={tBody}>
-        {Object.keys(products).length > 0 &&
-          Object.entries(products).map((item) => (
+        {products.length > 0 &&
+          products.map((item) => (
             <Product
-              key={item[1].products[0].id}
-              product={item[1].products[0]}
+              key={item.id}
+              product={item}
               checkMainInput={checkMainInput}
             />
           ))}

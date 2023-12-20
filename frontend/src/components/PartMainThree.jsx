@@ -14,7 +14,7 @@ const PartMainThree = ({ products }) => {
         </tr>
       </thead>
       <tbody>
-        {products &&
+        {products.length > 0 &&
           products.map((product) => (
             <ProductShopAmountFounded key={product.id} product={product} />
           ))}
