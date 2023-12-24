@@ -23,8 +23,8 @@ const ModalAdmin = ({ isOpen, setIsOpen, editAbleUser, dispatch, loading }) => {
   }, [editAbleUser]);
 
   useEffect(() => {
-    if (!loading) {
-      setIsOpen(loading);
+    if (loading) {
+      setIsOpen(!loading);
       setDataUsers({
         nickname: "",
         name: "",

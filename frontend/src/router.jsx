@@ -68,9 +68,6 @@ const router = createBrowserRouter([
                 Component: AdminPage,
               };
             },
-            children: [
-              { path: "update-activestatus-user", action: actionUpdateUser },
-            ],
           },
           // {
           //   path: "refresh",
