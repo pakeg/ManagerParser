@@ -1,4 +1,4 @@
-import { Outlet, Navigate } from "react-router-dom";
+import { Outlet } from "react-router-dom";
 import { RiArrowDownSLine } from "react-icons/ri";
 import { AiFillPlusCircle } from "react-icons/ai";
 import Button from "./components/Button";

@@ -4,11 +4,7 @@ import App from "./App";
 import ErrorPage from "./pages/ErrorPage";
 import MainPage from "./pages/MainPage";
 
-import {
-  actionUpdateUser,
-  actionCreateNewUser,
-  loaderGetAllUsers,
-} from "./actions/actionAdminPanel";
+import { actionUpdateUser } from "./actions/actionAdminPanel";
 import {
   loaderGetCategoriesItem,
   actionCreateNewItemCategory,
@@ -66,22 +62,13 @@ const router = createBrowserRouter([
           },
           {
             path: "admin-panel",
-            loader: loaderGetAllUsers,
             async lazy() {
               let { AdminPage } = await import("./pages/AdminPage");
               return {
                 Component: AdminPage,
               };
             },
-            shouldRevalidate: () => {
-              return false;
-            },
             children: [
-              {
-                path: "create-new-user",
-                action: actionCreateNewUser,
-              },
-              { path: "update-user", action: actionUpdateUser },
               { path: "update-activestatus-user", action: actionUpdateUser },
             ],
           },

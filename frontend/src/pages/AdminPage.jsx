@@ -1,40 +1,28 @@
+import { BiSortDown } from "react-icons/bi";
+import { AiOutlineFieldNumber } from "react-icons/ai";
+import { useEffect, useState } from "react";
+
 import MenuItem from "../components/Menu/MenuItem.jsx";
 import User from "../components/User.jsx";
 import ModalAdmin from "../components/Modals/ModalAdmin.jsx";
 
-import { BiSortDown } from "react-icons/bi";
-import { AiOutlineFieldNumber } from "react-icons/ai";
-import { useEffect, useState } from "react";
-import {
-  useLoaderData,
-  useFetcher,
-  useLocation,
-  Navigate,
-} from "react-router-dom";
-
+import { useSelector, useDispatch } from "react-redux";
+import { fetchUsers, updateUser } from "../store/reducers/adminSlice.js";
+import { Navigate } from "react-router-dom";
 const session =
-  sessionStorage.getItem("authorized")?.match("admin|user|manager") ?? "";
+  sessionStorage.getItem("authorized")?.match("admin|user|manager")[0] ?? "";
 
 export const AdminPage = () => {
-  const [users, setUsers] = useState(useLoaderData());
-  const [isOpen, setIsOpen] = useState(true);
+  const { loading, errors, users } = useSelector((state) => state.adminReducer);
+  const dispatch = useDispatch();
+  const [isOpen, setIsOpen] = useState(false);
   const [editAbleUser, setEditAbleUser] = useState(null);
-  const fetcher = useFetcher();
-  const location = useLocation();
 
   if (session !== "admin") return <Navigate to="/" replace={true} />;
 
   useEffect(() => {
-    if (typeof fetcher.data !== "undefined" && fetcher.data !== null) {
-      const [user] = fetcher.data;
-      setUsers((state) =>
-        state.map((item) => {
-          if (item.id == user.id) return user;
-          return item;
-        }),
-      );
-    }
-  }, [fetcher.data]);
+    if (users.length == 0) dispatch(fetchUsers());
+  }, []);
 
   const setEditUser = (user) => {
     setEditAbleUser(user);
@@ -42,10 +30,7 @@ export const AdminPage = () => {
   };
 
   const changeActiveStatus = async (data) => {
-    fetcher.submit(data, {
-      method: "post",
-      action: location.pathname + "/update-activestatus-user",
-    });
+    dispatch(updateUser({ data, action: "updateActiveStatus" }));
   };
 
   return (
@@ -78,7 +63,8 @@ export const AdminPage = () => {
         isOpen={isOpen}
         setIsOpen={setIsOpen}
         editAbleUser={editAbleUser}
-        setUsers={setUsers}
+        dispatch={dispatch}
+        loading={loading}
       />
     </div>
   );
