@@ -1,63 +1,45 @@
-import { LiaUserPlusSolid, LiaUserCogSolid } from 'react-icons/lia';
-import { useEffect, useState } from 'react';
-import { useFetcher, useLocation } from 'react-router-dom';
+import { LiaUserPlusSolid, LiaUserCogSolid } from "react-icons/lia";
+import { useEffect, useState } from "react";
 
-import Modal from './Modal.jsx';
-import useErrors from '../../hooks/useErrors.jsx';
-import InputTrans from '../InputTrans.jsx';
+import Modal from "./Modal.jsx";
+import InputTrans from "../InputTrans.jsx";
+import useErrors from "../../hooks/useErrors.jsx";
+import { addNewUser, updateUser } from "../../store/reducers/adminSlice";
 
-const ModalAdmin = ({ isOpen, setIsOpen, editAbleUser, setUsers }) => {
-  const fetcher = useFetcher();
-  const location = useLocation();
+const ModalAdmin = ({ isOpen, setIsOpen, editAbleUser, dispatch, loading }) => {
   const [dataUsers, setDataUsers] = useState({
-    nickname: '',
-    name: '',
-    surname: '',
-    email: '',
-    password: '',
+    nickname: "",
+    name: "",
+    surname: "",
+    email: "",
+    password: "",
   });
   const { getError, cleanError, isErrors } = useErrors();
 
   useEffect(() => {
     if (editAbleUser) {
-      setDataUsers({ ...editAbleUser, password: '' });
+      setDataUsers({ ...editAbleUser, password: "" });
     }
   }, [editAbleUser]);
 
   useEffect(() => {
-    if (typeof fetcher.data !== 'undefined' && fetcher.data !== null) {
-      const [user, action] = fetcher.data;
-      if (action == 'createUser') {
-        setUsers((state) => [...state, user]);
-      }
-      if (action == 'updateUser') {
-        setUsers((state) =>
-          state.map((item) => {
-            if (item.id == user.id) return user;
-            return item;
-          })
-        );
-      }
-      setIsOpen(!isOpen);
+    if (!loading) {
+      setIsOpen(loading);
       setDataUsers({
-        nickname: '',
-        name: '',
-        surname: '',
-        email: '',
-        password: '',
+        nickname: "",
+        name: "",
+        surname: "",
+        email: "",
+        password: "",
       });
     }
-  }, [fetcher.data]);
+  }, [loading]);
 
   const createUser = async () => {
     const disabled = isErrors(dataUsers);
     if (disabled) {
       cleanError();
-
-      fetcher.submit(dataUsers, {
-        method: 'post',
-        action: location.pathname + '/create-new-user',
-      });
+      dispatch(addNewUser(dataUsers));
     }
   };
 
@@ -65,11 +47,7 @@ const ModalAdmin = ({ isOpen, setIsOpen, editAbleUser, setUsers }) => {
     const disabled = isErrors(dataUsers);
     if (disabled) {
       cleanError();
-
-      fetcher.submit(dataUsers, {
-        method: 'post',
-        action: location.pathname + '/update-user',
-      });
+      dispatch(updateUser({ data: dataUsers, action: "" }));
     }
   };
 
@@ -97,41 +75,41 @@ const ModalAdmin = ({ isOpen, setIsOpen, editAbleUser, setUsers }) => {
             </p>
           </div>
           <InputTrans
-            label={'Имя пользователя'}
-            type={'text'}
-            name={'nickname'}
+            label={"Имя пользователя"}
+            type={"text"}
+            name={"nickname"}
             value={dataUsers.nickname}
             setDataUsers={setDataUsers}
             errors={getError()}
           />
           <InputTrans
-            label={'Имя'}
-            type={'text'}
-            name={'name'}
+            label={"Имя"}
+            type={"text"}
+            name={"name"}
             value={dataUsers.name}
             setDataUsers={setDataUsers}
             errors={getError()}
           />
           <InputTrans
-            label={'Фамилия'}
-            type={'text'}
-            name={'surname'}
+            label={"Фамилия"}
+            type={"text"}
+            name={"surname"}
             value={dataUsers.surname}
             setDataUsers={setDataUsers}
             errors={getError()}
           />
           <InputTrans
-            label={'Електронная почта'}
-            type={'email'}
-            name={'email'}
+            label={"Електронная почта"}
+            type={"email"}
+            name={"email"}
             value={dataUsers.email}
             setDataUsers={setDataUsers}
             errors={getError()}
           />
           <InputTrans
-            label={'Пароль'}
-            type={'password'}
-            name={'password'}
+            label={"Пароль"}
+            type={"password"}
+            name={"password"}
             value={dataUsers.password}
             setDataUsers={setDataUsers}
             errors={getError()}

@@ -1,22 +1,22 @@
-import { useState } from 'react';
-import { formatSize } from '../utils/utilsFun';
+import { useState } from "react";
+import { formatSize } from "../utils/utilsFun";
 
-import { PiDownloadSimpleBold } from 'react-icons/pi';
+import { PiDownloadSimpleBold } from "react-icons/pi";
 
-const UploadFilePage = () => {
+export const UploadFilePage = () => {
   const [files, setFiles] = useState([]);
 
   const removeFiles = () => {
-    const fileName = event.target.innerText.split(' ')[0];
+    const fileName = event.target.innerText.split(" ")[0];
     setFiles((state) =>
-      Array.prototype.filter.call(state, (file) => file.name != fileName)
+      Array.prototype.filter.call(state, (file) => file.name != fileName),
     );
   };
 
   const uploadFiles = () => {
     const formData = new FormData();
-    formData.append('files', [...files]);
-    console.log('uploadFiles');
+    formData.append("files", [...files]);
+    console.log("uploadFiles");
   };
 
   return (
@@ -47,7 +47,7 @@ const UploadFilePage = () => {
                   className="relative after:content-[''] hover:cursor-pointer hover:bg-red-300 after:absolute after:left-0 after:right-0 after:bottom-0 after:h-[1px] after:bg-[#606060]"
                   title="Удалить"
                 >
-                  {file.name}{' '}
+                  {file.name}{" "}
                   <span className="text-xs">{formatSize(file.size)}</span>
                 </li>
               ))}
@@ -64,5 +64,3 @@ const UploadFilePage = () => {
     </div>
   );
 };
-
-export default UploadFilePage;

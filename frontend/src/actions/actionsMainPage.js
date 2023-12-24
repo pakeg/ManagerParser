@@ -1,14 +1,14 @@
 export const loaderGetAllInformation = async ({ request }) => {
   const req = await fetch(
-    import.meta.env.VITE_URL + '/api/get-all-information',
+    import.meta.env.VITE_URL + "/api/get-all-information",
     {
-      method: 'POST',
+      method: "POST",
       signal: request.signal,
       headers: {
-        Accept: 'application/json',
+        Accept: "application/json",
       },
-      credentials: 'include',
-    }
+      credentials: "include",
+    },
   );
 
   if (req.status === 401) {
@@ -17,7 +17,7 @@ export const loaderGetAllInformation = async ({ request }) => {
       status: req.status,
       statusText: info.statusText,
       headers: {
-        'Content-Type': 'application/json; utf-8',
+        "Content-Type": "application/json; utf-8",
       },
     });
   }
@@ -26,7 +26,7 @@ export const loaderGetAllInformation = async ({ request }) => {
     const error = await req.text();
     throw new Response(error, {
       status: req.status,
-      statusText: 'error',
+      statusText: "error",
     });
   }
 

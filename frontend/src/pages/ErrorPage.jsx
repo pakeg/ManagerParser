@@ -1,4 +1,4 @@
-import { useRouteError, useLocation, NavLink } from 'react-router-dom';
+import { useRouteError, useLocation, NavLink } from "react-router-dom";
 
 export default function ErrorPage() {
   let location = useLocation();
@@ -10,11 +10,11 @@ export default function ErrorPage() {
         Oops! {error.status}
       </h1>
       <p className="mb-4 text-gray-600">
-        Sorry, an unexpected error has occurred.
+        {error.status >= 500 && "Sorry, an unexpected error has occurred."}
       </p>
       <p className="mb-4 text-lg text-gray-600">
         <i>
-          {error.statusText}: {error.data}
+          {error.statusText}: {error.data?.msg ? error.data.msg : error.data}
         </i>
       </p>
       <div className="animate-bounce">
@@ -33,10 +33,19 @@ export default function ErrorPage() {
         </svg>
       </div>
       <p className="mt-4 text-gray-600">
-        Let's get you back{' '}
-        <NavLink to={location.pathname} className="text-blue-500">
-          home
-        </NavLink>
+        Let's get to{" "}
+        {error.status == 404 ? (
+          <NavLink to="/" className="text-blue-500">
+            sdfg
+          </NavLink>
+        ) : (
+          <NavLink
+            to={error.data?.path ? error.data.path : location.pathname}
+            className="text-blue-500"
+          >
+            link
+          </NavLink>
+        )}
         .
       </p>
     </div>

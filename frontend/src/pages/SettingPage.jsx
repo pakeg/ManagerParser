@@ -1,10 +1,10 @@
-import { useEffect, useState } from 'react';
-import { LuCross } from 'react-icons/lu';
+import { useEffect, useState } from "react";
+import { LuCross } from "react-icons/lu";
 
-import useScroll from '../hooks/useScroll';
-import ModalNewShop from '../components/Modals/ModalNewShop.jsx';
+import useScroll from "../hooks/useScroll";
+import ModalNewShop from "../components/Modals/ModalNewShop.jsx";
 
-const SettingPage = () => {
+export const SettingPage = () => {
   const [shops, setShops] = useState(null);
   const [isOpen, setIsOpen] = useState(false);
   const [done, setDone] = useState(null);
@@ -14,12 +14,12 @@ const SettingPage = () => {
     // if delete from server
     if (true) {
       setShops((state) => state.filter((shop) => shop.id != id));
-      console.log('shop deleted');
+      console.log("shop deleted");
     }
   };
 
   const addShop = (title) => {
-    console.log(title, 'create new Shop');
+    console.log(title, "create new Shop");
     if (title.length > 1) {
       const req = { id: Math.random(), title };
       setShops((state) => [...state, req]);
@@ -34,23 +34,23 @@ const SettingPage = () => {
     const data = [
       {
         id: 0,
-        title: 'allo.ua',
+        title: "allo.ua",
       },
       {
         id: 1,
-        title: 'rozetka.ua',
+        title: "rozetka.ua",
       },
       {
         id: 2,
-        title: 'eldorado.ua',
+        title: "eldorado.ua",
       },
       {
         id: 3,
-        title: 'foxtrot.ua',
+        title: "foxtrot.ua",
       },
       {
         id: 4,
-        title: 'storgrom.ua',
+        title: "storgrom.ua",
       },
     ];
 
@@ -84,7 +84,7 @@ const SettingPage = () => {
             <div className="grow overflow-hidden border-2 border-[#5e5e5e] bg-[#dfdfdf]">
               <div
                 className={`h-[550px] text-[#a0a0a0] overflow-auto ${
-                  isScroll && '-mr-[19px]'
+                  isScroll && "-mr-[19px]"
                 }`}
                 ref={boxScroll}
               >
@@ -104,7 +104,7 @@ const SettingPage = () => {
                           strokeWidth="1"
                           fill="white"
                           style={{
-                            transform: 'rotateZ(45deg)',
+                            transform: "rotateZ(45deg)",
                           }}
                           title="deleteShops"
                         />
@@ -138,5 +138,3 @@ const SettingPage = () => {
     </div>
   );
 };
-
-export default SettingPage;

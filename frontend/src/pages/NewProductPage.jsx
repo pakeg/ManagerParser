@@ -1,14 +1,14 @@
-import { useEffect, useState } from 'react';
-import useErrors from '../hooks/useErrors.jsx';
-import { MdOutlineDone } from 'react-icons/md';
+import { useEffect, useState } from "react";
+import useErrors from "../hooks/useErrors.jsx";
+import { MdOutlineDone } from "react-icons/md";
 
-import SelectBlock from '../components/NewProductPage/SelectBlock.jsx';
-import InputBlock from '../components/NewProductPage/InputBlock.jsx';
-import ModalNewProduct from '../components/Modals/ModalNewProduct.jsx';
+import SelectBlock from "../components/NewProductPage/SelectBlock.jsx";
+import InputBlock from "../components/NewProductPage/InputBlock.jsx";
+import ModalNewProduct from "../components/Modals/ModalNewProduct.jsx";
 
-import { useLoaderData, useFetcher, useLocation } from 'react-router-dom';
+import { useLoaderData, useFetcher, useLocation } from "react-router-dom";
 
-const NewProductPage = () => {
+export const NewProductPage = () => {
   const [data, setData] = useState(useLoaderData());
   const fetcher = useFetcher();
   const location = useLocation();
@@ -17,18 +17,18 @@ const NewProductPage = () => {
   const [done, setDone] = useState(null);
   const { getError, cleanError, isErrors } = useErrors();
   const [newProduct, setNewProduct] = useState({
-    title: '',
+    title: "",
     categories: null,
     manufactures: null,
     projects: null,
-    part_number: '',
-    purchase_price: '',
-    price: '',
-    shopsUrl: '',
+    part_number: "",
+    purchase_price: "",
+    price: "",
+    shopsUrl: "",
   });
 
   useEffect(() => {
-    if (typeof fetcher.data !== 'undefined' && fetcher.data !== null) {
+    if (typeof fetcher.data !== "undefined" && fetcher.data !== null) {
       const isNew = fetcher.data;
 
       // set flag after adding new product for ModalNewProduct
@@ -36,21 +36,21 @@ const NewProductPage = () => {
         is: isNew,
         title: newProduct.title,
         projects: data.projects.find(
-          (project) => project.id == newProduct.projects
+          (project) => project.id == newProduct.projects,
         ),
       });
       //open modal
       setIsOpen(!isOpen);
       //clear data of new product
       setNewProduct({
-        title: '',
+        title: "",
         categories: null,
         manufactures: null,
         projects: null,
-        part_number: '',
+        part_number: "",
         purchase_price: 0,
         price: 0,
-        shopsUrl: '',
+        shopsUrl: "",
       });
     }
   }, [fetcher.data]);
@@ -62,7 +62,7 @@ const NewProductPage = () => {
       cleanError();
 
       fetcher.submit(newProduct, {
-        method: 'post',
+        method: "post",
         action: location.pathname,
       });
     }
@@ -180,5 +180,3 @@ const NewProductPage = () => {
     </div>
   );
 };
-
-export default NewProductPage;

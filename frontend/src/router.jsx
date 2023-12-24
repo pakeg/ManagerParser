@@ -1,47 +1,43 @@
-import { createBrowserRouter } from 'react-router-dom';
+import { createBrowserRouter, redirect } from "react-router-dom";
 
-import App from './App';
-import ErrorPage from './pages/ErrorPage';
-import MainPage from './pages/MainPage';
+import App from "./App";
+import ErrorPage from "./pages/ErrorPage";
+import MainPage from "./pages/MainPage";
 
-import {
-  actionUpdateUser,
-  actionCreateNewUser,
-  loaderGetAllUsers,
-} from './actions/actionAdminPanel';
+import { actionUpdateUser } from "./actions/actionAdminPanel";
 import {
   loaderGetCategoriesItem,
   actionCreateNewItemCategory,
   actionCreateNewProduct,
-} from './actions/actionsNewProductPage';
-import { actionSignIn } from './actions/actionsAuthPage';
-import { loaderGetAllInformation } from './actions/actionsMainPage';
+} from "./actions/actionsNewProductPage";
+import { actionSignIn } from "./actions/actionsAuthPage";
+import { loaderGetAllInformation } from "./actions/actionsMainPage";
 
 const isAuthorized = async ({ request }) => {
   const path = new URL(request.url).pathname;
-  const session = sessionStorage.getItem('authorized');
+  const session = sessionStorage.getItem("authorized");
 
-  if (session === null && path !== '/authorization') {
-    const req = await fetch(import.meta.env.VITE_URL + '/api/authorization', {
-      method: 'GET',
+  if (session === null && path !== "/authorization") {
+    const req = await fetch(import.meta.env.VITE_URL + "/api/authorization", {
+      method: "GET",
       signal: request.signal,
-      mode: 'cors',
-      credentials: 'include',
+      mode: "cors",
+      credentials: "include",
     });
 
     if (!req.ok) {
       const error = await req.text();
       throw new Response(error, {
         status: req.status,
-        statusText: 'error',
+        statusText: "error",
       });
     }
 
     const { authorized } = await req.json();
     if (authorized) {
-      sessionStorage.setItem('authorized', authorized);
+      sessionStorage.setItem("authorized", authorized);
     } else {
-      return redirect('/authorization');
+      return redirect("/authorization");
     }
     return null;
   }
@@ -51,7 +47,7 @@ const isAuthorized = async ({ request }) => {
 
 const router = createBrowserRouter([
   {
-    path: '/',
+    path: "/",
     element: <App />,
     loader: isAuthorized,
     errorElement: <ErrorPage />,
@@ -65,83 +61,64 @@ const router = createBrowserRouter([
             element: <MainPage />,
           },
           {
-            path: '/authorization',
-            action: actionSignIn,
+            path: "admin-panel",
             async lazy() {
-              let { AuthPage } = await import('./pages/AuthPage');
-              return {
-                Component: AuthPage,
-              };
-            },
-          },
-          {
-            path: 'admin-panel',
-            loader: loaderGetAllUsers,
-            async lazy() {
-              let { AdminPage } = await import('./pages/AdminPage');
+              let { AdminPage } = await import("./pages/AdminPage");
               return {
                 Component: AdminPage,
               };
             },
-            shouldRevalidate: () => {
-              return false;
-            },
             children: [
-              {
-                path: 'create-new-user',
-                action: actionCreateNewUser,
-              },
-              { path: 'update-user', action: actionUpdateUser },
-              { path: 'update-activestatus-user', action: actionUpdateUser },
+              { path: "update-activestatus-user", action: actionUpdateUser },
             ],
           },
+          // {
+          //   path: "refresh",
+          //   async lazy() {
+          //     let { RefreshParsingPage } = await import(
+          //       "./pages/RefreshParsingPage"
+          //     );
+          //     return {
+          //       Component: RefreshParsingPage,
+          //     };
+          //   },
+          // },
           {
-            path: 'refresh',
-            async lazy() {
-              let { RefreshParsingPage } = await import(
-                './pages/RefreshParsingPage'
-              );
-              return {
-                Component: RefreshParsingPage,
-              };
-            },
-          },
-          {
-            path: 'new-product',
+            path: "new-product",
             loader: loaderGetCategoriesItem,
             action: actionCreateNewProduct,
             async lazy() {
-              let { NewProductPage } = await import('./pages/NewProductPage');
+              let { NewProductPage } = await import("./pages/NewProductPage");
               return {
                 Component: NewProductPage,
               };
             },
             children: [
-              { path: 'new-category', action: actionCreateNewItemCategory },
+              { path: "new-category", action: actionCreateNewItemCategory },
             ],
           },
           {
-            path: 'comments',
+            path: "comments",
             async lazy() {
-              let { CommentsPage } = await import('./pages/CommentsPage');
+              let { CommentsPage } = await import("./pages/CommentsPage");
               return {
                 Component: CommentsPage,
               };
             },
           },
           {
-            path: 'settings',
+            path: "settings",
             async lazy() {
-              let { SettingPage } = await import('./pages/SettingPage');
+              let { SettingPage } = await import("./pages/SettingPage");
               return {
                 Component: SettingPage,
               };
             },
           },
           {
-            path: 'upload',
+            path: "upload",
             async lazy() {
-              let { UploadFilePage } = await import('./pages/UploadFilePage');
+              let { UploadFilePage } = await import("./pages/UploadFilePage");
               return {
                 Component: UploadFilePage,
               };
@@ -150,6 +127,17 @@ const router = createBrowserRouter([
         ],
       },
     ],
+  },
+  {
+    path: "/authorization",
+    action: actionSignIn,
+    async lazy() {
+      let { AuthPage } = await import("./pages/AuthPage");
+      return {
+        Component: AuthPage,
+      };
+    },
+    errorElement: <ErrorPage />,
   },
 ]);
 

@@ -1,13 +1,13 @@
-import { useCallback, useRef, useState } from 'react';
-import { MdOutlineHistory } from 'react-icons/md';
+import { useCallback, useRef, useState } from "react";
+import { MdOutlineHistory } from "react-icons/md";
 
-import ProductShop from './Product/ProductShop.jsx';
-import MenuItemShop from './Menu/MenuItemShop.jsx';
+import ProductShop from "./Product/ProductShop.jsx";
+import MenuItemShop from "./Menu/MenuItemShop.jsx";
 
-const PartMainTwo = ({ uniqueStores, storeTableRows, boxScrollHor }) => {
+const PartMainTwo = ({ shops, shopsTableRows, boxScrollHor }) => {
   const commentPopUp = useRef(null);
 
-  const [comment, setComment] = useState({ id: null, comment: '' });
+  const [comment, setComment] = useState({ id: null, comment: "" });
   const [isPopUpOpen, setIsPopUpOpen] = useState(false);
 
   const positionDivComment = useCallback((e, id) => {
@@ -15,16 +15,16 @@ const PartMainTwo = ({ uniqueStores, storeTableRows, boxScrollHor }) => {
     const coor = e.target.getBoundingClientRect();
     // 15 - width SVg element, 20 - position right ::after, 12.5 - width ::after
     commentPopUp.current.style.left =
-      coor.x - commentPopUp.current.offsetWidth + 15 + 20 + 12.5 + 'px';
+      coor.x - commentPopUp.current.offsetWidth + 15 + 20 + 12.5 + "px";
     // 17.5 - height/2 ::after
-    commentPopUp.current.style.top = coor.y + coor.height + 17.5 + 'px';
+    commentPopUp.current.style.top = coor.y + coor.height + 17.5 + "px";
     setIsPopUpOpen(!isPopUpOpen);
   }, []);
 
   const addNewProductsComment = () => {
     if (true) {
-      console.log(comment, 'comment');
-      setComment({ id: null, comment: '' });
+      console.log(comment, "comment");
+      setComment({ id: null, comment: "" });
       setIsPopUpOpen(!isPopUpOpen);
     }
   };
@@ -46,7 +46,7 @@ const PartMainTwo = ({ uniqueStores, storeTableRows, boxScrollHor }) => {
                 </td>
                 {shops.length > 0 &&
                   shops
-                    .filter((shop) => shop.active_status != '0')
+                    .filter((shop) => shop.active_status != "0")
                     .map((shop) => (
                       <MenuItemShop key={shop.id} title={shop.title} />
                     ))}
@@ -70,7 +70,7 @@ const PartMainTwo = ({ uniqueStores, storeTableRows, boxScrollHor }) => {
       <div
         ref={commentPopUp}
         className={`${
-          isPopUpOpen ? 'opacity-100 visible' : 'opacity-0 invisible'
+          isPopUpOpen ? "opacity-100 visible" : "opacity-0 invisible"
         } w-min fixed z-20 rounded-lg border-2 border-solid border-white bg-[#d6d0cf] after:content-[''] after:absolute after:-top-[13px] after:right-[20px] after:w-[25px] after:h-[25px] after:bg-[#d7cdcc] after:border-2 after:border-b-transparent after:border-r-transparent after:-z-[1] after:rotate-z-45`}
       >
         <div className="p-2.5 rounded-lg">

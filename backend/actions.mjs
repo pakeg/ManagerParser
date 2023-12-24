@@ -1,22 +1,24 @@
-import sql from './db.mjs';
-import bcrypt from 'bcryptjs';
+import sql from "./db.mjs";
+import bcrypt from "bcryptjs";
 
 const authorize = async function ({ nickname, password }) {
   try {
     const [user] = await sql`select * from users where nickname = ${nickname}`;
-    if (typeof user === 'undefined') {
+    if (typeof user === "undefined") {
       return { redirect: false };
     }
 
     const redirect = bcrypt.compareSync(password, user.password.trim());
     if (redirect) {
       const salt = bcrypt.genSaltSync(10);
-      const hash = bcrypt.hashSync(user.nickname + user.email, salt);
+      let hash = bcrypt.hashSync(user.nickname + user.email, salt);
+      const len = hash.length;
+      hash = hash.slice(0, len / 2) + user.role + hash.slice(len / 2);
       return { redirect, cookie: hash };
     }
     return { redirect };
   } catch (e) {
-    return { error: e?.detail ?? 'Something went wrong. Please, try later' };
+    return { error: e?.detail ?? "Something went wrong. Please, try later" };
   }
 };
 
@@ -69,7 +71,7 @@ const createNewProduct = async function ({
   `;
 
     if (shopsUrl.length > 0) {
-      const urls = shopsUrl.split(',').map((url) => {
+      const urls = shopsUrl.split(",").map((url) => {
         const uri = new URL(url);
         return {
           link: uri.origin,
@@ -107,8 +109,8 @@ const createNewProduct = async function ({
       if (notFoundedShops.length > 0) {
         newShop = await sql`insert into shops ${sql(
           notFoundedShops,
-          'title',
-          'link'
+          "title",
+          "link",
         )} returning id, link`;
       }
 
@@ -120,9 +122,9 @@ const createNewProduct = async function ({
 
       await sql`insert into parsed_products ${sql(
         final,
-        'product_id',
-        'shop_id',
-        'link'
+        "product_id",
+        "shop_id",
+        "link",
       )}`;
     }
     return projectId;
@@ -170,12 +172,12 @@ const createNewUser = async function ({
 };
 
 const updateUserData = async function (user) {
-  if (Object.hasOwn(user, 'password')) {
+  if (Object.hasOwn(user, "password")) {
     const salt = bcrypt.genSaltSync(10);
     user.password = bcrypt.hashSync(user.password, salt);
   }
 
-  const columns = Object.keys(user).filter((item) => item != 'id');
+  const columns = Object.keys(user).filter((item) => item != "id");
   const updatedUser = await sql`
   update users set ${sql(user, columns)}
   where id = ${user.id}
@@ -241,9 +243,9 @@ const getAllProductsInformation = async function () {
     const shopsTableRows = Object.keys(groupProductsById).map((id) => {
       const row = [];
       shops.forEach((shop) => {
-        if (shop.active_status != '0') {
+        if (shop.active_status != "0") {
           const finded = groupProductsById[id].products.find(
-            (prod) => prod.shop === shop.title
+            (prod) => prod.shop === shop.title,
           );
           row.push(
             finded
@@ -253,7 +255,7 @@ const getAllProductsInformation = async function () {
                   parsed_price: finded.parsed_price,
                   date: finded.date,
                 }
-              : null
+              : null,
           );
         }
       });
@@ -262,12 +264,12 @@ const getAllProductsInformation = async function () {
     });
 
     const resultedProducts = Object.entries(groupProductsById).map(
-      ([_, value]) => ({ ...value.products[0], ...value.info })
+      ([_, value]) => ({ ...value.products[0], ...value.info }),
     );
 
     return { products: resultedProducts, shops, shopsTableRows };
   } catch (e) {
-    return { error: e?.detail ?? 'Something went wrong. Please, try later' };
+    return { error: e?.detail ?? "Something went wrong. Please, try later" };
   }
 };
 
