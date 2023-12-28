@@ -9,6 +9,7 @@ import ModalAdmin from "../components/Modals/ModalAdmin.jsx";
 import { useSelector, useDispatch } from "react-redux";
 import { fetchUsers, updateUser } from "../store/reducers/adminSlice.js";
 import { Navigate } from "react-router-dom";
+
 const session =
   sessionStorage.getItem("authorized")?.match("admin|user|manager")[0] ?? "";
 

@@ -31,9 +31,9 @@ const createNewItemCategory = async function ({ choosedElement, title }) {
       (${title})
     returning id, title
   `;
-    return newItem;
+    return { newItem, choosedElement, created: true };
   } catch (e) {
-    return { error: e.detail };
+    return { error: e?.detail ?? "Something went wrong. Please, try later" };
   }
 };
 

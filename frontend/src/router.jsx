@@ -4,9 +4,7 @@ import App from "./App";
 import ErrorPage from "./pages/ErrorPage";
 import MainPage from "./pages/MainPage";
 
-import { actionUpdateUser } from "./actions/actionAdminPanel";
 import {
-  loaderGetCategoriesItem,
   actionCreateNewItemCategory,
   actionCreateNewProduct,
 } from "./actions/actionsNewProductPage";
@@ -68,9 +66,6 @@ const router = createBrowserRouter([
                 Component: AdminPage,
               };
             },
-            children: [
-              { path: "update-activestatus-user", action: actionUpdateUser },
-            ],
           },
           // {
           //   path: "refresh",
@@ -85,17 +80,12 @@ const router = createBrowserRouter([
           // },
           {
             path: "new-product",
-            loader: loaderGetCategoriesItem,
-            action: actionCreateNewProduct,
             async lazy() {
               let { NewProductPage } = await import("./pages/NewProductPage");
               return {
                 Component: NewProductPage,
               };
             },
-            children: [
-              { path: "new-category", action: actionCreateNewItemCategory },
-            ],
           },
           {
             path: "comments",

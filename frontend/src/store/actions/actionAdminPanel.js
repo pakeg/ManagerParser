@@ -51,7 +51,7 @@ export const actionUpdateUser = async ({ data, action }, signal) => {
   return user;
 };
 
-export const loaderGetAllUsers = async (signal) => {
+export const fetchAllUsers = async (signal) => {
   const req = await fetch(import.meta.env.VITE_URL + "/api/getall-user", {
     method: "POST",
     signal,
