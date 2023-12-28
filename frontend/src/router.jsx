@@ -4,10 +4,6 @@ import App from "./App";
 import ErrorPage from "./pages/ErrorPage";
 import MainPage from "./pages/MainPage";
 
-import {
-  actionCreateNewItemCategory,
-  actionCreateNewProduct,
-} from "./actions/actionsNewProductPage";
 import { actionSignIn } from "./actions/actionsAuthPage";
 import { loaderGetAllInformation } from "./actions/actionsMainPage";
 
