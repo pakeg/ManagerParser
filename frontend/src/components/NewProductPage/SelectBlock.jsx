@@ -1,7 +1,7 @@
-import { useMemo, useState } from 'react';
-import { BsFillPlusCircleFill } from 'react-icons/bs';
+import { useMemo, useState } from "react";
+import { BsFillPlusCircleFill } from "react-icons/bs";
 
-import useScroll from '../../hooks/useScroll';
+import useScroll from "../../hooks/useScroll";
 
 const SelectBlock = ({
   items,
@@ -36,7 +36,7 @@ const SelectBlock = ({
   return (
     <div
       className={`flex items-center border border-black relative ${
-        errors && !errors[field] && 'shadow-[0_0px_4px_2px] shadow-red-500'
+        errors && !errors[field] && "shadow-[0_0px_4px_2px] shadow-red-500"
       }`}
     >
       <p
@@ -46,7 +46,7 @@ const SelectBlock = ({
         {!value ? placeholder : selectedValue.title}
       </p>
       <div className="cursor-pointer bg-[#c1c1c1] w-[21px] flex items-center justify-center">
-        <div className={`${!isOpen ? '-rotate-90' : 'rotate-90'}`}>{'<'}</div>
+        <div className={`${!isOpen ? "-rotate-90" : "rotate-90"}`}>{"<"}</div>
       </div>
       <div
         className="absolute top-1/2 -right-[36px] -mt-[9.5px] cursor-pointer"
@@ -64,13 +64,13 @@ const SelectBlock = ({
               onClick={(e) => chooseElement(e)}
             >
               {items &&
-                items.map((a) => (
+                items.map((item) => (
                   <div
                     className="pl-4 hover:bg-white"
-                    key={a.id}
-                    data-id={a.id}
+                    key={item.id}
+                    data-id={item.id}
                   >
-                    {a.title}
+                    {item.title}
                   </div>
                 ))}
             </div>

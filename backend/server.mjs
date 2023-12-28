@@ -91,7 +91,7 @@ app.post("/api/authorization", async function (req, res) {
 
 //------------
 // new product page
-app.post("/api/new-category", async function (req, res) {
+app.post("/api/new-categoryitem", async function (req, res) {
   const newItem = await createNewItemCategory(req.body);
   if (!newItem?.error) res.status(201).json(newItem);
   else res.status(400).send(newItem.error);
@@ -99,7 +99,7 @@ app.post("/api/new-category", async function (req, res) {
 
 app.post("/api/new-product", async function (req, res) {
   const isNewProduct = await createNewProduct(req.body);
-  if (!isNewProduct?.error) res.sendStatus(201);
+  if (!isNewProduct?.error) res.status(201).json({ created: true });
   else res.status(400).send(isNewProduct.error);
 });
 

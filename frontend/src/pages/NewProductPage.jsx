@@ -6,12 +6,17 @@ import SelectBlock from "../components/NewProductPage/SelectBlock.jsx";
 import InputBlock from "../components/NewProductPage/InputBlock.jsx";
 import ModalNewProduct from "../components/Modals/ModalNewProduct.jsx";
 
-import { useLoaderData, useFetcher, useLocation } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
+import {
+  fetchData,
+  createNewProduct,
+} from "../store/reducers/newProductSlice.js";
 
 export const NewProductPage = () => {
-  const [data, setData] = useState(useLoaderData());
-  const fetcher = useFetcher();
-  const location = useLocation();
+  const { loading, errors, createdProd, createdCatItem, data } = useSelector(
+    (state) => state.newProductReducer,
+  );
+  const dispatch = useDispatch();
   const [isOpen, setIsOpen] = useState(false);
   const [choosedElement, setChoosedElement] = useState(null);
   const [done, setDone] = useState(null);
@@ -28,19 +33,21 @@ export const NewProductPage = () => {
   });
 
   useEffect(() => {
-    if (typeof fetcher.data !== "undefined" && fetcher.data !== null) {
-      const isNew = fetcher.data;
+    if (Object.keys(data).length === 0) dispatch(fetchData());
+  }, []);
 
+  useEffect(() => {
+    if (createdProd) {
       // set flag after adding new product for ModalNewProduct
       setDone({
-        is: isNew,
+        is: createdProd,
         title: newProduct.title,
         projects: data.projects.find(
           (project) => project.id == newProduct.projects,
         ),
       });
       //open modal
-      setIsOpen(!isOpen);
+      setIsOpen(!createdProd);
       //clear data of new product
       setNewProduct({
         title: "",
@@ -53,18 +60,14 @@ export const NewProductPage = () => {
         shopsUrl: "",
       });
     }
-  }, [fetcher.data]);
+  }, [createdProd]);
 
   const addNewProduct = () => {
     const disabled = isErrors(newProduct);
 
     if (disabled) {
       cleanError();
-
-      fetcher.submit(newProduct, {
-        method: "post",
-        action: location.pathname,
-      });
+      dispatch(createNewProduct(newProduct));
     }
   };
 
@@ -175,7 +178,8 @@ export const NewProductPage = () => {
         setIsOpen={setIsOpen}
         choosedElement={choosedElement}
         done={done}
-        setData={setData}
+        dispatch={dispatch}
+        createdCatItem={createdCatItem}
       />
     </div>
   );

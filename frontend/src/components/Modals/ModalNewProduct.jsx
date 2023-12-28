@@ -1,13 +1,13 @@
-import { useEffect, useState } from 'react';
-import { GoAlertFill } from 'react-icons/go';
-import Modal from './Modal.jsx';
+import { useEffect, useState } from "react";
+import { GoAlertFill } from "react-icons/go";
+import Modal from "./Modal.jsx";
 
-import { useFetcher, useLocation } from 'react-router-dom';
+import { createNewItemCategory } from "../../store/reducers/newProductSlice.js";
 
 const fields = {
-  categories: 'категории',
-  manufacturers: 'производителя',
-  projects: 'проэкта',
+  categories: "категории",
+  manufacturers: "производителя",
+  projects: "проэкта",
 };
 
 const ModalNewProduct = ({
@@ -15,34 +15,21 @@ const ModalNewProduct = ({
   setIsOpen,
   choosedElement,
   done,
-  setData,
+  dispatch,
+  createdCatItem,
 }) => {
-  const [title, setTitle] = useState('');
-  const fetcher = useFetcher();
-  const location = useLocation();
+  const [title, setTitle] = useState("");
 
   useEffect(() => {
-    if (typeof fetcher.data !== 'undefined' && fetcher.data !== null) {
-      const category = fetcher.data;
-
-      setTitle('');
-      setIsOpen(!isOpen);
-      setData((state) => ({
-        ...state,
-        [choosedElement]: [...state[choosedElement], category],
-      }));
+    if (createdCatItem) {
+      setTitle("");
+      setIsOpen(!createdCatItem);
     }
-  }, [fetcher.data]);
+  }, [createdCatItem]);
 
   const addChooseElement = () => {
     if (title.length >= 0) {
-      fetcher.submit(
-        { choosedElement, title },
-        {
-          method: 'post',
-          action: location.pathname + '/new-category',
-        }
-      );
+      dispatch(createNewItemCategory({ choosedElement, title }));
     }
   };
 
@@ -74,7 +61,7 @@ const ModalNewProduct = ({
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
               />
-              <div className={`${!done?.is ? 'text-center' : 'text-end'}`}>
+              <div className={`${!done?.is ? "text-center" : "text-end"}`}>
                 <button
                   className="px-10 mt-5 bg-[#cccccc] rounded shadow-xl"
                   onClick={addChooseElement}
@@ -86,7 +73,7 @@ const ModalNewProduct = ({
           ) : (
             <>
               <p className="text-center">{`Товар "${done.title}" добавлен в проэкт "${done.projects.title}"`}</p>
-              <div className={`${!done.is ? 'text-center' : 'text-end'}`}>
+              <div className={`${!done.is ? "text-center" : "text-end"}`}>
                 <button
                   className="px-10 mt-5 bg-[#cccccc] rounded shadow-xl"
                   onClick={() => setIsOpen(!isOpen)}
