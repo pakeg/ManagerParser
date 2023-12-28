@@ -1,4 +1,7 @@
 import { useEffect, useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { fetchGeneralData } from "../store/reducers/mainPageSlice.js";
+
 import PartMainOne from "../components/PartMainOne.jsx";
 import PartMainTwo from "../components/PartMainTwo.jsx";
 import PartMainThree from "../components/PartMainThree.jsx";
@@ -8,7 +11,6 @@ import ModalComments from "../components/Modals/ModalComments.jsx";
 
 import useScroll from "../hooks/useScroll.jsx";
 import useScrollHorizontal from "../hooks/useScrollHorizontal";
-import { useLoaderData, useFetcher, useLocation } from "react-router-dom";
 
 const Home = () => {
   const { isScroll, boxScroll, buttonScroll } = useScroll(true);
@@ -17,7 +19,14 @@ const Home = () => {
     boxScroll: boxScrollHor,
     buttonScroll: buttonScrollHor,
   } = useScrollHorizontal();
-  const [data, setData] = useState(useLoaderData());
+  const { loading, errors, data } = useSelector(
+    (state) => state.mainPageReducer,
+  );
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    if (Object.keys(data).length === 0) dispatch(fetchGeneralData());
+  }, []);
 
   return (
     <div>

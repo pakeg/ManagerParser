@@ -44,7 +44,7 @@ const PartMainTwo = ({ shops, shopsTableRows, boxScrollHor }) => {
                     <span>+</span>
                   </div>
                 </td>
-                {shops.length > 0 &&
+                {shops &&
                   shops
                     .filter((shop) => shop.active_status != "0")
                     .map((shop) => (
