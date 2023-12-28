@@ -89,8 +89,15 @@ const newProductSlice = createSliceWithThunks({
         },
       },
     ),
+    resetCreatedProd: create.reducer((state) => {
+      state.createdProd = false;
+    }),
   }),
 });
-export const { fetchData, createNewProduct, createNewItemCategory } =
-  newProductSlice.actions;
+export const {
+  fetchData,
+  createNewProduct,
+  createNewItemCategory,
+  resetCreatedProd,
+} = newProductSlice.actions;
 export default newProductSlice.reducer;

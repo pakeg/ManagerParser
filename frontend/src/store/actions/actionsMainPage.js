@@ -1,9 +1,9 @@
-export const loaderGetAllInformation = async ({ request }) => {
+export const fetchAllInformation = async (signal) => {
   const req = await fetch(
     import.meta.env.VITE_URL + "/api/get-all-information",
     {
       method: "POST",
-      signal: request.signal,
+      signal,
       headers: {
         Accept: "application/json",
       },

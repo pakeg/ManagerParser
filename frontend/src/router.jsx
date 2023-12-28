@@ -1,49 +1,16 @@
-import { createBrowserRouter, redirect } from "react-router-dom";
+import { createBrowserRouter } from "react-router-dom";
 
 import App from "./App";
 import ErrorPage from "./pages/ErrorPage";
 import MainPage from "./pages/MainPage";
 
-import { actionSignIn } from "./actions/actionsAuthPage";
-import { loaderGetAllInformation } from "./actions/actionsMainPage";
-
-const isAuthorized = async ({ request }) => {
-  const path = new URL(request.url).pathname;
-  const session = sessionStorage.getItem("authorized");
-
-  if (session === null && path !== "/authorization") {
-    const req = await fetch(import.meta.env.VITE_URL + "/api/authorization", {
-      method: "GET",
-      signal: request.signal,
-      mode: "cors",
-      credentials: "include",
-    });
-
-    if (!req.ok) {
-      const error = await req.text();
-      throw new Response(error, {
-        status: req.status,
-        statusText: "error",
-      });
-    }
-
-    const { authorized } = await req.json();
-    if (authorized) {
-      sessionStorage.setItem("authorized", authorized);
-    } else {
-      return redirect("/authorization");
-    }
-    return null;
-  }
-
-  return null;
-};
+import authInterceptor, { actionSignIn } from "./middleware/authInterceptor";
 
 const router = createBrowserRouter([
   {
     path: "/",
     element: <App />,
-    loader: isAuthorized,
+    loader: authInterceptor,
     errorElement: <ErrorPage />,
     children: [
       {
@@ -51,7 +18,6 @@ const router = createBrowserRouter([
         children: [
           {
             index: true,
-            loader: loaderGetAllInformation,
             element: <MainPage />,
           },
           {

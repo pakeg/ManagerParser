@@ -1,10 +1,10 @@
-import { MdOutlineDone, MdKeyboardArrowDown } from 'react-icons/md';
-import { BiSortDown, BiSearchAlt2 } from 'react-icons/bi';
-import { BsSortNumericDown } from 'react-icons/bs';
+import { MdOutlineDone, MdKeyboardArrowDown } from "react-icons/md";
+import { BiSortDown, BiSearchAlt2 } from "react-icons/bi";
+import { BsSortNumericDown } from "react-icons/bs";
 
-import Product from './Product/Product.jsx';
-import MenuItem from './Menu/MenuItem.jsx';
-import { useCallback, useRef } from 'react';
+import Product from "./Product/Product.jsx";
+import MenuItem from "./Menu/MenuItem.jsx";
+import { useCallback, useRef } from "react";
 
 const PartMainOne = ({ products }) => {
   const tBody = useRef(null);
@@ -18,8 +18,8 @@ const PartMainOne = ({ products }) => {
           mainCheckbox.current.checked && !element.checked
             ? !element.checked
             : !mainCheckbox.current.checked
-            ? !element.checked
-            : element.checked;
+              ? !element.checked
+              : element.checked;
       });
   }, [tBody, mainCheckbox]);
 
@@ -53,23 +53,23 @@ const PartMainOne = ({ products }) => {
             </label>
           </td>
           <MenuItem
-            title={'Категория'}
+            title={"Категория"}
             sort={BiSortDown}
             category={MdKeyboardArrowDown}
           />
           <MenuItem
-            title={'Произв.'}
+            title={"Произв."}
             sort={BiSortDown}
             category={MdKeyboardArrowDown}
           />
-          <MenuItem title={'Арт.'} sort={BiSortDown} search={BiSearchAlt2} />
-          <MenuItem title={'Товар'} sort={BiSortDown} search={BiSearchAlt2} />
-          <MenuItem title={'Закупка'} sort={BsSortNumericDown} />
-          <MenuItem title={'Цена'} sort={BsSortNumericDown} />
+          <MenuItem title={"Арт."} sort={BiSortDown} search={BiSearchAlt2} />
+          <MenuItem title={"Товар"} sort={BiSortDown} search={BiSearchAlt2} />
+          <MenuItem title={"Закупка"} sort={BsSortNumericDown} />
+          <MenuItem title={"Цена"} sort={BsSortNumericDown} />
         </tr>
       </thead>
       <tbody ref={tBody}>
-        {products.length > 0 &&
+        {products &&
           products.map((item) => (
             <Product
               key={item.id}

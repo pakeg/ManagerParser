@@ -10,6 +10,7 @@ import { useSelector, useDispatch } from "react-redux";
 import {
   fetchData,
   createNewProduct,
+  resetCreatedProd,
 } from "../store/reducers/newProductSlice.js";
 
 export const NewProductPage = () => {
@@ -47,7 +48,7 @@ export const NewProductPage = () => {
         ),
       });
       //open modal
-      setIsOpen(!createdProd);
+      setIsOpen(createdProd);
       //clear data of new product
       setNewProduct({
         title: "",
@@ -55,10 +56,11 @@ export const NewProductPage = () => {
         manufactures: null,
         projects: null,
         part_number: "",
-        purchase_price: 0,
-        price: 0,
+        purchase_price: "",
+        price: "",
         shopsUrl: "",
       });
+      dispatch(resetCreatedProd());
     }
   }, [createdProd]);
 
