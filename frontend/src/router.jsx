@@ -2,7 +2,6 @@ import { createBrowserRouter } from "react-router-dom";
 
 import App from "./App";
 import ErrorPage from "./pages/ErrorPage";
-import MainPage from "./pages/MainPage";
 
 import authInterceptor, { actionSignIn } from "./middleware/authInterceptor";
 
@@ -18,7 +17,12 @@ const router = createBrowserRouter([
         children: [
           {
             index: true,
-            element: <MainPage />,
+            async lazy() {
+              let { MainPage } = await import("./pages/MainPage");
+              return {
+                Component: MainPage,
+              };
+            },
           },
           {
             path: "admin-panel",

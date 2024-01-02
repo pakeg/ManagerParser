@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
+import { memoize } from "proxy-memoize";
 import { fetchGeneralData } from "../store/reducers/mainPageSlice.js";
 
 import PartMainOne from "../components/PartMainOne.jsx";
@@ -12,7 +13,7 @@ import ModalComments from "../components/Modals/ModalComments.jsx";
 import useScroll from "../hooks/useScroll.jsx";
 import useScrollHorizontal from "../hooks/useScrollHorizontal";
 
-const Home = () => {
+export const MainPage = () => {
   const { isScroll, boxScroll, buttonScroll } = useScroll(true);
   const {
     isScroll: isScrollHor,
@@ -20,12 +21,15 @@ const Home = () => {
     buttonScroll: buttonScrollHor,
   } = useScrollHorizontal();
   const { loading, errors, data } = useSelector(
-    (state) => state.mainPageReducer,
+    memoize((state) => ({
+      ...state.mainPageReducer,
+      data: { ...state.mainPageReducer.data, ...state.newProductReducer.data },
+    })),
   );
   const dispatch = useDispatch();
 
   useEffect(() => {
-    if (Object.keys(data).length === 0) dispatch(fetchGeneralData());
+    if (typeof data.products === "undefined") dispatch(fetchGeneralData());
   }, []);
 
   return (
@@ -40,7 +44,11 @@ const Home = () => {
           >
             <div className="flex">
               {/* -------Table N. 1--------- */}
-              <PartMainOne products={data.products} />
+              <PartMainOne
+                products={data.products}
+                categories={data.categories}
+                manufactures={data.manufactures}
+              />
               {/* -------Table N. 2--------- */}
               <PartMainTwo
                 shops={data.shops}
@@ -85,5 +93,3 @@ const Home = () => {
     </div>
   );
 };
-
-export default Home;

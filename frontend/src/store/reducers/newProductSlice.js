@@ -21,7 +21,7 @@ const newProductSlice = createSliceWithThunks({
   name: "newProducts",
   initialState,
   reducers: (create) => ({
-    fetchData: create.asyncThunk(
+    fetchDataCategories: create.asyncThunk(
       async (_, { signal, getState }) => {
         const {
           newProductReducer: { revalidate },
@@ -94,8 +94,9 @@ const newProductSlice = createSliceWithThunks({
     }),
   }),
 });
+
 export const {
-  fetchData,
+  fetchDataCategories,
   createNewProduct,
   createNewItemCategory,
   resetCreatedProd,

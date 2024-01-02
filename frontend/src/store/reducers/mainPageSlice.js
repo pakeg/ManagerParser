@@ -1,6 +1,7 @@
 import { buildCreateSlice, asyncThunkCreator } from "@reduxjs/toolkit";
 
 import { fetchAllInformation } from "../actions/actionsMainPage";
+import { fetchDataCategories } from "./newProductSlice";
 
 const initialState = {
   loading: false,
@@ -17,10 +18,14 @@ const mainPageSlice = createSliceWithThunks({
   initialState,
   reducers: (create) => ({
     fetchGeneralData: create.asyncThunk(
-      async (_, { signal, getState }) => {
+      async (_, { signal, getState, dispatch }) => {
         const {
-          adminReducer: { revalidate },
+          mainPageReducer: { revalidate },
+          newProductReducer: { data: categories },
         } = getState();
+        if (Object.keys(categories).length === 0) {
+          dispatch(fetchDataCategories());
+        }
         if (revalidate == null || revalidate < Date.now()) {
           const data = await fetchAllInformation(signal);
           return data;

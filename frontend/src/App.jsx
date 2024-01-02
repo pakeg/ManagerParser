@@ -1,30 +1,12 @@
 import { Outlet } from "react-router-dom";
-import { RiArrowDownSLine } from "react-icons/ri";
-import { AiFillPlusCircle } from "react-icons/ai";
+import Header from "./components/Header";
 import Button from "./components/Button";
 import Aside from "./components/AsideBar/Aside";
 
 function App() {
   return (
     <div className="h-screen">
-      <div className="bg-black py-3 flex items-center space-x-28">
-        <h1 className="text-gray-400 ml-20 first-letter:text-2xl tracking-wider text-lg ">
-          PARCERMANN
-        </h1>
-        <div>
-          <div className="bg-gray-400 flex items-center rounded py-1 cursor-pointer">
-            <span className="shrink-0 font-semibold pl-10">Проект</span>
-            <span className="shrink pl-10 pt-1">
-              <RiArrowDownSLine size="25" />
-            </span>
-          </div>
-          <div></div>
-        </div>
-        <div className="flex space-x-4">
-          <Button text="Добавить товар" icon={AiFillPlusCircle} />
-        </div>
-      </div>
-
+      <Header />
       <main className="flex h-fscreen">
         <Aside />
         <Outlet />
