@@ -1,16 +1,23 @@
-import { useCallback, useState } from 'react';
-import { PiArrowElbowDownLeft } from 'react-icons/pi';
+import { useCallback, useState } from "react";
+import { PiArrowElbowDownLeft } from "react-icons/pi";
 
-const MenuItem = ({ title, sort: Sort, icon: Icon, category, search }) => {
+const MenuItem = ({
+  title,
+  sort: Sort,
+  icon: Icon,
+  category: Category,
+  search: Search,
+  data,
+}) => {
   const [hideCategory, setHideCategory] = useState(false);
   const [hideSearch, setHideSearch] = useState(false);
-  const [querySearch, setQuerySearch] = useState('');
+  const [querySearch, setQuerySearch] = useState("");
 
   const searching = useCallback(() => {
     if (querySearch) {
-      console.log(querySearch, 'querySearch');
+      console.log(querySearch, "querySearch");
       setHideSearch(!hideSearch);
-      setQuerySearch('');
+      setQuerySearch("");
     }
     return;
   }, [querySearch]);
@@ -21,43 +28,45 @@ const MenuItem = ({ title, sort: Sort, icon: Icon, category, search }) => {
         {Sort && <Sort className="cursor-pointer" size={20} />}
         <span>{title}</span>
 
-        {Icon && !category && !search && (
+        {Icon && !Category && !Search && (
           <Icon className="cursor-pointer" size={20} />
         )}
-        {Icon && category && (
-          <Icon
+
+        {Category && (
+          <Category
             className="cursor-pointer"
             size={20}
             onClick={() => setHideCategory(!hideCategory)}
           />
         )}
-        {Icon && search && (
-          <Icon
+
+        {Search && (
+          <Search
             className="cursor-pointer"
             size={20}
             onClick={() => setHideSearch(!hideSearch)}
           />
         )}
 
-        {category && hideCategory && (
+        {Category && hideCategory && (
           <div className="absolute top-full -left-1 w-full bg-white rounded px-0.5">
             <ul>
-              {['Высшая', 'Высшая 1'].map((item) => (
-                <li key={item} className="flex justify-between">
-                  <span>{item}</span>
-                  <input
-                    key={item}
-                    type="checkbox"
-                    name="category[]"
-                    value={item}
-                  />
+              {data.map((item) => (
+                <li key={item.id} className="flex justify-between">
+                  <span
+                    className="overflow-hidden whitespace-nowrap text-ellipsis cursor-default"
+                    title={item.title}
+                  >
+                    {item.title}
+                  </span>
+                  <input type="checkbox" name="category[]" value={item.id} />
                 </li>
               ))}
             </ul>
           </div>
         )}
 
-        {search && hideSearch && (
+        {Search && hideSearch && (
           <div className="absolute top-full -left-1 w-full bg-white rounded px-0.5 flex items-center">
             <input
               className="w-full bg-white px-2.5 py-1.5"

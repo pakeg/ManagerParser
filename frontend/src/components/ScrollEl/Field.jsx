@@ -1,8 +1,8 @@
-import { useState } from 'react';
-import { BsCheck } from 'react-icons/bs';
-import { LuCross } from 'react-icons/lu';
+import { useState } from "react";
+import { BsCheck } from "react-icons/bs";
+import { LuCross } from "react-icons/lu";
 
-function InfoData({ text, newInput }) {
+function Field({ text, newInput }) {
   const [value, setValue] = useState(text);
   const [visible, setVisible] = useState(false);
 
@@ -49,7 +49,7 @@ function InfoData({ text, newInput }) {
                 strokeWidth="1"
                 fill="white"
                 style={{
-                  transform: 'rotateZ(45deg)',
+                  transform: "rotateZ(45deg)",
                 }}
                 title="cancel"
               />
@@ -61,4 +61,4 @@ function InfoData({ text, newInput }) {
   );
 }
 
-export default InfoData;
+export default Field;

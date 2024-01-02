@@ -1,25 +1,25 @@
-import { useCallback, useState } from 'react';
-import { MdOutlineDone } from 'react-icons/md';
-import { TiEdit } from 'react-icons/ti';
-import { BsCheck } from 'react-icons/bs';
+import { useCallback, useState } from "react";
+import { MdOutlineDone } from "react-icons/md";
+import { TiEdit } from "react-icons/ti";
+import { BsCheck } from "react-icons/bs";
 
-import { percentageDifference } from '../../utils/utilsFun';
+import { percentageDifference } from "../../utils/utilsFun";
 
 const Product = ({ product, checkMainInput }) => {
   const [editable, setEditable] = useState(false);
-  const [price, setPrice] = useState('');
+  const [price, setPrice] = useState("");
 
   const changePrice = useCallback(
     (price) => {
       if (price) {
-        console.log(price, 'change price');
+        console.log(price, "change price");
       }
 
-      setPrice('');
+      setPrice("");
       setEditable(false);
       return;
     },
-    [price]
+    [price],
   );
 
   return (
@@ -44,27 +44,37 @@ const Product = ({ product, checkMainInput }) => {
           />
         </label>
       </td>
-      <td>
-        <span>{product.category}</span>
+      <td title={product.category}>
+        <p className="overflow-hidden whitespace-nowrap text-ellipsis w-32">
+          {product.category}
+        </p>
       </td>
-      <td>
-        <span>{product.manufacture}</span>
+      <td title={product.manufacture}>
+        <p className="overflow-hidden whitespace-nowrap text-ellipsis w-32">
+          {product.manufacture}
+        </p>
       </td>
-      <td>
-        <span>{product.part_number}</span>
+      <td title={product.part_number}>
+        <p className="overflow-hidden whitespace-nowrap text-ellipsis w-32">
+          {product.part_number}
+        </p>
       </td>
-      <td>
-        <span>{product.title}</span>
+      <td title={product.title}>
+        <p className="overflow-hidden whitespace-nowrap text-ellipsis w-32">
+          {product.title}
+        </p>
       </td>
-      <td>
-        <span>{product.purchase}</span>
+      <td title={product.purchase}>
+        <p className="overflow-hidden whitespace-nowrap text-ellipsis w-20 mx-auto">
+          {product.purchase}
+        </p>
       </td>
-      <td className="relative py-2 px-12 group">
+      <td className="relative px-1.5 group" title={product.price}>
         {!editable ? (
-          <div>
+          <div className="overflow-hidden whitespace-nowrap text-ellipsis w-20">
             <span>{product.price}</span>
             <span className="absolute top-0 text-[#4bc1b5] leading-none">
-              {percentageDifference(product.purchase, product.price) + '%'}
+              {percentageDifference(product.purchase, product.price) + "%"}
             </span>
             <div
               className="group-hover:opacity-90 absolute w-full h-full top-0 left-0 bg-[#f9f8f9] opacity-0 flex items-center justify-center cursor-pointer"
@@ -74,11 +84,11 @@ const Product = ({ product, checkMainInput }) => {
             </div>
           </div>
         ) : (
-          <div>
+          <div className="overflow-hidden whitespace-nowrap text-ellipsis w-20">
             <input
               type="number"
               name="change-price"
-              className="bg-white w-6 rounded-sm peer"
+              className="bg-white rounded-sm peer outline-slate-800 w-full"
               min="0"
               placeholder={product.price}
               onChange={(e) => setPrice(e.target.value)}
@@ -89,7 +99,7 @@ const Product = ({ product, checkMainInput }) => {
                 strokeWidth="2"
                 fill="white"
                 title={`${
-                  price ? 'confirm change' : 'cancel or put the price'
+                  price ? "confirm change" : "cancel or put the price"
                 }`}
                 onClick={() => changePrice(price)}
               />

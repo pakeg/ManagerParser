@@ -39,9 +39,9 @@ const PartMainTwo = ({ shops, shopsTableRows, boxScrollHor }) => {
           <table className="text-center border-separate text-black font-semibold text-xs border-spacing-1">
             <thead>
               <tr className="bg-[#c1c1c1]">
-                <td>
-                  <div className="w-8 h-8 cursor-pointer flex items-center justify-center font-normal text-4xl">
-                    <span>+</span>
+                <td className="py-1.5 px-2.5">
+                  <div className="flex items-center cursor-pointer text-xl leading-none">
+                    +
                   </div>
                 </td>
                 {shops &&

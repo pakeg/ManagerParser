@@ -8,7 +8,7 @@ import ModalNewProduct from "../components/Modals/ModalNewProduct.jsx";
 
 import { useSelector, useDispatch } from "react-redux";
 import {
-  fetchData,
+  fetchDataCategories,
   createNewProduct,
   resetCreatedProd,
 } from "../store/reducers/newProductSlice.js";
@@ -34,7 +34,7 @@ export const NewProductPage = () => {
   });
 
   useEffect(() => {
-    if (Object.keys(data).length === 0) dispatch(fetchData());
+    if (Object.keys(data).length === 0) dispatch(fetchDataCategories());
   }, []);
 
   useEffect(() => {

@@ -6,7 +6,7 @@ import Product from "./Product/Product.jsx";
 import MenuItem from "./Menu/MenuItem.jsx";
 import { useCallback, useRef } from "react";
 
-const PartMainOne = ({ products }) => {
+const PartMainOne = ({ products, categories, manufactures }) => {
   const tBody = useRef(null);
   const mainCheckbox = useRef(null);
 
@@ -56,11 +56,13 @@ const PartMainOne = ({ products }) => {
             title={"Категория"}
             sort={BiSortDown}
             category={MdKeyboardArrowDown}
+            data={categories}
           />
           <MenuItem
             title={"Произв."}
             sort={BiSortDown}
             category={MdKeyboardArrowDown}
+            data={manufactures}
           />
           <MenuItem title={"Арт."} sort={BiSortDown} search={BiSearchAlt2} />
           <MenuItem title={"Товар"} sort={BiSortDown} search={BiSearchAlt2} />
