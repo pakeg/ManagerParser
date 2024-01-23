@@ -2,12 +2,19 @@ import { buildCreateSlice, asyncThunkCreator } from "@reduxjs/toolkit";
 
 import { fetchAllInformation } from "../actions/actionsMainPage";
 import { fetchDataCategories } from "./newProductSlice";
+import {
+  sortByPropertiesASC,
+  sortByPropertiesDESC,
+} from "../../utils/utilsFun";
 
 const initialState = {
   loading: false,
   errors: null,
   data: {},
   revalidate: null,
+  sort: [],
+  search: "",
+  filters: [],
 };
 const createSliceWithThunks = buildCreateSlice({
   creators: { asyncThunk: asyncThunkCreator },
@@ -46,7 +53,16 @@ const mainPageSlice = createSliceWithThunks({
         },
       },
     ),
+    sorting: create.reducer((state, action) => {
+      if (state.sort.indexOf(action.payload) === -1) {
+        state.sort.push(action.payload);
+        state.data.products.sort(sortByPropertiesASC(state.sort));
+      } else {
+        state.sort.splice(state.sort.indexOf(action.payload), 1);
+        state.data.products.sort(sortByPropertiesDESC([action.payload]));
+      }
+    }),
   }),
 });
-export const { fetchGeneralData } = mainPageSlice.actions;
+export const { fetchGeneralData, sorting } = mainPageSlice.actions;
 export default mainPageSlice.reducer;

@@ -52,22 +52,43 @@ const PartMainOne = ({ products, categories, manufactures }) => {
               />
             </label>
           </td>
+
           <MenuItem
             title={"Категория"}
             sort={BiSortDown}
+            properties={"category"}
             category={MdKeyboardArrowDown}
             data={categories}
           />
           <MenuItem
             title={"Произв."}
             sort={BiSortDown}
+            properties={"manufacture"}
             category={MdKeyboardArrowDown}
             data={manufactures}
           />
-          <MenuItem title={"Арт."} sort={BiSortDown} search={BiSearchAlt2} />
-          <MenuItem title={"Товар"} sort={BiSortDown} search={BiSearchAlt2} />
-          <MenuItem title={"Закупка"} sort={BsSortNumericDown} />
-          <MenuItem title={"Цена"} sort={BsSortNumericDown} />
+          <MenuItem
+            title={"Арт."}
+            sort={BiSortDown}
+            properties={"part_number"}
+            search={BiSearchAlt2}
+          />
+          <MenuItem
+            title={"Товар"}
+            sort={BiSortDown}
+            properties={"title"}
+            search={BiSearchAlt2}
+          />
+          <MenuItem
+            title={"Закупка"}
+            sort={BsSortNumericDown}
+            properties={"purchase"}
+          />
+          <MenuItem
+            title={"Цена"}
+            sort={BsSortNumericDown}
+            properties={"price"}
+          />
         </tr>
       </thead>
       <tbody ref={tBody}>
