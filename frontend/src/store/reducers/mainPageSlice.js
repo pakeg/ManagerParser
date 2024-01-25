@@ -1,11 +1,11 @@
 import { buildCreateSlice, asyncThunkCreator } from "@reduxjs/toolkit";
+import { produce } from "immer";
 
 import { fetchAllInformation } from "../actions/actionsMainPage";
 import { fetchDataCategories } from "./newProductSlice";
-import {
-  sortByPropertiesASC,
-  sortByPropertiesDESC,
-} from "../../utils/utilsFun";
+import { sortByProperties } from "../../utils/utilsFun";
+
+const sortOrder = ["asc", "desc", "del"];
 
 const initialState = {
   loading: false,
@@ -53,14 +53,24 @@ const mainPageSlice = createSliceWithThunks({
         },
       },
     ),
-    sorting: create.reducer((state, action) => {
-      if (state.sort.indexOf(action.payload) === -1) {
-        state.sort.push(action.payload);
-        state.data.products.sort(sortByPropertiesASC(state.sort));
-      } else {
-        state.sort.splice(state.sort.indexOf(action.payload), 1);
-        state.data.products.sort(sortByPropertiesDESC([action.payload]));
-      }
+    sorting: create.reducer((state, { payload: { properties, sortIndex } }) => {
+      const orderProp = `${properties}:${sortOrder[sortIndex]}`;
+      const findI = state.sort.findIndex((el) => {
+        if (el.indexOf(properties) !== -1) {
+          return true;
+        }
+        return false;
+      });
+      const start = findI === -1 ? state.sort.length : findI;
+
+      return produce(state, (draft) => {
+        if (sortOrder[sortIndex] !== "del") {
+          draft.sort.splice(start, 1, orderProp);
+        } else {
+          draft.sort.splice(start, 1);
+        }
+        draft.data.products.sort(sortByProperties(draft.sort));
+      });
     }),
   }),
 });

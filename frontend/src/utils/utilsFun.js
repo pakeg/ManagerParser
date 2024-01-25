@@ -18,42 +18,21 @@ const formatSize = (length) => {
   return length.toFixed(2) + type[i];
 };
 
-const sortByPropertiesASC = (properties) => {
+const sortByProperties = (properties) => {
   return function (a, b) {
     for (var i = 0; i < properties.length; i++) {
-      var property = properties[i];
+      var [property, order] = properties[i].split(":");
+      const sortOrder = order === "desc" ? -1 : 1;
 
       if (a[property] < b[property]) {
-        return -1;
+        return -1 * sortOrder;
       }
       if (a[property] > b[property]) {
-        return 1;
+        return 1 * sortOrder;
       }
     }
     return 0;
   };
 };
 
-const sortByPropertiesDESC = (properties) => {
-  return function (a, b) {
-    for (var i = 0; i < properties.length; i++) {
-      var property = properties[i];
-
-      if (a[property] < b[property]) {
-        return 1;
-      }
-      if (a[property] > b[property]) {
-        return -1;
-      }
-    }
-    return 0;
-  };
-};
-
-export {
-  formatDate,
-  percentageDifference,
-  formatSize,
-  sortByPropertiesASC,
-  sortByPropertiesDESC,
-};
+export { formatDate, percentageDifference, formatSize, sortByProperties };

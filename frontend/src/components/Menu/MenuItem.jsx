@@ -16,7 +16,17 @@ const MenuItem = ({
   const [hideCategory, setHideCategory] = useState(false);
   const [hideSearch, setHideSearch] = useState(false);
   const [querySearch, setQuerySearch] = useState("");
+  const [sortIndex, setSortIndex] = useState(0);
   const dispatch = useDispatch();
+
+  const changingSortOrder = useCallback(() => {
+    dispatch(sorting({ properties, sortIndex }));
+    if (sortIndex === 2) {
+      setSortIndex(0);
+      return;
+    }
+    setSortIndex(sortIndex + 1);
+  });
 
   const searching = useCallback(() => {
     if (querySearch) {
@@ -32,9 +42,9 @@ const MenuItem = ({
       <div className="flex items-center justify-center space-x-1">
         {Sort && (
           <Sort
-            className="cursor-pointer"
+            className={`cursor-pointer ${sortIndex === 1 && "text-teal-500"} ${sortIndex === 2 && "text-rose-500"}`}
             size={20}
-            onClick={() => properties && dispatch(sorting(properties))}
+            onClick={() => properties && changingSortOrder()}
           />
         )}
         <span>{title}</span>
