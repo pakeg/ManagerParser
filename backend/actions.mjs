@@ -191,7 +191,7 @@ const getAllUser = async function () {
   const users =
     await sql`select id, nickname, name, surname, email, active_status from users order by id`;
 
-  return users;
+  return { users };
 };
 
 const getAllProductsInformation = async function () {
@@ -216,8 +216,20 @@ const getAllProductsInformation = async function () {
     left join shops on (shops.id = shop_id and shops.active_status != '0')
     order by id`;
     const groupProductsById = products.reduce((c, n) => {
-      if (!Object.hasOwn(c, n.id)) c[n.id] = { products: [] };
-      c[n.id].products.push(n);
+      if (!Object.hasOwn(c, n.id)) {
+        c[n.id] = { product: { ...n, shops_data: [] } };
+      }
+      c[n.id].product.shops_data.push({
+        shop: n.shop,
+        price: n.price,
+        parsed_price: n.parsed_price,
+        date: n.date,
+      });
+      c[n.id].info = { count: 0, min: 0, max: 0 };
+
+      delete c[n.id].product.shop;
+      delete c[n.id].product.parsed_price;
+      delete c[n.id].product.date;
       return c;
     }, {});
 
@@ -234,9 +246,9 @@ const getAllProductsInformation = async function () {
     product_id`;
     AddInfoProduct.forEach((info) => {
       groupProductsById[info.product_id].info = {
-        count: info.count,
-        min: info.min,
-        max: info.max,
+        count: +info.count ?? 0,
+        min: +info.min ?? 0,
+        max: +info.max ?? 0,
       };
     });
 
@@ -244,19 +256,10 @@ const getAllProductsInformation = async function () {
       const row = [];
       shops.forEach((shop) => {
         if (shop.active_status != "0") {
-          const finded = groupProductsById[id].products.find(
-            (prod) => prod.shop === shop.title,
+          const finded = groupProductsById[id].product.shops_data.find(
+            (shop_data) => shop_data.shop === shop.title,
           );
-          row.push(
-            finded
-              ? {
-                  shop: finded.shop,
-                  price: finded.price,
-                  parsed_price: finded.parsed_price,
-                  date: finded.date,
-                }
-              : null,
-          );
+          row.push(finded ?? null);
         }
       });
 
@@ -264,7 +267,7 @@ const getAllProductsInformation = async function () {
     });
 
     const resultedProducts = Object.entries(groupProductsById).map(
-      ([_, value]) => ({ ...value.products[0], ...value.info }),
+      ([_, value]) => ({ ...value.product, ...value.info }),
     );
 
     return { products: resultedProducts, shops, shopsTableRows };

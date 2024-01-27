@@ -1,14 +1,8 @@
-import {
-  buildCreateSlice,
-  asyncThunkCreator,
-  createSelector,
-} from "@reduxjs/toolkit";
+import { buildCreateSlice, asyncThunkCreator } from "@reduxjs/toolkit";
 
 import { fetchAllInformation } from "../actions/actionsMainPage";
 import { fetchDataCategories } from "./newProductSlice";
-import { sortByProperties } from "../../utils/utilsFun";
-
-const sortOrder = ["asc", "desc", "del"];
+import { sortReducer } from "../actions/createdActions";
 
 const initialState = {
   loading: false,
@@ -56,35 +50,9 @@ const mainPageSlice = createSliceWithThunks({
         },
       },
     ),
-    setSort: create.reducer((state, { payload: { properties, sortIndex } }) => {
-      const orderProp = `${properties}:${sortOrder[sortIndex]}`;
-      const findI = state.sort.findIndex((el) => {
-        if (el.indexOf(properties) !== -1) {
-          return true;
-        }
-        return false;
-      });
-      const start = findI === -1 ? state.sort.length : findI;
-
-      if (sortOrder[sortIndex] !== "del") {
-        state.sort.splice(start, 1, orderProp);
-      } else {
-        state.sort.splice(start, 1);
-      }
-    }),
+    setSort: sortReducer(create),
   }),
 });
 
-export const getSortedProducts = createSelector(
-  (state) => state,
-  (state) => {
-    const sortedProducts = state.data.products ? [...state.data.products] : [];
-    if (state.sort.length != 0) {
-      sortedProducts.sort(sortByProperties(state.sort));
-    }
-    return sortedProducts;
-  },
-);
-
-export const { fetchGeneralData, setSort } = mainPageSlice.actions;
+export const { fetchGeneralData } = mainPageSlice.actions;
 export default mainPageSlice.reducer;

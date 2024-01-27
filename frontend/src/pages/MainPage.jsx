@@ -1,10 +1,9 @@
 import { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { memoize } from "proxy-memoize";
-import {
-  fetchGeneralData,
-  getSortedProducts,
-} from "../store/reducers/mainPageSlice.js";
+
+import { fetchGeneralData } from "../store/reducers/mainPageSlice.js";
+import { getSortedDataSelector } from "../store/actions/createdActions.js";
 
 import PartMainOne from "../components/PartMainOne.jsx";
 import PartMainTwo from "../components/PartMainTwo.jsx";
@@ -27,8 +26,7 @@ export const MainPage = () => {
     memoize((state) => ({
       ...state.mainPageReducer,
       data: {
-        ...state.mainPageReducer.data,
-        products: getSortedProducts(state.mainPageReducer),
+        ...getSortedDataSelector(state.mainPageReducer, "products"),
         ...state.newProductReducer.data,
       },
     })),
@@ -36,7 +34,7 @@ export const MainPage = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    if (data.products.length === 0) dispatch(fetchGeneralData());
+    if (typeof data.products === "undefined") dispatch(fetchGeneralData());
   }, []);
 
   return (
