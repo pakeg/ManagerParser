@@ -3,7 +3,6 @@ import {
   asyncThunkCreator,
   createSelector,
 } from "@reduxjs/toolkit";
-import { produce } from "immer";
 
 import { fetchAllInformation } from "../actions/actionsMainPage";
 import { fetchDataCategories } from "./newProductSlice";
