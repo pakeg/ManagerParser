@@ -57,6 +57,7 @@ const PartMainOne = ({ products, categories, manufactures }) => {
             title={"Категория"}
             sort={BiSortDown}
             properties={"category"}
+            actionType={"mainPage/setSort"}
             category={MdKeyboardArrowDown}
             data={categories}
           />
@@ -64,6 +65,7 @@ const PartMainOne = ({ products, categories, manufactures }) => {
             title={"Произв."}
             sort={BiSortDown}
             properties={"manufacture"}
+            actionType={"mainPage/setSort"}
             category={MdKeyboardArrowDown}
             data={manufactures}
           />
@@ -71,23 +73,27 @@ const PartMainOne = ({ products, categories, manufactures }) => {
             title={"Арт."}
             sort={BiSortDown}
             properties={"part_number"}
+            actionType={"mainPage/setSort"}
             search={BiSearchAlt2}
           />
           <MenuItem
             title={"Товар"}
             sort={BiSortDown}
             properties={"title"}
+            actionType={"mainPage/setSort"}
             search={BiSearchAlt2}
           />
           <MenuItem
             title={"Закупка"}
             sort={BsSortNumericDown}
             properties={"purchase"}
+            actionType={"mainPage/setSort"}
           />
           <MenuItem
             title={"Цена"}
             sort={BsSortNumericDown}
             properties={"price"}
+            actionType={"mainPage/setSort"}
           />
         </tr>
       </thead>

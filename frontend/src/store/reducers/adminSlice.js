@@ -4,11 +4,13 @@ import {
   actionCreateNewUser,
   actionUpdateUser,
 } from "../actions/actionAdminPanel";
+import { sortReducer } from "../actions/createdActions";
 
 const initialState = {
   loading: false,
   errors: null,
-  users: [],
+  data: {},
+  sort: [],
   revalidate: null,
 };
 const createSliceWithThunks = buildCreateSlice({
@@ -28,7 +30,7 @@ const usersSlice = createSliceWithThunks({
           const data = await fetchAllUsers(signal);
           return data;
         }
-        return [];
+        return {};
       },
       {
         pending: (state) => {
@@ -40,7 +42,7 @@ const usersSlice = createSliceWithThunks({
         fulfilled: (state, action) => {
           state.loading = false;
           state.revalidate = Date.now() + 60 * 60 * 1000;
-          state.users.push(...action.payload);
+          state.data = action.payload;
         },
       },
     ),
@@ -83,6 +85,7 @@ const usersSlice = createSliceWithThunks({
         },
       },
     ),
+    setSort: sortReducer(create),
   }),
 });
 export const { fetchUsers, addNewUser, updateUser } = usersSlice.actions;

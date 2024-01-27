@@ -8,9 +8,27 @@ const PartMainThree = ({ products }) => {
     <table className="text-center border-separate text-black font-semibold text-xs border-spacing-1">
       <thead>
         <tr className="bg-[#c1c1c1]">
-          <MenuItem title={"Количество"} sort={BsSortNumericDown} left />
-          <MenuItem title={"Min"} sort={BsSortNumericDown} left />
-          <MenuItem title={"Max"} sort={BsSortNumericDown} left />
+          <MenuItem
+            title={"Количество"}
+            sort={BsSortNumericDown}
+            properties={"count"}
+            actionType={"mainPage/setSort"}
+            left
+          />
+          <MenuItem
+            title={"Min"}
+            sort={BsSortNumericDown}
+            properties={"min"}
+            actionType={"mainPage/setSort"}
+            left
+          />
+          <MenuItem
+            title={"Max"}
+            sort={BsSortNumericDown}
+            properties={"max"}
+            actionType={"mainPage/setSort"}
+            left
+          />
         </tr>
       </thead>
       <tbody>

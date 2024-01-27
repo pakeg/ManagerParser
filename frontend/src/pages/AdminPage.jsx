@@ -1,6 +1,9 @@
 import { BiSortDown } from "react-icons/bi";
 import { AiOutlineFieldNumber } from "react-icons/ai";
+import { memoize } from "proxy-memoize";
+
 import { useEffect, useState } from "react";
+import { Navigate } from "react-router-dom";
 
 import MenuItem from "../components/Menu/MenuItem.jsx";
 import User from "../components/User.jsx";
@@ -8,13 +11,21 @@ import ModalAdmin from "../components/Modals/ModalAdmin.jsx";
 
 import { useSelector, useDispatch } from "react-redux";
 import { fetchUsers, updateUser } from "../store/reducers/adminSlice.js";
-import { Navigate } from "react-router-dom";
+import { getSortedDataSelector } from "../store/actions/createdActions.js";
 
 const session =
   sessionStorage.getItem("authorized")?.match("admin|user|manager")[0] ?? "";
 
 export const AdminPage = () => {
-  const { loading, errors, users } = useSelector((state) => state.adminReducer);
+  const { loading, errors, data } = useSelector(
+    memoize((state) => ({
+      ...state.adminReducer,
+      data: {
+        ...getSortedDataSelector(state.adminReducer, "users"),
+      },
+    })),
+  );
+
   const dispatch = useDispatch();
   const [isOpen, setIsOpen] = useState(false);
   const [editAbleUser, setEditAbleUser] = useState(null);
@@ -22,7 +33,7 @@ export const AdminPage = () => {
   if (session !== "admin") return <Navigate to="/" replace={true} />;
 
   useEffect(() => {
-    if (users.length == 0) dispatch(fetchUsers());
+    if (typeof data.users === "undefined") dispatch(fetchUsers());
   }, []);
 
   const setEditUser = (user) => {
@@ -42,15 +53,35 @@ export const AdminPage = () => {
             <td className="p-2">
               <AiOutlineFieldNumber size={20} />
             </td>
-            <MenuItem title={"Имя пользователя"} sort={BiSortDown} />
-            <MenuItem title={"Имя"} />
-            <MenuItem title={"Фамилия"} />
-            <MenuItem title={"Электронная почта (email)"} />
+            <MenuItem
+              title={"Имя пользователя"}
+              sort={BiSortDown}
+              properties={"nickname"}
+              actionType={"users/setSort"}
+            />
+            <MenuItem
+              title={"Имя"}
+              sort={BiSortDown}
+              properties={"name"}
+              actionType={"users/setSort"}
+            />
+            <MenuItem
+              title={"Фамилия"}
+              sort={BiSortDown}
+              properties={"surname"}
+              actionType={"users/setSort"}
+            />
+            <MenuItem
+              title={"Электронная почта (email)"}
+              sort={BiSortDown}
+              properties={"email"}
+              actionType={"users/setSort"}
+            />
           </tr>
         </thead>
         <tbody>
-          {users &&
-            users.map((user) => (
+          {data.users &&
+            data.users.map((user) => (
               <User
                 key={user.id}
                 user={user}

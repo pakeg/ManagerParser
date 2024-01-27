@@ -68,6 +68,6 @@ export const fetchAllUsers = async (signal) => {
       statusText: "Server internal error",
     });
   }
-  const users = await req.json();
-  return users;
+  const data = await req.json(); //Object {users}
+  return data;
 };

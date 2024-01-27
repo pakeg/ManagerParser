@@ -2,16 +2,18 @@ import { useCallback, useState } from "react";
 import { PiArrowElbowDownLeft } from "react-icons/pi";
 
 import { useDispatch } from "react-redux";
-import { sorting } from "../../store/reducers/mainPageSlice";
+import { setSortActions } from "../../store/actions/createdActions";
 
 const MenuItem = ({
   title,
   sort: Sort,
   properties,
+  actionType,
   icon: Icon,
   category: Category,
   search: Search,
   data,
+  left,
 }) => {
   const [hideCategory, setHideCategory] = useState(false);
   const [hideSearch, setHideSearch] = useState(false);
@@ -20,7 +22,8 @@ const MenuItem = ({
   const dispatch = useDispatch();
 
   const changingSortOrder = useCallback(() => {
-    dispatch(sorting({ properties, sortIndex }));
+    const action = setSortActions(actionType);
+    dispatch(action({ properties, sortIndex }));
     if (sortIndex === 2) {
       setSortIndex(0);
       return;
@@ -39,7 +42,9 @@ const MenuItem = ({
 
   return (
     <td className="py-1.5 px-2.5 relative">
-      <div className="flex items-center justify-center space-x-1">
+      <div
+        className={`flex items-center justify-center space-x-1 ${left && "flex-row-reverse"}`}
+      >
         {Sort && (
           <Sort
             className={`cursor-pointer ${sortIndex === 1 && "text-teal-500"} ${sortIndex === 2 && "text-rose-500"}`}

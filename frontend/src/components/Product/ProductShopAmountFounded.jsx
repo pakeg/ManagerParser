@@ -1,9 +1,9 @@
 const ProductShopAmountFounded = ({ product }) => {
   return (
     <tr className="bg-[#dfdfdf]">
-      <td>{product.count ?? '-'}</td>
-      <td>{product.min ?? '-'}</td>
-      <td>{product.max ?? '-'}</td>
+      <td>{product.count ? product.count : "-"}</td>
+      <td>{product.min ? product.min : "-"}</td>
+      <td>{product.max ? product.max : "-"}</td>
     </tr>
   );
 };
