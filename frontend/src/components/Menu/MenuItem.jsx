@@ -1,9 +1,13 @@
 import { useCallback, useState } from "react";
 import { PiArrowElbowDownLeft } from "react-icons/pi";
 
+import { useDispatch } from "react-redux";
+import { sorting } from "../../store/reducers/mainPageSlice";
+
 const MenuItem = ({
   title,
   sort: Sort,
+  properties,
   icon: Icon,
   category: Category,
   search: Search,
@@ -12,6 +16,17 @@ const MenuItem = ({
   const [hideCategory, setHideCategory] = useState(false);
   const [hideSearch, setHideSearch] = useState(false);
   const [querySearch, setQuerySearch] = useState("");
+  const [sortIndex, setSortIndex] = useState(0);
+  const dispatch = useDispatch();
+
+  const changingSortOrder = useCallback(() => {
+    dispatch(sorting({ properties, sortIndex }));
+    if (sortIndex === 2) {
+      setSortIndex(0);
+      return;
+    }
+    setSortIndex(sortIndex + 1);
+  });
 
   const searching = useCallback(() => {
     if (querySearch) {
@@ -25,7 +40,13 @@ const MenuItem = ({
   return (
     <td className="py-1.5 px-2.5 relative">
       <div className="flex items-center justify-center space-x-1">
-        {Sort && <Sort className="cursor-pointer" size={20} />}
+        {Sort && (
+          <Sort
+            className={`cursor-pointer ${sortIndex === 1 && "text-teal-500"} ${sortIndex === 2 && "text-rose-500"}`}
+            size={20}
+            onClick={() => properties && changingSortOrder()}
+          />
+        )}
         <span>{title}</span>
 
         {Icon && !Category && !Search && (
@@ -51,17 +72,18 @@ const MenuItem = ({
         {Category && hideCategory && (
           <div className="absolute top-full -left-1 w-full bg-white rounded px-0.5">
             <ul>
-              {data.map((item) => (
-                <li key={item.id} className="flex justify-between">
-                  <span
-                    className="overflow-hidden whitespace-nowrap text-ellipsis cursor-default"
-                    title={item.title}
-                  >
-                    {item.title}
-                  </span>
-                  <input type="checkbox" name="category[]" value={item.id} />
-                </li>
-              ))}
+              {data &&
+                data.map((item) => (
+                  <li key={item.id} className="flex justify-between">
+                    <span
+                      className="overflow-hidden whitespace-nowrap text-ellipsis cursor-default"
+                      title={item.title}
+                    >
+                      {item.title}
+                    </span>
+                    <input type="checkbox" name="category[]" value={item.id} />
+                  </li>
+                ))}
             </ul>
           </div>
         )}
