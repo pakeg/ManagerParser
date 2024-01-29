@@ -3,6 +3,10 @@ import { PiArrowElbowDownLeft } from "react-icons/pi";
 
 import { useDispatch } from "react-redux";
 import { setSortActions } from "../../store/actions/createdActions";
+import {
+  setFiltersAction,
+  setSearchAction,
+} from "../../store/reducers/mainPageSlice.js";
 
 const MenuItem = ({
   title,
@@ -10,16 +14,17 @@ const MenuItem = ({
   properties,
   actionType,
   icon: Icon,
-  category: Category,
+  filter: Filter,
   search: Search,
   data,
   left,
 }) => {
-  const [hideCategory, setHideCategory] = useState(false);
-  const [hideSearch, setHideSearch] = useState(false);
-  const [querySearch, setQuerySearch] = useState("");
-  const [sortIndex, setSortIndex] = useState(0);
   const dispatch = useDispatch();
+  const [filters, setFilters] = useState([]);
+  const [hideFilter, setHideFilter] = useState(false);
+  const [querySearch, setQuerySearch] = useState("");
+  const [hideSearch, setHideSearch] = useState(false);
+  const [sortIndex, setSortIndex] = useState(0);
 
   const changingSortOrder = useCallback(() => {
     const action = setSortActions(actionType);
@@ -29,6 +34,13 @@ const MenuItem = ({
       return;
     }
     setSortIndex(sortIndex + 1);
+  });
+
+  const changingFilters = useCallback(() => {
+    setHideFilter(!hideFilter);
+    if (hideFilter) {
+      dispatch(setFiltersAction({ properties, filters }));
+    }
   });
 
   const searching = useCallback(() => {
@@ -54,15 +66,15 @@ const MenuItem = ({
         )}
         <span>{title}</span>
 
-        {Icon && !Category && !Search && (
+        {Icon && !Filter && !Search && (
           <Icon className="cursor-pointer" size={20} />
         )}
 
-        {Category && (
-          <Category
+        {Filter && (
+          <Filter
             className="cursor-pointer"
             size={20}
-            onClick={() => setHideCategory(!hideCategory)}
+            onClick={() => changingFilters()}
           />
         )}
 
@@ -74,24 +86,34 @@ const MenuItem = ({
           />
         )}
 
-        {Category && hideCategory && (
-          <div className="absolute top-full -left-1 w-full bg-white rounded px-0.5">
-            <ul>
-              {data &&
-                data.map((item) => (
-                  <li key={item.id} className="flex justify-between">
-                    <span
-                      className="overflow-hidden whitespace-nowrap text-ellipsis cursor-default"
-                      title={item.title}
-                    >
-                      {item.title}
-                    </span>
-                    <input type="checkbox" name="category[]" value={item.id} />
-                  </li>
-                ))}
-            </ul>
-          </div>
-        )}
+        <div
+          className={`absolute top-full -left-1 w-full bg-white rounded px-0.5 ${!hideFilter ? "hidden" : ""}`}
+        >
+          <ul>
+            {data &&
+              data.map((item) => (
+                <li key={item.id} className="flex justify-between">
+                  <span
+                    className="overflow-hidden whitespace-nowrap text-ellipsis cursor-default"
+                    title={item.title}
+                  >
+                    {item.title}
+                  </span>
+                  <input
+                    type="checkbox"
+                    value={item.title}
+                    onChange={(e) => {
+                      if (e.target.checked) {
+                        setFilters([...filters, item.title]);
+                      } else {
+                        setFilters(filters.filter((i) => i !== item.title));
+                      }
+                    }}
+                  />
+                </li>
+              ))}
+          </ul>
+        </div>
 
         {Search && hideSearch && (
           <div className="absolute top-full -left-1 w-full bg-white rounded px-0.5 flex items-center">

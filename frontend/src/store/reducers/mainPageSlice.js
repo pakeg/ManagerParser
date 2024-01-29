@@ -11,7 +11,7 @@ const initialState = {
   revalidate: null,
   sort: [],
   search: "",
-  filters: [],
+  filters: {},
 };
 const createSliceWithThunks = buildCreateSlice({
   creators: { asyncThunk: asyncThunkCreator },
@@ -51,8 +51,22 @@ const mainPageSlice = createSliceWithThunks({
       },
     ),
     setSort: sortReducer(create),
+    setFiltersAction: create.reducer(
+      (state, { payload: { properties, filters } }) => {
+        if (filters.length === 0) {
+          delete state.filters[properties];
+          return;
+        }
+        state.filters = { ...state.filters, [properties]: filters };
+      },
+    ),
+    setSearchAction: create.reducer((state, { payload }) => {
+      state.search = payload;
+      console.log(state.search);
+    }),
   }),
 });
 
-export const { fetchGeneralData } = mainPageSlice.actions;
+export const { fetchGeneralData, setFiltersAction, setSearchAction } =
+  mainPageSlice.actions;
 export default mainPageSlice.reducer;

@@ -10,18 +10,18 @@ function DivScrollEl() {
   } = useSelector((state) => state.newProductReducer);
   let boxContent = useRef(null);
 
-  const { isScroll, boxScroll, buttonScroll } = useScroll(
-    Boolean(projects.length),
-  );
-
   useEffect(() => {
     const childElemnt = boxContent?.current?.firstChild;
-    const padding =
-      childElemnt.className.match(/py[0-9-.]*/)[0].split("-")[1] / 0.125;
+    const match = childElemnt.className.match(/py[0-9-.]*/);
+    const padding = match ? match[0].split("-")[1] / 0.125 : 0;
     const countRows = 7;
     const boxScrollHeight = childElemnt?.offsetHeight * countRows + padding;
     boxContent.current.style.maxHeight = `${boxScrollHeight}px`;
   }, []);
+
+  const { isScroll, boxScroll, buttonScroll } = useScroll(
+    Boolean(projects.length),
+  );
 
   return (
     <div
