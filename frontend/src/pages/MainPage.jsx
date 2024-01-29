@@ -16,12 +16,6 @@ import useScroll from "../hooks/useScroll.jsx";
 import useScrollHorizontal from "../hooks/useScrollHorizontal";
 
 export const MainPage = () => {
-  const { isScroll, boxScroll, buttonScroll } = useScroll(true);
-  const {
-    isScroll: isScrollHor,
-    boxScroll: boxScrollHor,
-    buttonScroll: buttonScrollHor,
-  } = useScrollHorizontal();
   const { loading, errors, data } = useSelector(
     memoize((state) => ({
       ...state.mainPageReducer,
@@ -36,6 +30,13 @@ export const MainPage = () => {
   useEffect(() => {
     if (typeof data.products === "undefined") dispatch(fetchGeneralData());
   }, []);
+
+  const { isScroll, boxScroll, buttonScroll } = useScroll(true);
+  const {
+    isScroll: isScrollHor,
+    boxScroll: boxScrollHor,
+    buttonScroll: buttonScrollHor,
+  } = useScrollHorizontal();
 
   return (
     <div>

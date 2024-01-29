@@ -58,7 +58,7 @@ const PartMainOne = ({ products, categories, manufactures }) => {
             sort={BiSortDown}
             properties={"category"}
             actionType={"mainPage/setSort"}
-            category={MdKeyboardArrowDown}
+            filter={MdKeyboardArrowDown}
             data={categories}
           />
           <MenuItem
@@ -66,7 +66,7 @@ const PartMainOne = ({ products, categories, manufactures }) => {
             sort={BiSortDown}
             properties={"manufacture"}
             actionType={"mainPage/setSort"}
-            category={MdKeyboardArrowDown}
+            filter={MdKeyboardArrowDown}
             data={manufactures}
           />
           <MenuItem
