@@ -37,18 +37,16 @@ const MenuItem = ({
   });
 
   const changingFilters = useCallback(() => {
-    setHideFilter(!hideFilter);
     if (hideFilter) {
       dispatch(setFiltersAction({ properties, filters }));
     }
+    setHideFilter(!hideFilter);
   });
 
   const searching = useCallback(() => {
-    if (querySearch) {
-      console.log(querySearch, "querySearch");
-      setHideSearch(!hideSearch);
-      setQuerySearch("");
-    }
+    dispatch(setSearchAction({ properties, querySearch }));
+    setHideSearch(!hideSearch);
+    setQuerySearch("");
     return;
   }, [querySearch]);
 

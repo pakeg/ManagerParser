@@ -49,6 +49,38 @@ export const getSortedDataSelector = (state, typeData) => {
     (state) => {
       const sortedProducts = state.data[typeData] ? { ...state.data } : {};
 
+      if (
+        state.search.title.length != 0 ||
+        state.search.part_number.length != 0
+      ) {
+        sortedProducts[typeData] = sortedProducts[typeData].filter((item) => {
+          for (const key in state.search) {
+            if (
+              item[key]
+                .toLowerCase()
+                .includes(state.search[key].toLowerCase()) === false
+            ) {
+              return false;
+            }
+          }
+          return true;
+        });
+      }
+
+      if (
+        state.filters.category.length != 0 ||
+        state.filters.manufacture.length != 0
+      ) {
+        sortedProducts[typeData] = sortedProducts[typeData].filter((item) => {
+          for (const key in state.filters) {
+            if (state.filters[key].includes(item[key]) === true) {
+              return true;
+            }
+          }
+          return false;
+        });
+      }
+
       if (state.sort.length != 0) {
         sortedProducts[typeData] = [...sortedProducts[typeData]].sort(
           sortByProperties(state.sort),
