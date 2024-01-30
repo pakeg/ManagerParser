@@ -10,8 +10,8 @@ const initialState = {
   data: {},
   revalidate: null,
   sort: [],
-  search: "",
-  filters: {},
+  search: { title: "", part_number: "" },
+  filters: { category: [], manufacture: [] },
 };
 const createSliceWithThunks = buildCreateSlice({
   creators: { asyncThunk: asyncThunkCreator },
@@ -54,16 +54,21 @@ const mainPageSlice = createSliceWithThunks({
     setFiltersAction: create.reducer(
       (state, { payload: { properties, filters } }) => {
         if (filters.length === 0) {
-          delete state.filters[properties];
+          state.filters[properties] = [];
           return;
         }
         state.filters = { ...state.filters, [properties]: filters };
       },
     ),
-    setSearchAction: create.reducer((state, { payload }) => {
-      state.search = payload;
-      console.log(state.search);
-    }),
+    setSearchAction: create.reducer(
+      (state, { payload: { properties, querySearch } }) => {
+        if (querySearch.length === 0) {
+          state.search[properties] = "";
+          return;
+        }
+        state.search = { ...state.search, [properties]: querySearch };
+      },
+    ),
   }),
 });
 
