@@ -64,6 +64,9 @@ const mainPageSlice = createSliceWithThunks({
         },
         fulfilled: (state, action) => {
           state.loading = false;
+          const findedProducts = state.data.products.find(
+            (product) => product.id === action.payload.id,
+          ) 
           console.log(action.payload);
         },
       },

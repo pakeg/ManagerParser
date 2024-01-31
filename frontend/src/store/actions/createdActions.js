@@ -97,7 +97,6 @@ export const getSortedDataSelector = (state, typeData) => {
 
         //reCreate shopsTableRows
         if (typeData === "products" && sortedData["shops"]) {
-          console.log("reCreate shopsTableRows");
           sortedData["shopsTableRows"] = reCreateTableRows(
             sortedData[typeData],
             sortedData["shops"],
