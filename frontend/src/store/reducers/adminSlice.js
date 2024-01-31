@@ -11,6 +11,8 @@ const initialState = {
   errors: null,
   data: {},
   sort: [],
+  search: {},
+  filters: {},
   revalidate: null,
 };
 const createSliceWithThunks = buildCreateSlice({
