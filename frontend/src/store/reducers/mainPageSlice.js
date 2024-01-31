@@ -1,6 +1,6 @@
 import { buildCreateSlice, asyncThunkCreator } from "@reduxjs/toolkit";
 
-import { fetchAllInformation } from "../actions/actionsMainPage";
+import { fetchAllInformation, updatePrice } from "../actions/actionsMainPage";
 import { fetchDataCategories } from "./newProductSlice";
 import { sortReducer } from "../actions/createdActions";
 
@@ -50,8 +50,26 @@ const mainPageSlice = createSliceWithThunks({
         },
       },
     ),
+    fetchUpdatePrice: create.asyncThunk(
+      async ({ id, price }, { signal }) => {
+        const data = await updatePrice({ id, price }, signal);
+        return data;
+      },
+      {
+        pending: (state) => {
+          state.loading = true;
+        },
+        rejected: (state, action) => {
+          state.loading = false;
+        },
+        fulfilled: (state, action) => {
+          state.loading = false;
+          console.log(action.payload);
+        },
+      },
+    ),
     setSort: sortReducer(create),
-    setFiltersAction: create.reducer(
+    setFilters: create.reducer(
       (state, { payload: { properties, filters } }) => {
         if (filters.length === 0) {
           state.filters[properties] = [];
@@ -60,7 +78,7 @@ const mainPageSlice = createSliceWithThunks({
         state.filters = { ...state.filters, [properties]: filters };
       },
     ),
-    setSearchAction: create.reducer(
+    setSearch: create.reducer(
       (state, { payload: { properties, querySearch } }) => {
         if (querySearch.length === 0) {
           state.search[properties] = "";
@@ -72,6 +90,6 @@ const mainPageSlice = createSliceWithThunks({
   }),
 });
 
-export const { fetchGeneralData, setFiltersAction, setSearchAction } =
+export const { fetchGeneralData, fetchUpdatePrice, setFilters, setSearch } =
   mainPageSlice.actions;
 export default mainPageSlice.reducer;

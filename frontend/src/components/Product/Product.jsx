@@ -1,18 +1,32 @@
 import { useCallback, useState } from "react";
+import { useDispatch } from "react-redux";
 import { MdOutlineDone } from "react-icons/md";
 import { TiEdit } from "react-icons/ti";
 import { BsCheck } from "react-icons/bs";
 
 import { percentageDifference } from "../../utils/utilsFun";
+import { fetchUpdatePrice } from "../../store/reducers/mainPageSlice.js";
 
 const Product = ({ product, checkMainInput }) => {
+  const dispatch = useDispatch();
   const [editable, setEditable] = useState(false);
   const [price, setPrice] = useState("");
+
+  const validPrice = useCallback((value) => {
+    let temp = String(value);
+    value = temp[0] === "-" ? `-${temp.slice(1)}` : `-${temp}`;
+    if (isNaN(value)) {
+      setPrice("");
+      return;
+    }
+    setPrice(-1 * Number(value));
+    return;
+  }, []);
 
   const changePrice = useCallback(
     (price) => {
       if (price) {
-        console.log(price, "change price");
+        dispatch(fetchUpdatePrice({ id: product.id, price }));
       }
 
       setPrice("");
@@ -86,12 +100,13 @@ const Product = ({ product, checkMainInput }) => {
         ) : (
           <div className="overflow-hidden whitespace-nowrap text-ellipsis w-20">
             <input
-              type="number"
+              type="text"
               name="change-price"
               className="bg-white rounded-sm peer outline-slate-800 w-full"
               min="0"
               placeholder={product.price}
-              onChange={(e) => setPrice(e.target.value)}
+              value={price}
+              onChange={(e) => validPrice(e.target.value)}
             />
             <div className="peer-placeholder-shown:bg-[#a1a1a1] peer-placeholder-shown:hover:bg-red-500 bg-green-500 rounded-sm absolute bottom-0.5 right-1 cursor-pointer">
               <BsCheck
