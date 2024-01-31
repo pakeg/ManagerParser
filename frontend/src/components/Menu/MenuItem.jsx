@@ -3,7 +3,10 @@ import { PiArrowElbowDownLeft } from "react-icons/pi";
 
 import { useDispatch } from "react-redux";
 import { setSortActions } from "../../store/actions/createdActions";
-import { setFilters, setSearch } from "../../store/reducers/mainPageSlice.js";
+import {
+  setFiltersReducer,
+  setSearchReducer,
+} from "../../store/reducers/mainPageSlice.js";
 
 const MenuItem = ({
   title,
@@ -35,13 +38,13 @@ const MenuItem = ({
 
   const changingFilters = useCallback(() => {
     if (hideFilter) {
-      dispatch(setFilters({ properties, filters }));
+      dispatch(setFiltersReducer({ properties, filters }));
     }
     setHideFilter(!hideFilter);
   });
 
   const searching = useCallback(() => {
-    dispatch(setSearch({ properties, querySearch }));
+    dispatch(setSearchReducer({ properties, querySearch }));
     setHideSearch(!hideSearch);
     setQuerySearch("");
     return;

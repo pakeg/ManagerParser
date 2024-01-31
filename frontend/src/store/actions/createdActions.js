@@ -94,14 +94,14 @@ export const getSortedDataSelector = (state, typeData) => {
         sortedData[typeData] = [...sortedData[typeData]].sort(
           sortByProperties(state.sort),
         );
+      }
 
-        //reCreate shopsTableRows
-        if (typeData === "products" && sortedData["shops"]) {
-          sortedData["shopsTableRows"] = reCreateTableRows(
-            sortedData[typeData],
-            sortedData["shops"],
-          );
-        }
+      //reCreate shopsTableRows
+      if (typeData === "products" && sortedData["shops"]) {
+        sortedData["shopsTableRows"] = reCreateTableRows(
+          sortedData[typeData],
+          sortedData["shops"],
+        );
       }
 
       return sortedData;
