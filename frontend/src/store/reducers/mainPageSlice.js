@@ -67,12 +67,26 @@ const mainPageSlice = createSliceWithThunks({
           const findedProductsIndex = state.data.products.findIndex(
             (product) => product.id === action.payload.id,
           );
+
+          const row = [];
+          state.data.shops.forEach((shop) => {
+            if (shop.active_status != "0") {
+              const finded = state.data.products[
+                findedProductsIndex
+              ].shops_data.find((shop_data) => shop_data.shop === shop.title);
+              if (finded) {
+                finded.price = action.payload.price;
+              }
+              row.push(finded);
+            }
+          });
+          state.data.shopsTableRows[findedProductsIndex] = row;
           state.data.products[findedProductsIndex].price = action.payload.price;
         },
       },
     ),
     setSort: sortReducer(create),
-    setFilters: create.reducer(
+    setFiltersReducer: create.reducer(
       (state, { payload: { properties, filters } }) => {
         if (filters.length === 0) {
           state.filters[properties] = [];
@@ -81,7 +95,7 @@ const mainPageSlice = createSliceWithThunks({
         state.filters = { ...state.filters, [properties]: filters };
       },
     ),
-    setSearch: create.reducer(
+    setSearchReducer: create.reducer(
       (state, { payload: { properties, querySearch } }) => {
         if (querySearch.length === 0) {
           state.search[properties] = "";
@@ -93,6 +107,10 @@ const mainPageSlice = createSliceWithThunks({
   }),
 });
 
-export const { fetchGeneralData, fetchUpdatePrice, setFilters, setSearch } =
-  mainPageSlice.actions;
+export const {
+  fetchGeneralData,
+  fetchUpdatePrice,
+  setFiltersReducer,
+  setSearchReducer,
+} = mainPageSlice.actions;
 export default mainPageSlice.reducer;

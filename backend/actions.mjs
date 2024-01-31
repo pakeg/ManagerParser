@@ -220,6 +220,7 @@ const getAllProductsInformation = async function () {
         c[n.id] = { product: { ...n, shops_data: [] } };
       }
       c[n.id].product.shops_data.push({
+        product_id: n.id,
         shop: n.shop,
         price: n.price,
         parsed_price: n.parsed_price,
