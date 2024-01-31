@@ -47,13 +47,25 @@ export const getSortedDataSelector = (state, typeData) => {
   const selector = createSelector(
     (state) => state,
     (state) => {
-      const sortedProducts = state.data[typeData] ? { ...state.data } : {};
+      if (!state.data[typeData]) return {};
+      const sortedData = { ...state.data };
 
-      if (
-        state.search.title.length != 0 ||
-        state.search.part_number.length != 0
-      ) {
-        sortedProducts[typeData] = sortedProducts[typeData].filter((item) => {
+      let countEmptySearch = 0;
+      let countEmptyFilters = 0;
+
+      for (const key in state.search) {
+        if (state.search[key] === "") {
+          countEmptySearch++;
+        }
+      }
+      for (const key in state.filters) {
+        if (state.filters[key].length === 0) {
+          countEmptyFilters++;
+        }
+      }
+
+      if (countEmptySearch !== Object.keys(state.search).length) {
+        sortedData[typeData] = sortedData[typeData].filter((item) => {
           for (const key in state.search) {
             if (
               item[key]
@@ -67,11 +79,8 @@ export const getSortedDataSelector = (state, typeData) => {
         });
       }
 
-      if (
-        state.filters.category.length != 0 ||
-        state.filters.manufacture.length != 0
-      ) {
-        sortedProducts[typeData] = sortedProducts[typeData].filter((item) => {
+      if (countEmptyFilters !== Object.keys(state.filters).length) {
+        sortedData[typeData] = sortedData[typeData].filter((item) => {
           for (const key in state.filters) {
             if (state.filters[key].includes(item[key]) === true) {
               return true;
@@ -82,19 +91,21 @@ export const getSortedDataSelector = (state, typeData) => {
       }
 
       if (state.sort.length != 0) {
-        sortedProducts[typeData] = [...sortedProducts[typeData]].sort(
+        sortedData[typeData] = [...sortedData[typeData]].sort(
           sortByProperties(state.sort),
         );
+
+        //reCreate shopsTableRows
+        if (typeData === "products" && sortedData["shops"]) {
+          console.log("reCreate shopsTableRows");
+          sortedData["shopsTableRows"] = reCreateTableRows(
+            sortedData[typeData],
+            sortedData["shops"],
+          );
+        }
       }
 
-      //reCreate shopsTableRows
-      if (typeData === "products" && sortedProducts["shops"]) {
-        sortedProducts["shopsTableRows"] = reCreateTableRows(
-          sortedProducts[typeData],
-          sortedProducts["shops"],
-        );
-      }
-      return sortedProducts;
+      return sortedData;
     },
   );
   return selector(state);
