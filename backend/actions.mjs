@@ -276,6 +276,17 @@ const getAllProductsInformation = async function () {
   }
 };
 
+const updatePrice = async function (data) {
+  try {
+    const { id, price } = data;
+    const result =
+      await sql`update products set price = ${price} where id = ${id} returning id, price`;
+    return result;
+  } catch (e) {
+    return { error: e?.detail ?? "Something went wrong. Please, try later" };
+  }
+};
+
 export {
   authorize,
   createNewItemCategory,
@@ -285,4 +296,5 @@ export {
   updateUserData,
   getAllUser,
   getAllProductsInformation,
+  updatePrice,
 };

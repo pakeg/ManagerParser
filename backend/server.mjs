@@ -13,6 +13,7 @@ import {
   updateUserData,
   getAllUser,
   getAllProductsInformation,
+  updatePrice,
 } from "./actions.mjs";
 
 const app = express();
@@ -128,6 +129,13 @@ app.post("/api/getall-user", async function (req, res) {
 //------main page-----------
 app.post("/api/get-all-information", async function (req, res) {
   const data = await getAllProductsInformation();
+  if (!data?.error) {
+    res.status(201).json(data);
+  } else res.status(500).send(data.error);
+});
+
+app.post("/api/post-update-price", async function (req, res) {
+  const data = await updatePrice(req.body);
   if (!data?.error) {
     res.status(201).json(data);
   } else res.status(500).send(data.error);
