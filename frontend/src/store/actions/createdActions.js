@@ -10,9 +10,14 @@ const reCreateTableRows = (products, shops) => {
     shops.forEach((shop) => {
       if (shop.active_status != "0") {
         const finded = product.shops_data.find(
-          (shop_data) => shop_data.shop === shop.title,
+          (shop_data) => shop_data.shop.id === shop.id,
         );
-        row.push(finded ?? null);
+        row.push(
+          finded ?? {
+            product_id: product.id,
+            shop: { id: shop.id, title: shop.title },
+          },
+        );
       }
     });
 
