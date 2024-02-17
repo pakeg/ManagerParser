@@ -1,10 +1,10 @@
-import sql from './db.mjs';
-import bcrypt from 'bcryptjs';
+import sql from "./db.mjs";
+import bcrypt from "bcryptjs";
 
 const authorize = async function ({ nickname, password }) {
   try {
     const [user] = await sql`select * from users where nickname = ${nickname}`;
-    if (typeof user === 'undefined') {
+    if (typeof user === "undefined") {
       return { redirect: false };
     }
 
@@ -18,7 +18,7 @@ const authorize = async function ({ nickname, password }) {
     }
     return { redirect };
   } catch (e) {
-    return { error: e?.detail ?? 'Something went wrong. Please, try later' };
+    return { error: e?.detail ?? "Something went wrong. Please, try later" };
   }
 };
 
@@ -33,7 +33,7 @@ const createNewItemCategory = async function ({ choosedElement, title }) {
   `;
     return { newItem, choosedElement, created: true };
   } catch (e) {
-    return { error: e?.detail ?? 'Something went wrong. Please, try later' };
+    return { error: e?.detail ?? "Something went wrong. Please, try later" };
   }
 };
 
@@ -71,7 +71,7 @@ const createNewProduct = async function ({
   `;
 
     if (shopsUrl.length > 0) {
-      const urls = shopsUrl.split(',').map((url) => {
+      const urls = shopsUrl.split(",").map((url) => {
         const uri = new URL(url);
         return {
           link: uri.origin,
@@ -109,8 +109,8 @@ const createNewProduct = async function ({
       if (notFoundedShops.length > 0) {
         newShop = await sql`insert into shops ${sql(
           notFoundedShops,
-          'title',
-          'link'
+          "title",
+          "link",
         )} returning id, link`;
       }
 
@@ -122,9 +122,9 @@ const createNewProduct = async function ({
 
       await sql`insert into parsed_products ${sql(
         final,
-        'product_id',
-        'shop_id',
-        'link'
+        "product_id",
+        "shop_id",
+        "link",
       )}`;
     }
     return projectId;
@@ -172,12 +172,12 @@ const createNewUser = async function ({
 };
 
 const updateUserData = async function (user) {
-  if (Object.hasOwn(user, 'password')) {
+  if (Object.hasOwn(user, "password")) {
     const salt = bcrypt.genSaltSync(10);
     user.password = bcrypt.hashSync(user.password, salt);
   }
 
-  const columns = Object.keys(user).filter((item) => item != 'id');
+  const columns = Object.keys(user).filter((item) => item != "id");
   const updatedUser = await sql`
   update users set ${sql(user, columns)}
   where id = ${user.id}
@@ -206,6 +206,7 @@ const getAllProductsInformation = async function () {
     purchase,
     price,
     shops.title as shop,
+    shops.id as shop_id,
     parsed_price,
     parsed_products.created_on as date
   from
@@ -221,7 +222,7 @@ const getAllProductsInformation = async function () {
       }
       c[n.id].product.shops_data.push({
         product_id: n.id,
-        shop: n.shop,
+        shop: { id: n.shop_id, title: n.shop },
         price: n.price,
         parsed_price: n.parsed_price,
         date: n.date,
@@ -229,6 +230,7 @@ const getAllProductsInformation = async function () {
       c[n.id].info = { count: 0, min: 0, max: 0 };
 
       delete c[n.id].product.shop;
+      delete c[n.id].product.shop_id;
       delete c[n.id].product.parsed_price;
       delete c[n.id].product.date;
       return c;
@@ -256,11 +258,16 @@ const getAllProductsInformation = async function () {
     const shopsTableRows = Object.keys(groupProductsById).map((id) => {
       const row = [];
       shops.forEach((shop) => {
-        if (shop.active_status != '0') {
+        if (shop.active_status != "0") {
           const finded = groupProductsById[id].product.shops_data.find(
-            (shop_data) => shop_data.shop === shop.title
+            (shop_data) => shop_data.shop.id === shop.id,
           );
-          row.push(finded ?? null);
+          row.push(
+            finded ?? {
+              product_id: id,
+              shop: { id: shop.id, title: shop.title },
+            },
+          );
         }
       });
 
@@ -268,12 +275,12 @@ const getAllProductsInformation = async function () {
     });
 
     const resultedProducts = Object.entries(groupProductsById).map(
-      ([_, value]) => ({ ...value.product, ...value.info })
+      ([_, value]) => ({ ...value.product, ...value.info }),
     );
 
     return { products: resultedProducts, shops, shopsTableRows };
   } catch (e) {
-    return { error: e?.detail ?? 'Something went wrong. Please, try later' };
+    return { error: e?.detail ?? "Something went wrong. Please, try later" };
   }
 };
 
@@ -284,7 +291,24 @@ const updatePrice = async function (data) {
       await sql`update products set price = ${price} where id = ${id} returning id, price`;
     return result;
   } catch (e) {
-    return { error: e?.detail ?? 'Something went wrong. Please, try later' };
+    return { error: e?.detail ?? "Something went wrong. Please, try later" };
+  }
+};
+
+const addParseLink = async function (data) {
+  try {
+    const { shopUrl, rowIndex, colIndex, productId, shopId } = data;
+    await sql`
+    insert into parsed_products
+      ( product_id,
+        shop_id,
+        link)
+    values
+      (${productId}, ${shopId}, ${shopUrl})`;
+
+    return { rowIndex, colIndex };
+  } catch (e) {
+    return { error: e?.detail ?? "Something went wrong. Please, try later" };
   }
 };
 
@@ -298,4 +322,5 @@ export {
   getAllUser,
   getAllProductsInformation,
   updatePrice,
+  addParseLink,
 };
