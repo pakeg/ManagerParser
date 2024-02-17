@@ -1,7 +1,7 @@
 import ProductShopCellEmpty from "./ProductShopCellEmpty.jsx";
 import ProductShopCellFull from "./ProductShopCellFull.jsx";
 
-const ProductShop = ({ rows, positionDivComment }) => {
+const ProductShop = ({ rows, rowIndex, positionDivComment }) => {
   return (
     <tr className="bg-[#dfdfdf]">
       <td>
@@ -12,7 +12,7 @@ const ProductShop = ({ rows, positionDivComment }) => {
       </td>
       {rows.length > 0 &&
         rows.map((row, i) =>
-          row ? (
+          row.price ? (
             <ProductShopCellFull
               key={row.shop + "_" + i}
               price={row.parsed_price}
@@ -22,7 +22,13 @@ const ProductShop = ({ rows, positionDivComment }) => {
               positionDivComment={positionDivComment}
             />
           ) : (
-            <ProductShopCellEmpty key={i} />
+            <ProductShopCellEmpty
+              key={i}
+              rowIndex={rowIndex}
+              colIndex={i}
+              productId={row.product_id}
+              shopId={row.shop.id}
+            />
           ),
         )}
     </tr>
