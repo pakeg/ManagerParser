@@ -2,10 +2,11 @@ const formatDate = (timestamp) => {
   return new Date(timestamp).toLocaleDateString();
 };
 
-const percentageDifference = (a, b) => {
+const percentageDifference = (a, b, symbol = "%") => {
+  if (a === null || b === null) return "N/A";
   const average = (a + b) / 2;
   const percentageDifference = Math.abs((a - b) / average) * 100;
-  return percentageDifference.toFixed(0);
+  return percentageDifference.toFixed(0) + symbol;
 };
 
 const formatSize = (length) => {
@@ -35,4 +36,23 @@ const sortByProperties = (properties) => {
   };
 };
 
-export { formatDate, percentageDifference, formatSize, sortByProperties };
+function isValidUrl(url) {
+  const urlPattern = /^(https?|ftp):\/\/[^\s/$.?#]+\.[^\s]*$/;
+  if (!urlPattern.test(url)) {
+    return false;
+  }
+  try {
+    const { hostname, pathname, protocol } = new URL(url);
+    return !!hostname && !!pathname && !!protocol;
+  } catch (e) {
+    return false;
+  }
+}
+
+export {
+  formatDate,
+  percentageDifference,
+  formatSize,
+  sortByProperties,
+  isValidUrl,
+};

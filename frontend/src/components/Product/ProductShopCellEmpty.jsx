@@ -1,14 +1,22 @@
-import { useState } from 'react';
-import { TiEdit } from 'react-icons/ti';
+import { useState } from "react";
+import { useDispatch } from "react-redux";
 
-const ProductShopCellEmpty = () => {
+import { TiEdit } from "react-icons/ti";
+
+import { fetchAddParseLink } from "../../store/reducers/mainPageSlice.js";
+import { isValidUrl } from "../../utils/utilsFun.js";
+
+const ProductShopCellEmpty = ({ rowIndex, colIndex, productId, shopId }) => {
+  const dispatch = useDispatch();
   const [editable, setEditable] = useState(false);
-  const [shopUrl, setShopUrl] = useState('');
+  const [shopUrl, setShopUrl] = useState("");
 
   const handleKeyPress = (e) => {
-    if (e.key === 'Enter') {
-      console.log('Enter');
-      setShopUrl('');
+    if (e.key === "Enter" && shopUrl.length > 0 && isValidUrl(shopUrl)) {
+      dispatch(
+        fetchAddParseLink({ shopUrl, rowIndex, colIndex, productId, shopId }),
+      );
+      setShopUrl("");
       setEditable(!editable);
     }
 
@@ -33,8 +41,8 @@ const ProductShopCellEmpty = () => {
               name="shopUrl"
               value={shopUrl}
               placeholder="url"
-              onChange={(e) => setShopUrl(e.target.value)}
-              onKeyPress={handleKeyPress}
+              onChange={(e) => setShopUrl(e.target.value.trim())}
+              onKeyUp={handleKeyPress}
             />
           </div>
           <div

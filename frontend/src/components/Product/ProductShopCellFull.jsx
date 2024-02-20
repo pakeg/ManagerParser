@@ -16,8 +16,13 @@ const ProductShopCellFull = ({
 
   useEffect(() => {
     let style = "";
-    if (price > products_price) style += "ist bg-green-500";
-    if (price < products_price) style += "ist bg-red-500";
+    if (price === null) {
+      style += "ist bg-yellow-500";
+    } else if (price < products_price) {
+      style += "ist bg-red-500";
+    } else if (price > products_price) {
+      style += "ist bg-green-500";
+    }
     setStyleCell(style);
   }, [products_price]);
 
@@ -25,11 +30,12 @@ const ProductShopCellFull = ({
     <td
       className={`relative py-2 px-12 group text-white ${styleCell}
       }`}
+      title={price === null ? `in process ...` : price}
     >
       <div>
         <span className="group-[.ist]:text-black">{price}</span>
         <span className="absolute top-0 leading-none ">
-          {percentageDifference(price, products_price) + "%"}
+          {percentageDifference(price, products_price)}
         </span>
         <span className="group-[:not(.ist)]:text-[#acacac] absolute bottom-0 left-0 leading-none">
           {formatDate(date)}
