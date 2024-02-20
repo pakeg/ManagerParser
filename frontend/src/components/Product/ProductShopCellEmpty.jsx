@@ -6,20 +6,28 @@ import { TiEdit } from "react-icons/ti";
 import { fetchAddParseLink } from "../../store/reducers/mainPageSlice.js";
 import { isValidUrl } from "../../utils/utilsFun.js";
 
-const ProductShopCellEmpty = ({ rowIndex, colIndex, productId, shopId }) => {
+const ProductShopCellEmpty = ({ colIndex, productId, shopData }) => {
   const dispatch = useDispatch();
   const [editable, setEditable] = useState(false);
   const [shopUrl, setShopUrl] = useState("");
 
   const handleKeyPress = (e) => {
-    if (e.key === "Enter" && shopUrl.length > 0 && isValidUrl(shopUrl)) {
-      dispatch(
-        fetchAddParseLink({ shopUrl, rowIndex, colIndex, productId, shopId }),
-      );
-      setShopUrl("");
-      setEditable(!editable);
+    if (shopUrl.length > 0 && isValidUrl(shopUrl, shopData.title)) {
+      if (e.key === "Enter") {
+        dispatch(
+          fetchAddParseLink({
+            shopUrl,
+            colIndex,
+            productId,
+            shopId: shopData.id,
+          }),
+        );
+        setShopUrl("");
+        setEditable(!editable);
+      }
+    } else {
+      setShopUrl("Incorrect link or link does not match the store");
     }
-
     return;
   };
 

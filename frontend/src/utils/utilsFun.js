@@ -36,14 +36,14 @@ const sortByProperties = (properties) => {
   };
 };
 
-function isValidUrl(url) {
+function isValidUrl(url, shopUrl) {
   const urlPattern = /^(https?|ftp):\/\/[^\s/$.?#]+\.[^\s]*$/;
   if (!urlPattern.test(url)) {
     return false;
   }
   try {
     const { hostname, pathname, protocol } = new URL(url);
-    return !!hostname && !!pathname && !!protocol;
+    return !!hostname && !!pathname && !!protocol && hostname == shopUrl;
   } catch (e) {
     return false;
   }

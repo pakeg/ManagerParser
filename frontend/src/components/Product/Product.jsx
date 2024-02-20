@@ -88,7 +88,7 @@ const Product = ({ product, checkMainInput }) => {
           <div className="overflow-hidden whitespace-nowrap text-ellipsis w-20">
             <span>{product.price}</span>
             <span className="absolute top-0 text-[#4bc1b5] leading-none">
-              {percentageDifference(product.purchase, product.price) + "%"}
+              {percentageDifference(product.purchase, product.price)}
             </span>
             <div
               className="group-hover:opacity-90 absolute w-full h-full top-0 left-0 bg-[#f9f8f9] opacity-0 flex items-center justify-center cursor-pointer"

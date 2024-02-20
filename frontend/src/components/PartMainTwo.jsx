@@ -57,7 +57,7 @@ const PartMainTwo = ({ shops, shopsTableRows, boxScrollHor }) => {
                 shopsTableRows.map((items, i) => (
                   <ProductShop
                     key={i}
-                    rowIndex={i}
+                    colIndex={i}
                     rows={items}
                     positionDivComment={positionDivComment}
                   />
