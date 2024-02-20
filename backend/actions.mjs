@@ -207,14 +207,15 @@ const getAllProductsInformation = async function () {
     price,
     shops.title as shop,
     shops.id as shop_id,
-    parsed_price,
-    parsed_products.created_on as date
+    parsed_products.created_on as date,
+    parsed_products.link as link,
+    parsed_price
   from
     products
     left join categories on (categories.id = category_id)
     left join manufactures on (manufactures.id = manufacture_id)
     left join parsed_products on (parsed_products.product_id = products.id)
-    left join shops on (shops.id = shop_id and shops.active_status != '0')
+    left join shops on (shops.id = parsed_products.shop_id and shops.active_status != '0')
     order by id`;
     const groupProductsById = products.reduce((c, n) => {
       if (!Object.hasOwn(c, n.id)) {
@@ -223,16 +224,18 @@ const getAllProductsInformation = async function () {
       c[n.id].product.shops_data.push({
         product_id: n.id,
         shop: { id: n.shop_id, title: n.shop },
-        price: n.price,
-        parsed_price: n.parsed_price,
+        product_price: n.price,
         date: n.date,
+        link: n.link,
+        parsed_price: n.parsed_price,
       });
       c[n.id].info = { count: 0, min: 0, max: 0 };
 
       delete c[n.id].product.shop;
       delete c[n.id].product.shop_id;
-      delete c[n.id].product.parsed_price;
       delete c[n.id].product.date;
+      delete c[n.id].product.href;
+      delete c[n.id].product.parsed_price;
       return c;
     }, {});
 
@@ -297,16 +300,16 @@ const updatePrice = async function (data) {
 
 const addParseLink = async function (data) {
   try {
-    const { shopUrl, rowIndex, colIndex, productId, shopId } = data;
-    await sql`
+    const { shopUrl, colIndex, productId, shopId } = data;
+    const [parsed_product] = await sql`
     insert into parsed_products
       ( product_id,
         shop_id,
         link)
     values
-      (${productId}, ${shopId}, ${shopUrl})`;
+      (${productId}, ${shopId}, ${shopUrl}) returning created_on as date, link, parsed_price`;
 
-    return { rowIndex, colIndex };
+    return { colIndex, productId, shopId, ...parsed_product };
   } catch (e) {
     return { error: e?.detail ?? "Something went wrong. Please, try later" };
   }

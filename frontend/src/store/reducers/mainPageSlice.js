@@ -1,6 +1,10 @@
 import { buildCreateSlice, asyncThunkCreator } from "@reduxjs/toolkit";
 
-import { fetchAllInformation, updatePrice } from "../actions/actionsMainPage";
+import {
+  fetchAllInformation,
+  updatePrice,
+  addParseLink,
+} from "../actions/actionsMainPage";
 import { fetchDataCategories } from "./newProductSlice";
 import { sortReducer } from "../actions/createdActions";
 
@@ -68,20 +72,50 @@ const mainPageSlice = createSliceWithThunks({
             (product) => product.id === action.payload.id,
           );
 
-          const row = [];
-          state.data.shops.forEach((shop) => {
-            if (shop.active_status != "0") {
-              const finded = state.data.products[
-                findedProductsIndex
-              ].shops_data.find((shop_data) => shop_data.shop === shop.title);
-              if (finded) {
-                finded.price = action.payload.price;
-              }
-              row.push(finded);
-            }
-          });
-          state.data.shopsTableRows[findedProductsIndex] = row;
-          state.data.products[findedProductsIndex].price = action.payload.price;
+          state.data.products[findedProductsIndex] = {
+            ...state.data.products[findedProductsIndex],
+            price: action.payload.price,
+            shops_data: state.data.products[findedProductsIndex].shops_data.map(
+              (el) => ({
+                ...el,
+                product_price: action.payload.price,
+              }),
+            ),
+          };
+        },
+      },
+    ),
+    fetchAddParseLink: create.asyncThunk(
+      async (data, { signal }) => {
+        const res = await addParseLink(data, signal);
+        return res;
+      },
+      {
+        pending: (state) => {
+          state.loading = true;
+        },
+        rejected: (state, action) => {
+          state.loading = false;
+        },
+        fulfilled: (state, action) => {
+          const { colIndex, productId, shopId, date, link, parsed_price } =
+            action.payload;
+
+          state.data.products[colIndex] = {
+            ...state.data.products[colIndex],
+            count: state.data.products[colIndex].count + 1,
+            shops_data: [
+              ...state.data.products[colIndex].shops_data,
+              {
+                product_id: productId,
+                shop: { id: shopId },
+                product_price: state.data.products[colIndex].price,
+                date,
+                link: link,
+                parsed_price,
+              },
+            ],
+          };
         },
       },
     ),
@@ -110,6 +144,7 @@ const mainPageSlice = createSliceWithThunks({
 export const {
   fetchGeneralData,
   fetchUpdatePrice,
+  fetchAddParseLink,
   setFiltersReducer,
   setSearchReducer,
 } = mainPageSlice.actions;
