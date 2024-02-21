@@ -1,15 +1,27 @@
-import { useState } from 'react';
-import { LuCross } from 'react-icons/lu';
-import useScroll from '../../hooks/useScroll';
-import { formatDate } from '../../utils/utilsFun';
+import { useEffect } from "react";
+import { LuCross } from "react-icons/lu";
 
-import Modal from './Modal.jsx';
-import ModalCommentsScrollCell from './ModalComments/ModalCommentsScrollCell.jsx';
+import useScroll from "../../hooks/useScroll";
+import { formatDate } from "../../utils/utilsFun";
 
-const ModalComments = ({ productComments }) => {
-  const [isOpen, setIsOpen] = useState(false);
+import Modal from "./Modal.jsx";
+import ModalCommentsScrollCell from "./ModalComments/ModalCommentsScrollCell.jsx";
 
+const ModalComments = ({
+  isOpen,
+  setIsOpen,
+  dispatch,
+  fetchGetCommentsHistory,
+  parsed_product_id,
+  comments,
+}) => {
   const { isScroll, boxScroll, buttonScroll } = useScroll(true);
+
+  useEffect(() => {
+    if (typeof comments === "undefined") {
+      dispatch(fetchGetCommentsHistory(parsed_product_id));
+    }
+  }, []);
 
   return (
     <Modal isOpen={isOpen} setIsOpen={setIsOpen}>
@@ -30,7 +42,7 @@ const ModalComments = ({ productComments }) => {
           </div>
         </div>
         <div className="min-h-[300px] p-4 pr-1 flex">
-          {productComments ? (
+          {comments?.length ? (
             <>
               <div className="grow overflow-hidden">
                 <div
@@ -47,11 +59,13 @@ const ModalComments = ({ productComments }) => {
                         </tr>
                       </thead>
                       <tbody>
-                        {productComments.map((store) => (
-                          <tr key={store.id} className="bg-[#e1e1e1]">
-                            <td className="p-5">{formatDate(store.date)}</td>
-                            <td className="p-5">{store.price}</td>
-                            <ModalCommentsScrollCell comment={store.comment} />
+                        {comments.map((item) => (
+                          <tr key={item.id} className="bg-[#e1e1e1]">
+                            <td className="p-5">
+                              {formatDate(item.created_on)}
+                            </td>
+                            <td className="p-5">{item.price}</td>
+                            <ModalCommentsScrollCell text={item.text} />
                           </tr>
                         ))}
                       </tbody>
@@ -62,8 +76,8 @@ const ModalComments = ({ productComments }) => {
               <div
                 className={`bg-[#c1c1c1] rounded-3xl shadow-[inset_0px_0px_1px_0px_black] ${
                   !isScroll
-                    ? 'opacity-0 invisible'
-                    : 'opacity-100 visible mx-2.5'
+                    ? "opacity-0 invisible"
+                    : "opacity-100 visible mx-2.5"
                 }`}
               >
                 <div

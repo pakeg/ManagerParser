@@ -1,17 +1,31 @@
 import { useCallback, useRef, useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
 import { MdOutlineHistory } from "react-icons/md";
 
 import ProductShop from "./Product/ProductShop.jsx";
 import MenuItemShop from "./Menu/MenuItemShop.jsx";
+import ModalComments from "./Modals/ModalComments.jsx";
+
+import {
+  fetchAddProductComment,
+  fetchGetCommentsHistory,
+} from "../store/reducers/mainPageSlice.js";
 
 const PartMainTwo = ({ shops, shopsTableRows, boxScrollHor }) => {
+  const [comment, setComment] = useState({
+    parsed_product_id: null,
+    price: 0,
+    text: "",
+  });
+  const comments = useSelector((state) => state.mainPageReducer.comments);
+  const dispatch = useDispatch();
   const commentPopUp = useRef(null);
 
-  const [comment, setComment] = useState({ id: null, comment: "" });
+  const [isOpen, setIsOpen] = useState(false);
   const [isPopUpOpen, setIsPopUpOpen] = useState(false);
 
-  const positionDivComment = useCallback((e, id) => {
-    setComment((state) => ({ ...state, id }));
+  const positionDivComment = useCallback((e, id, price) => {
+    setComment({ parsed_product_id: id, price, text: "" });
     const coor = e.target.getBoundingClientRect();
     // 15 - width SVg element, 20 - position right ::after, 12.5 - width ::after
     commentPopUp.current.style.left =
@@ -21,12 +35,15 @@ const PartMainTwo = ({ shops, shopsTableRows, boxScrollHor }) => {
     setIsPopUpOpen(!isPopUpOpen);
   }, []);
 
-  const addNewProductsComment = () => {
-    if (true) {
-      console.log(comment, "comment");
-      setComment({ id: null, comment: "" });
+  const addNewProductComment = () => {
+    if (comment.text.length > 0) {
+      dispatch(
+        fetchAddProductComment({ ...comment, text: comment.text.trim() }),
+      );
+      setComment({ parsed_product_id: null, price: 0, text: "" });
       setIsPopUpOpen(!isPopUpOpen);
     }
+    return;
   };
 
   return (
@@ -66,7 +83,7 @@ const PartMainTwo = ({ shops, shopsTableRows, boxScrollHor }) => {
           </table>
         </div>
       </div>
-      {/* -----Comment Pop-up History */}
+      {/* -----Comment Pop-up -----*/}
 
       <div
         ref={commentPopUp}
@@ -79,21 +96,22 @@ const PartMainTwo = ({ shops, shopsTableRows, boxScrollHor }) => {
             <textarea
               cols="35"
               rows="10"
-              value={comment.comment}
+              value={comment.text}
               placeholder="write comment"
               className="resize-none bg-white rounded-lg text-black p-2.5 focus:outline-none"
-              onChange={(e) =>
-                setComment((state) => ({ ...state, comment: e.target.value }))
-              }
+              onChange={(e) => setComment({ ...comment, text: e.target.value })}
             />
             <button
               className="text-base bg-gradient-to-b from-yellow-300 to-yellow-500 py-1.5 px-5 rounded-md w-full"
-              onClick={addNewProductsComment}
+              onClick={addNewProductComment}
             >
               Добавить комментарий
             </button>
           </div>
-          <div className="flex items-center justify-center text-black">
+          <div
+            className="flex items-center justify-center text-black"
+            onClick={() => setIsOpen(!isOpen)}
+          >
             <span className="hover:underline cursor-pointer">
               Посмотреть историю
             </span>
@@ -105,6 +123,18 @@ const PartMainTwo = ({ shops, shopsTableRows, boxScrollHor }) => {
           onClick={() => setIsPopUpOpen(!isPopUpOpen)}
         ></div>
       </div>
+
+      {/* -----M History -----*/}
+      {isOpen && (
+        <ModalComments
+          isOpen={isOpen}
+          setIsOpen={setIsOpen}
+          dispatch={dispatch}
+          fetchGetCommentsHistory={fetchGetCommentsHistory}
+          parsed_product_id={comment.parsed_product_id}
+          comments={comments[comment.parsed_product_id]}
+        />
+      )}
     </div>
   );
 };

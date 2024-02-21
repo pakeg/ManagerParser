@@ -15,7 +15,7 @@ const ProductShop = ({ rows, colIndex, positionDivComment }) => {
           row.product_price ? (
             <ProductShopCellFull
               key={row.shop + "_" + i}
-              id={i}
+              id={row.id}
               parsed_price={row.parsed_price}
               product_price={row.product_price}
               date={row.date}

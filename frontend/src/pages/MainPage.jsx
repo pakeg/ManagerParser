@@ -10,7 +10,6 @@ import PartMainTwo from "../components/PartMainTwo.jsx";
 import PartMainThree from "../components/PartMainThree.jsx";
 import ModalDelete from "../components/Modals/ModalDelete.jsx";
 import ModalAddShop from "../components/Modals/ModalAddShop.jsx";
-import ModalComments from "../components/Modals/ModalComments.jsx";
 
 import useScroll from "../hooks/useScroll.jsx";
 import useScrollHorizontal from "../hooks/useScrollHorizontal";
@@ -87,15 +86,6 @@ export const MainPage = () => {
       </div>
       <ModalDelete />
       {/* <ModalAddShop stores={[...products.stores]} /> */}
-
-      {/* {
-            id: 0,
-            date: 1698084416000,
-            price: 134,
-            comment:
-              "Lorem Ipsum is simply dummy",
-          }, */}
-      <ModalComments productComments={null} />
     </div>
   );
 };

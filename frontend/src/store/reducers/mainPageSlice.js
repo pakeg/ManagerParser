@@ -4,6 +4,8 @@ import {
   fetchAllInformation,
   updatePrice,
   addParseLink,
+  addPostProductComment,
+  getCommentsHistory,
 } from "../actions/actionsMainPage";
 import { fetchDataCategories } from "./newProductSlice";
 import { sortReducer } from "../actions/createdActions";
@@ -12,6 +14,7 @@ const initialState = {
   loading: false,
   errors: null,
   data: {},
+  comments: {},
   revalidate: null,
   sort: [],
   search: { title: "", part_number: "" },
@@ -119,6 +122,46 @@ const mainPageSlice = createSliceWithThunks({
         },
       },
     ),
+    fetchAddProductComment: create.asyncThunk(
+      async (data, { signal }) => {
+        const res = await addPostProductComment(data, signal);
+        return res;
+      },
+      {
+        pending: (state) => {
+          state.loading = true;
+        },
+        rejected: (state, action) => {
+          state.loading = false;
+        },
+        fulfilled: (state, action) => {
+          if (action.payload) {
+            const { parsed_product_id } = action.payload;
+            if (Object.hasOwn(state.comments, parsed_product_id)) {
+              state.comments[parsed_product_id].push(action.payload.comment);
+            }
+          }
+          return;
+        },
+      },
+    ),
+    fetchGetCommentsHistory: create.asyncThunk(
+      async (id, { signal }) => {
+        const res = await getCommentsHistory(id, signal);
+        return res;
+      },
+      {
+        pending: (state) => {
+          state.loading = true;
+        },
+        rejected: (state, action) => {
+          state.loading = false;
+        },
+        fulfilled: (state, action) => {
+          state.comments[action.payload.id] = action.payload.comments;
+        },
+      },
+    ),
     setSort: sortReducer(create),
     setFiltersReducer: create.reducer(
       (state, { payload: { properties, filters } }) => {
@@ -145,6 +188,8 @@ export const {
   fetchGeneralData,
   fetchUpdatePrice,
   fetchAddParseLink,
+  fetchAddProductComment,
+  fetchGetCommentsHistory,
   setFiltersReducer,
   setSearchReducer,
 } = mainPageSlice.actions;

@@ -11,7 +11,7 @@ const authorize = async function ({ nickname, password }) {
     const redirect = bcrypt.compareSync(password, user.password.trim());
     if (redirect) {
       const salt = bcrypt.genSaltSync(10);
-      let hash = bcrypt.hashSync(user.nickname + user.email, salt);
+      let hash = user.password.trim();
       const len = hash.length;
       hash = hash.slice(0, len / 2) + user.role + hash.slice(len / 2);
       return { redirect, cookie: hash };
@@ -199,6 +199,7 @@ const getAllProductsInformation = async function () {
     const shops = await sql`select id, title, active_status from shops`;
     const products = await sql`select
     products.id,
+    parsed_products.id as parsed_id,
     categories.title as category,
     manufactures.title as manufacture,
     products.title,
@@ -222,6 +223,7 @@ const getAllProductsInformation = async function () {
         c[n.id] = { product: { ...n, shops_data: [] } };
       }
       c[n.id].product.shops_data.push({
+        id: n.parsed_id,
         product_id: n.id,
         shop: { id: n.shop_id, title: n.shop },
         product_price: n.price,
@@ -231,6 +233,7 @@ const getAllProductsInformation = async function () {
       });
       c[n.id].info = { count: 0, min: 0, max: 0 };
 
+      delete c[n.id].product.parsed_id;
       delete c[n.id].product.shop;
       delete c[n.id].product.shop_id;
       delete c[n.id].product.date;
@@ -315,6 +318,36 @@ const addParseLink = async function (data) {
   }
 };
 
+const addProductComment = async function (hash, data) {
+  try {
+    const role = hash.match("admin|user|manager")[0];
+    const password = hash.replace(role, "");
+    const [user] = await sql`select * from users where password = ${password}`;
+    if (typeof user === "undefined") {
+      return false;
+    }
+
+    data = { ...data, user_id: user.id };
+    const [comment] =
+      await sql`insert into comments ${sql(data, Object.keys(data))} returning *`;
+
+    return { comment, parsed_product_id: data.parsed_product_id };
+  } catch (e) {
+    return { error: e?.detail ?? "Something went wrong. Please, try later" };
+  }
+};
+
+const getCommentsHistory = async function ({ id }) {
+  try {
+    const comments =
+      await sql`select * from comments where parsed_product_id = ${id}`;
+
+    return { id, comments };
+  } catch (e) {
+    return { error: e?.detail ?? "Something went wrong. Please, try later" };
+  }
+};
+
 export {
   authorize,
   createNewItemCategory,
@@ -326,4 +359,6 @@ export {
   getAllProductsInformation,
   updatePrice,
   addParseLink,
+  addProductComment,
+  getCommentsHistory,
 };
