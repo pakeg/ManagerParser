@@ -15,6 +15,8 @@ import {
   getAllProductsInformation,
   updatePrice,
   addParseLink,
+  addProductComment,
+  getCommentsHistory,
 } from "./actions.mjs";
 
 const app = express();
@@ -72,7 +74,6 @@ app.get("/api/authorization", async function (req, res) {
 
 app.post("/api/authorization", async function (req, res) {
   const user = await authorize(req.body);
-  console.log(user, "user - after");
   if (!user?.error) {
     if (user.redirect) {
       const options = {
@@ -145,6 +146,20 @@ app.post("/api/post-update-price", async function (req, res) {
 
 app.post("/api/post-add-parse-link", async function (req, res) {
   const data = await addParseLink(req.body);
+  if (!data?.error) {
+    res.status(201).json(data);
+  } else res.status(500).send(data.error);
+});
+
+app.post("/api/post-add-parse-product-comment", async function (req, res) {
+  const data = await addProductComment(req.cookies.authorized, req.body);
+  if (!data?.error) {
+    res.status(201).json(data);
+  } else res.status(500).send(data.error);
+});
+
+app.post("/api/get-comments-history", async function (req, res) {
+  const data = await getCommentsHistory(req.body);
   if (!data?.error) {
     res.status(201).json(data);
   } else res.status(500).send(data.error);

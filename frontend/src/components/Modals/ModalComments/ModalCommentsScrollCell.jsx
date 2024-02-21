@@ -1,6 +1,6 @@
 import useScroll from '../../../hooks/useScroll';
 
-const ModalCommentsScrollCell = ({ comment }) => {
+const ModalCommentsScrollCell = ({ text }) => {
   const { isScroll, boxScroll, buttonScroll } = useScroll();
 
   return (
@@ -12,7 +12,7 @@ const ModalCommentsScrollCell = ({ comment }) => {
             !isScroll && 'pr-[17px]'
           }`}
           readOnly
-          value={comment}
+          value={text}
         ></textarea>
         <div
           ref={buttonScroll}

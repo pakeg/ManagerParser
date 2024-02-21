@@ -52,7 +52,7 @@ const ProductShopCellFull = ({
             color="#f7c34a"
             className="rotate-y-180"
             title="add comment"
-            onClick={(e) => positionDivComment(e, id)}
+            onClick={(e) => positionDivComment(e, id, parsed_price)}
           />
         </div>
       </div>
