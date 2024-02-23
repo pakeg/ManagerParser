@@ -46,7 +46,7 @@ const ModalComments = ({
             <>
               <div className="grow overflow-hidden">
                 <div
-                  className="max-h-[300px] overflow-auto -mr-5"
+                  className={`max-h-[300px] overflow-auto ${isScroll ? "-mr-5" : ""}`}
                   ref={boxScroll}
                 >
                   <div>
