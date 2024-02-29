@@ -28,7 +28,7 @@ const MenuItem = ({
 
   const changingSortOrder = useCallback(() => {
     const action = setSortActions(actionType);
-    dispatch(action({ properties, sortIndex }));
+    dispatch(action({ properties, sortIndex, table: "one" }));
     if (sortIndex === 2) {
       setSortIndex(0);
       return;
@@ -57,7 +57,7 @@ const MenuItem = ({
       >
         {Sort && (
           <Sort
-            className={`cursor-pointer ${sortIndex === 1 && "text-teal-500"} ${sortIndex === 2 && "text-rose-500"}`}
+            className={`cursor-pointer ${sortIndex === 1 ? "text-teal-500" : ""} ${sortIndex === 2 ? "text-rose-500" : ""}`}
             size={20}
             onClick={() => properties && changingSortOrder()}
           />
@@ -104,7 +104,7 @@ const MenuItem = ({
                       if (e.target.checked) {
                         setFilters([...filters, item.title]);
                       } else {
-                        setFilters(filters.filter((i) => i !== item.title));
+                        setFilters(filters.filter((el) => el !== item.title));
                       }
                     }}
                   />

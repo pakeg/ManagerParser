@@ -1,13 +1,35 @@
+import { useState } from "react";
 import ProductShopCellEmpty from "./ProductShopCellEmpty.jsx";
 import ProductShopCellFull from "./ProductShopCellFull.jsx";
 
-const ProductShop = ({ rows, colIndex, positionDivComment }) => {
+const ProductShop = ({
+  rows,
+  colIndex,
+  setSortTableTwo,
+  sortTableTwo,
+  dispatch,
+  positionDivComment,
+}) => {
+  const changingSort = (typeIndex) => {
+    dispatch(setSortTableTwo({ colIndex, typeIndex }));
+  };
+
   return (
     <tr className="bg-[#dfdfdf]">
       <td>
         <div className="flex flex-col cursor-pointer bg-white">
-          <span className="hover:bg-[#dfdfdf]">{">"}</span>
-          <span className="hover:bg-[#dfdfdf]">{"<"}</span>
+          <span
+            className={`hover:bg-[#dfdfdf] ${sortTableTwo?.colIndex == colIndex && sortTableTwo?.typeIndex == 0 ? "bg-[#dfdfdf]" : ""}`}
+            onClick={() => changingSort(0)}
+          >
+            {">"}
+          </span>
+          <span
+            className={`hover:bg-[#dfdfdf] ${sortTableTwo?.colIndex == colIndex && sortTableTwo?.typeIndex == 1 ? "bg-[#dfdfdf]" : ""}`}
+            onClick={() => changingSort(1)}
+          >
+            {"<"}
+          </span>
         </div>
       </td>
       {rows.length > 0 &&

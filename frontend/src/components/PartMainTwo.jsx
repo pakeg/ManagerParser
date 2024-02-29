@@ -1,5 +1,4 @@
 import { useCallback, useRef, useState } from "react";
-import { useSelector, useDispatch } from "react-redux";
 import { MdOutlineHistory } from "react-icons/md";
 
 import ProductShop from "./Product/ProductShop.jsx";
@@ -9,16 +8,22 @@ import ModalComments from "./Modals/ModalComments.jsx";
 import {
   fetchAddProductComment,
   fetchGetCommentsHistory,
+  setSortTableTwo,
 } from "../store/reducers/mainPageSlice.js";
 
-const PartMainTwo = ({ shops, shopsTableRows, boxScrollHor }) => {
+const PartMainTwo = ({
+  shops,
+  shopsTableRows,
+  comments,
+  sortTableTwo,
+  dispatch,
+  boxScrollHor,
+}) => {
   const [comment, setComment] = useState({
     parsed_product_id: null,
     price: 0,
     text: "",
   });
-  const comments = useSelector((state) => state.mainPageReducer.comments);
-  const dispatch = useDispatch();
   const commentPopUp = useRef(null);
 
   const [isOpen, setIsOpen] = useState(false);
@@ -76,6 +81,9 @@ const PartMainTwo = ({ shops, shopsTableRows, boxScrollHor }) => {
                     key={i}
                     colIndex={i}
                     rows={items}
+                    setSortTableTwo={setSortTableTwo}
+                    sortTableTwo={sortTableTwo}
+                    dispatch={dispatch}
                     positionDivComment={positionDivComment}
                   />
                 ))}
