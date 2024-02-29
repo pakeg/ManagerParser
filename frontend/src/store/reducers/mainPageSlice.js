@@ -17,6 +17,7 @@ const initialState = {
   comments: {},
   revalidate: null,
   sort: [],
+  sortTableTwo: {},
   search: { title: "", part_number: "" },
   filters: { category: [], manufacture: [] },
 };
@@ -163,6 +164,18 @@ const mainPageSlice = createSliceWithThunks({
       },
     ),
     setSort: sortReducer(create),
+    setSortTableTwo: create.reducer(
+      (state, { payload: { colIndex, typeIndex } }) => {
+        if (
+          state.sortTableTwo.typeIndex !== typeIndex ||
+          state.sortTableTwo.colIndex !== colIndex
+        ) {
+          state.sortTableTwo = { colIndex, typeIndex };
+          return;
+        }
+        state.sortTableTwo = {};
+      },
+    ),
     setFiltersReducer: create.reducer(
       (state, { payload: { properties, filters } }) => {
         if (filters.length === 0) {
@@ -192,5 +205,6 @@ export const {
   fetchGetCommentsHistory,
   setFiltersReducer,
   setSearchReducer,
+  setSortTableTwo,
 } = mainPageSlice.actions;
 export default mainPageSlice.reducer;

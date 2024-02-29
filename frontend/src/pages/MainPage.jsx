@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { memoize } from "proxy-memoize";
 
@@ -15,7 +15,7 @@ import useScroll from "../hooks/useScroll.jsx";
 import useScrollHorizontal from "../hooks/useScrollHorizontal";
 
 export const MainPage = () => {
-  const { loading, errors, data } = useSelector(
+  const { loading, errors, data, comments, sortTableTwo } = useSelector(
     memoize((state) => ({
       ...state.mainPageReducer,
       data: {
@@ -58,6 +58,9 @@ export const MainPage = () => {
               <PartMainTwo
                 shops={data.shops}
                 shopsTableRows={data.shopsTableRows}
+                comments={comments}
+                sortTableTwo={sortTableTwo}
+                dispatch={dispatch}
                 boxScrollHor={boxScrollHor}
               />
               {/* -------Table N. 2--------- */}
