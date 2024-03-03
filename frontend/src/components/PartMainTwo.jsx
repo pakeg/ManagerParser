@@ -8,7 +8,7 @@ import ModalComments from "./Modals/ModalComments.jsx";
 import {
   fetchAddProductComment,
   fetchGetCommentsHistory,
-  setSortTableTwo,
+  middlewareSort,
 } from "../store/reducers/mainPageSlice.js";
 
 const PartMainTwo = ({
@@ -81,7 +81,7 @@ const PartMainTwo = ({
                     key={i}
                     colIndex={i}
                     rows={items}
-                    setSortTableTwo={setSortTableTwo}
+                    middlewareSort={middlewareSort}
                     sortTableTwo={sortTableTwo}
                     dispatch={dispatch}
                     positionDivComment={positionDivComment}

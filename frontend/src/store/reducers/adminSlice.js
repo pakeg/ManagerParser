@@ -10,7 +10,7 @@ const initialState = {
   loading: false,
   errors: null,
   data: {},
-  sort: [],
+  sort: { tableOne: [] },
   search: {},
   filters: {},
   revalidate: null,

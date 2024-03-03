@@ -4,25 +4,41 @@ import { sortByProperties } from "../../utils/utilsFun";
 const sortOrder = ["asc", "desc", "del"];
 
 //toolkit
+const reCreateShops = (state) => {
+  const index = state.data.products.findIndex(
+    (el) => el.id == state.sortTableTwo.product_id,
+  );
+  const notEmpty = state.data.shopsTableRows[index].filter(
+    (el) => el["parsed_price"],
+  );
+  const empty = state.data.shopsTableRows[index].filter(
+    (el) => !el["parsed_price"],
+  );
+
+  // sorting not empty by `parsed_price`
+  notEmpty.sort(sortByProperties(state.sort["tableTwo"]));
+  const shops = notEmpty.concat(empty).map((el) => el.shop);
+  return shops;
+};
+
 const reCreateTableRows = (products, shops) => {
-  return products.map((product) => {
+  const arr = products.map((product) => {
     const row = [];
     shops.forEach((shop) => {
-      if (shop.active_status != "0") {
-        const finded = product.shops_data.find(
-          (shop_data) => shop_data.shop.id === shop.id,
-        );
-        row.push(
-          finded ?? {
-            product_id: product.id,
-            shop: { id: shop.id, title: shop.title },
-          },
-        );
-      }
+      const finded = product.shops_data.find(
+        (shop_data) => shop_data.shop.id === shop.id,
+      );
+      row.push(
+        finded ?? {
+          product_id: product.id,
+          shop: { id: shop.id, title: shop.title },
+        },
+      );
     });
 
     return row;
   });
+  return [shops, arr];
 };
 
 //actions
@@ -30,20 +46,20 @@ export const setSortActions = (action) => createAction(action);
 
 //reducers
 export const sortReducer = (create) =>
-  create.reducer((state, { payload: { properties, sortIndex } }) => {
+  create.reducer((state, { payload: { properties, sortIndex, table } }) => {
     const orderProp = `${properties}:${sortOrder[sortIndex]}`;
-    const findI = state.sort.findIndex((el) => {
+    const findI = state.sort[table].findIndex((el) => {
       if (el.indexOf(properties) !== -1) {
         return true;
       }
       return false;
     });
-    const start = findI === -1 ? state.sort.length : findI;
+    const start = findI === -1 ? state.sort[table].length : findI;
 
     if (sortOrder[sortIndex] !== "del") {
-      state.sort.splice(start, 1, orderProp);
+      state.sort[table].splice(start, 1, orderProp);
     } else {
-      state.sort.splice(start, 1);
+      state.sort[table].splice(start, 1);
     }
   });
 
@@ -95,20 +111,26 @@ export const getSortedDataSelector = (state, typeData) => {
         });
       }
 
-      if (state.sort.length != 0) {
+      if (state.sort["tableOne"].length != 0) {
         sortedData[typeData] = [...sortedData[typeData]].sort(
-          sortByProperties(state.sort),
+          sortByProperties(state.sort["tableOne"]),
         );
       }
 
       //reCreate shopsTableRows
       if (typeData === "products" && sortedData["shops"]) {
+        let shops = sortedData.shops.filter((el) => el.active_status != "0");
+        if (
+          typeof state.sortTableTwo?.sortIndex !== "undefined" &&
+          state.sortTableTwo?.sortIndex !== 2
+        ) {
+          shops = reCreateShops(state);
+        }
         sortedData["shopsTableRows"] = reCreateTableRows(
-          sortedData[typeData],
-          sortedData["shops"],
+          sortedData.products,
+          shops,
         );
       }
-
       return sortedData;
     },
   );

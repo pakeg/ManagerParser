@@ -1,4 +1,8 @@
-import { buildCreateSlice, asyncThunkCreator } from "@reduxjs/toolkit";
+import {
+  buildCreateSlice,
+  asyncThunkCreator,
+  createAction,
+} from "@reduxjs/toolkit";
 
 import {
   fetchAllInformation,
@@ -16,7 +20,7 @@ const initialState = {
   data: {},
   comments: {},
   revalidate: null,
-  sort: [],
+  sort: { tableOne: [], tableTwo: [] },
   sortTableTwo: {},
   search: { title: "", part_number: "" },
   filters: { category: [], manufacture: [] },
@@ -164,16 +168,25 @@ const mainPageSlice = createSliceWithThunks({
       },
     ),
     setSort: sortReducer(create),
-    setSortTableTwo: create.reducer(
-      (state, { payload: { colIndex, typeIndex } }) => {
+    _setSortTableTwo: create.reducer(
+      (state, { payload: { product_id, sortIndex } }) => {
         if (
-          state.sortTableTwo.typeIndex !== typeIndex ||
-          state.sortTableTwo.colIndex !== colIndex
+          state.sortTableTwo.sortIndex !== sortIndex ||
+          state.sortTableTwo.product_id !== product_id
         ) {
-          state.sortTableTwo = { colIndex, typeIndex };
+          state.sortTableTwo = { product_id, sortIndex };
           return;
         }
         state.sortTableTwo = {};
+      },
+    ),
+    middlewareSort: create.asyncThunk(
+      async ({ product_id, sortIndex, properties, table }, { dispatch }) => {
+        const actionSetSort = createAction("mainPage/setSort");
+        const actionSetSortTableTwo = createAction("mainPage/_setSortTableTwo");
+        dispatch(actionSetSortTableTwo({ product_id, sortIndex }));
+        dispatch(actionSetSort({ properties, sortIndex, table }));
+        return;
       },
     ),
     setFiltersReducer: create.reducer(
@@ -205,6 +218,6 @@ export const {
   fetchGetCommentsHistory,
   setFiltersReducer,
   setSearchReducer,
-  setSortTableTwo,
+  middlewareSort,
 } = mainPageSlice.actions;
 export default mainPageSlice.reducer;
