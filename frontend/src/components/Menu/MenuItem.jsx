@@ -28,7 +28,7 @@ const MenuItem = ({
 
   const changingSortOrder = useCallback(() => {
     const action = setSortActions(actionType);
-    dispatch(action({ properties, sortIndex, table: "one" }));
+    dispatch(action({ properties, sortIndex, table: "tableOne" }));
     if (sortIndex === 2) {
       setSortIndex(0);
       return;

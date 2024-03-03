@@ -55,14 +55,16 @@ export const MainPage = () => {
                 manufactures={data.manufactures}
               />
               {/* -------Table N. 2--------- */}
-              <PartMainTwo
-                shops={data.shops}
-                shopsTableRows={data.shopsTableRows}
-                comments={comments}
-                sortTableTwo={sortTableTwo}
-                dispatch={dispatch}
-                boxScrollHor={boxScrollHor}
-              />
+              {data.shopsTableRows && (
+                <PartMainTwo
+                  shops={data.shopsTableRows[0]}
+                  shopsTableRows={data.shopsTableRows[1]}
+                  comments={comments}
+                  sortTableTwo={sortTableTwo}
+                  dispatch={dispatch}
+                  boxScrollHor={boxScrollHor}
+                />
+              )}
               {/* -------Table N. 2--------- */}
               <PartMainThree products={data.products} />
               {/*----------------------------*/}

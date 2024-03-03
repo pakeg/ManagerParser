@@ -4,7 +4,7 @@ import { useState } from "react";
 
 import Button from "./Button";
 import DivScrollEl from "./ScrollEl/DivScrollEl";
-import { useLocation } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 
 export default function Header() {
   const location = useLocation();
@@ -30,7 +30,9 @@ export default function Header() {
             {isOpen && <DivScrollEl />}
           </div>
           <div className="flex space-x-4">
-            <Button text="Добавить товар" icon={AiFillPlusCircle} />
+            <Link to="/new-product">
+              <Button text="Добавить товар" icon={AiFillPlusCircle} />
+            </Link>
           </div>
         </>
       )}

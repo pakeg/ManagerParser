@@ -30,8 +30,7 @@ const ProductShopCellFull = ({
 
   return (
     <td
-      className={`relative py-2 px-12 group text-white ${styleCell}
-      }`}
+      className={`relative py-2 px-12 group text-white ${styleCell}`}
       title={parsed_price === null ? `in process ...` : parsed_price}
     >
       <div>

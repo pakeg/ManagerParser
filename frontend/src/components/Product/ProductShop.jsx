@@ -5,13 +5,25 @@ import ProductShopCellFull from "./ProductShopCellFull.jsx";
 const ProductShop = ({
   rows,
   colIndex,
-  setSortTableTwo,
+  middlewareSort,
   sortTableTwo,
   dispatch,
   positionDivComment,
 }) => {
-  const changingSort = (typeIndex) => {
-    dispatch(setSortTableTwo({ colIndex, typeIndex }));
+  const changingSort = (index) => {
+    const sortIndex =
+      index == sortTableTwo?.sortIndex &&
+      sortTableTwo?.product_id == rows[0].product_id
+        ? 2
+        : index;
+    dispatch(
+      middlewareSort({
+        product_id: rows[0].product_id,
+        sortIndex,
+        properties: "parsed_price",
+        table: "tableTwo",
+      }),
+    );
   };
 
   return (
@@ -19,13 +31,13 @@ const ProductShop = ({
       <td>
         <div className="flex flex-col cursor-pointer bg-white">
           <span
-            className={`hover:bg-[#dfdfdf] ${sortTableTwo?.colIndex == colIndex && sortTableTwo?.typeIndex == 0 ? "bg-[#dfdfdf]" : ""}`}
+            className={`hover:bg-[#dfdfdf] ${sortTableTwo?.product_id == rows[0].product_id && sortTableTwo?.sortIndex == 0 ? "bg-[#dfdfdf]" : ""}`}
             onClick={() => changingSort(0)}
           >
             {">"}
           </span>
           <span
-            className={`hover:bg-[#dfdfdf] ${sortTableTwo?.colIndex == colIndex && sortTableTwo?.typeIndex == 1 ? "bg-[#dfdfdf]" : ""}`}
+            className={`hover:bg-[#dfdfdf] ${sortTableTwo?.product_id == rows[0].product_id && sortTableTwo?.sortIndex == 1 ? "bg-[#dfdfdf]" : ""}`}
             onClick={() => changingSort(1)}
           >
             {"<"}
