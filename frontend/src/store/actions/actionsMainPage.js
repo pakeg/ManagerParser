@@ -182,3 +182,41 @@ export const getCommentsHistory = async (id, signal) => {
   const res = await req.json();
   return res;
 };
+
+export const postChangeShopStatus = async (data, signal) => {
+  const req = await fetch(
+    import.meta.env.VITE_URL + "/api/post-change-shop-status",
+    {
+      method: "POST",
+      signal,
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json;charset=utf-8",
+      },
+      credentials: "include",
+      body: JSON.stringify(data),
+    },
+  );
+
+  if (req.status === 401) {
+    const info = await req.json();
+    throw new Response(JSON.stringify({ msg: info.msg, path: info.path }), {
+      status: req.status,
+      statusText: info.statusText,
+      headers: {
+        "Content-Type": "application/json; utf-8",
+      },
+    });
+  }
+
+  if (!req.ok) {
+    const error = await req.text();
+    throw new Response(error, {
+      status: req.status,
+      statusText: "error",
+    });
+  }
+
+  const res = await req.json();
+  return res;
+};

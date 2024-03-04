@@ -4,7 +4,7 @@ import { sortByProperties } from "../../utils/utilsFun";
 const sortOrder = ["asc", "desc", "del"];
 
 //toolkit
-const reCreateShops = (state) => {
+const reCreateShops = (state, shops) => {
   const index = state.data.products.findIndex(
     (el) => el.id == state.sortTableTwo.product_id,
   );
@@ -17,8 +17,11 @@ const reCreateShops = (state) => {
 
   // sorting not empty by `parsed_price`
   notEmpty.sort(sortByProperties(state.sort["tableTwo"]));
-  const shops = notEmpty.concat(empty).map((el) => el.shop);
-  return shops;
+  const newListShops = notEmpty.concat(empty).reduce((acc, el) => {
+    const finded = shops.find((shop) => shop.id === el.shop.id);
+    return finded ? [...acc, finded] : acc;
+  }, []);
+  return newListShops;
 };
 
 const reCreateTableRows = (products, shops) => {
@@ -31,13 +34,18 @@ const reCreateTableRows = (products, shops) => {
       row.push(
         finded ?? {
           product_id: product.id,
-          shop: { id: shop.id, title: shop.title },
+          shop: {
+            id: shop.id,
+            title: shop.title,
+            active_status: shop.active_status,
+          },
         },
       );
     });
 
     return row;
   });
+
   return [shops, arr];
 };
 
@@ -124,7 +132,7 @@ export const getSortedDataSelector = (state, typeData) => {
           typeof state.sortTableTwo?.sortIndex !== "undefined" &&
           state.sortTableTwo?.sortIndex !== 2
         ) {
-          shops = reCreateShops(state);
+          shops = reCreateShops(state, shops);
         }
         sortedData["shopsTableRows"] = reCreateTableRows(
           sortedData.products,

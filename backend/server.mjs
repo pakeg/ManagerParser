@@ -17,6 +17,7 @@ import {
   addParseLink,
   addProductComment,
   getCommentsHistory,
+  changeShopStatus,
 } from "./actions.mjs";
 
 const app = express();
@@ -160,6 +161,13 @@ app.post("/api/post-add-parse-product-comment", async function (req, res) {
 
 app.post("/api/get-comments-history", async function (req, res) {
   const data = await getCommentsHistory(req.body);
+  if (!data?.error) {
+    res.status(201).json(data);
+  } else res.status(500).send(data.error);
+});
+
+app.post("/api/post-change-shop-status", async function (req, res) {
+  const data = await changeShopStatus(req.body);
   if (!data?.error) {
     res.status(201).json(data);
   } else res.status(500).send(data.error);

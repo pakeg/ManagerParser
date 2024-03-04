@@ -4,11 +4,13 @@ import { MdOutlineHistory } from "react-icons/md";
 import ProductShop from "./Product/ProductShop.jsx";
 import MenuItemShop from "./Menu/MenuItemShop.jsx";
 import ModalComments from "./Modals/ModalComments.jsx";
+import ModalAddShop from "../components/Modals/ModalAddShop.jsx";
 
 import {
   fetchAddProductComment,
   fetchGetCommentsHistory,
   middlewareSort,
+  fetchChangeShopStatus,
 } from "../store/reducers/mainPageSlice.js";
 
 const PartMainTwo = ({
@@ -26,7 +28,8 @@ const PartMainTwo = ({
   });
   const commentPopUp = useRef(null);
 
-  const [isOpen, setIsOpen] = useState(false);
+  const [isOpenModalComments, setIsOpenModalComments] = useState(false);
+  const [isModalAddShop, setIsModalAddShop] = useState(false);
   const [isPopUpOpen, setIsPopUpOpen] = useState(false);
 
   const positionDivComment = useCallback((e, id, price) => {
@@ -62,21 +65,29 @@ const PartMainTwo = ({
             <thead>
               <tr className="bg-[#c1c1c1]">
                 <td className="py-1.5 px-2.5">
-                  <div className="flex items-center cursor-pointer text-xl leading-none">
+                  <div
+                    className="flex items-center cursor-pointer text-xl leading-[0.5px]"
+                    onClick={() => setIsModalAddShop(!isModalAddShop)}
+                  >
                     +
                   </div>
                 </td>
-                {shops &&
-                  shops
+                {shopsTableRows &&
+                  shopsTableRows[0]
                     .filter((shop) => shop.active_status != "0")
                     .map((shop) => (
-                      <MenuItemShop key={shop.id} title={shop.title} />
+                      <MenuItemShop
+                        key={shop.id}
+                        shopInfo={shop}
+                        fetchChangeShopStatus={fetchChangeShopStatus}
+                        dispatch={dispatch}
+                      />
                     ))}
               </tr>
             </thead>
             <tbody>
               {shopsTableRows &&
-                shopsTableRows.map((items, i) => (
+                shopsTableRows[1].map((items, i) => (
                   <ProductShop
                     key={i}
                     colIndex={i}
@@ -118,7 +129,7 @@ const PartMainTwo = ({
           </div>
           <div
             className="flex items-center justify-center text-black"
-            onClick={() => setIsOpen(!isOpen)}
+            onClick={() => setIsOpenModalComments(!isOpenModalComments)}
           >
             <span className="hover:underline cursor-pointer">
               Посмотреть историю
@@ -133,14 +144,22 @@ const PartMainTwo = ({
       </div>
 
       {/* -----M History -----*/}
-      {isOpen && (
+      {isOpenModalComments && (
         <ModalComments
-          isOpen={isOpen}
-          setIsOpen={setIsOpen}
+          isOpen={isOpenModalComments}
+          setIsOpen={setIsOpenModalComments}
           dispatch={dispatch}
           fetchGetCommentsHistory={fetchGetCommentsHistory}
           parsed_product_id={comment.parsed_product_id}
           comments={comments[comment.parsed_product_id]}
+        />
+      )}
+      {/* -----M AddShop -----*/}
+      {isModalAddShop && (
+        <ModalAddShop
+          isOpen={isModalAddShop}
+          setIsOpen={setIsModalAddShop}
+          shops={shops}
         />
       )}
     </div>

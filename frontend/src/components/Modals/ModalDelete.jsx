@@ -1,7 +1,7 @@
-import { useState } from 'react';
-import { GoAlertFill } from 'react-icons/go';
+import { useState } from "react";
+import { GoAlertFill } from "react-icons/go";
 
-import Modal from './Modal.jsx';
+import Modal from "./Modal.jsx";
 
 const ModalDelete = ({ shop }) => {
   const [isOpen, setIsOpen] = useState(false);
