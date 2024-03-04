@@ -208,6 +208,7 @@ const getAllProductsInformation = async function () {
     price,
     shops.title as shop,
     shops.id as shop_id,
+    shops.active_status as shop_active_status,
     parsed_products.created_on as date,
     parsed_products.link as link,
     parsed_price
@@ -225,7 +226,11 @@ const getAllProductsInformation = async function () {
       c[n.id].product.shops_data.push({
         id: n.parsed_id,
         product_id: n.id,
-        shop: { id: n.shop_id, title: n.shop },
+        shop: {
+          id: n.shop_id,
+          title: n.shop,
+          active_status: n.shop_active_status,
+        },
         product_price: n.price,
         date: n.date,
         link: n.link,
@@ -236,6 +241,7 @@ const getAllProductsInformation = async function () {
       delete c[n.id].product.parsed_id;
       delete c[n.id].product.shop;
       delete c[n.id].product.shop_id;
+      delete c[n.id].product.shop_active_status;
       delete c[n.id].product.date;
       delete c[n.id].product.href;
       delete c[n.id].product.parsed_price;
@@ -271,7 +277,11 @@ const getAllProductsInformation = async function () {
           row.push(
             finded ?? {
               product_id: id,
-              shop: { id: shop.id, title: shop.title },
+              shop: {
+                id: shop.id,
+                title: shop.title,
+                active_status: shop.active_status,
+              },
             },
           );
         }
@@ -348,6 +358,16 @@ const getCommentsHistory = async function ({ id }) {
   }
 };
 
+const changeShopStatus = async function ({ id, active_status }) {
+  try {
+    const [result] =
+      await sql`update shops set active_status = ${Number(!active_status)} where id = ${id} returning id, active_status`;
+    return result;
+  } catch (e) {
+    return { error: e?.detail ?? "Something went wrong. Please, try later" };
+  }
+};
+
 export {
   authorize,
   createNewItemCategory,
@@ -361,4 +381,5 @@ export {
   addParseLink,
   addProductComment,
   getCommentsHistory,
+  changeShopStatus,
 };

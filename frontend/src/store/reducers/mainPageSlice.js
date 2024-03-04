@@ -10,6 +10,7 @@ import {
   addParseLink,
   addPostProductComment,
   getCommentsHistory,
+  postChangeShopStatus,
 } from "../actions/actionsMainPage";
 import { fetchDataCategories } from "./newProductSlice";
 import { sortReducer } from "../actions/createdActions";
@@ -167,6 +168,25 @@ const mainPageSlice = createSliceWithThunks({
         },
       },
     ),
+    fetchChangeShopStatus: create.asyncThunk(
+      async (data, { signal }) => {
+        const res = await postChangeShopStatus(data, signal);
+        return res;
+      },
+      {
+        pending: (state) => {
+          state.loading = true;
+        },
+        rejected: (state, action) => {
+          state.loading = false;
+        },
+        fulfilled: (state, { payload: { id, active_status } }) => {
+          state.data.shops = state.data.shops.map((el) => {
+            return el.id === id ? { ...el, active_status } : el;
+          });
+        },
+      },
+    ),
     setSort: sortReducer(create),
     _setSortTableTwo: create.reducer(
       (state, { payload: { product_id, sortIndex } }) => {
@@ -216,6 +236,7 @@ export const {
   fetchAddParseLink,
   fetchAddProductComment,
   fetchGetCommentsHistory,
+  fetchChangeShopStatus,
   setFiltersReducer,
   setSearchReducer,
   middlewareSort,

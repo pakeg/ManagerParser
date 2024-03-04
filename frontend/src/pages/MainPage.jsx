@@ -9,7 +9,6 @@ import PartMainOne from "../components/PartMainOne.jsx";
 import PartMainTwo from "../components/PartMainTwo.jsx";
 import PartMainThree from "../components/PartMainThree.jsx";
 import ModalDelete from "../components/Modals/ModalDelete.jsx";
-import ModalAddShop from "../components/Modals/ModalAddShop.jsx";
 
 import useScroll from "../hooks/useScroll.jsx";
 import useScrollHorizontal from "../hooks/useScrollHorizontal";
@@ -57,8 +56,8 @@ export const MainPage = () => {
               {/* -------Table N. 2--------- */}
               {data.shopsTableRows && (
                 <PartMainTwo
-                  shops={data.shopsTableRows[0]}
-                  shopsTableRows={data.shopsTableRows[1]}
+                  shops={data.shops}
+                  shopsTableRows={data.shopsTableRows}
                   comments={comments}
                   sortTableTwo={sortTableTwo}
                   dispatch={dispatch}
@@ -90,7 +89,6 @@ export const MainPage = () => {
         </div>
       </div>
       <ModalDelete />
-      {/* <ModalAddShop stores={[...products.stores]} /> */}
     </div>
   );
 };
