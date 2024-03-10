@@ -6,7 +6,7 @@ import { createNewItemCategory } from "../../store/reducers/newProductSlice.js";
 
 const fields = {
   categories: "категории",
-  manufacturers: "производителя",
+  manufactures: "производителя",
   projects: "проэкта",
 };
 

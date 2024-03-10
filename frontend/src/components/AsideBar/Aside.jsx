@@ -20,10 +20,9 @@ const routes = [
   { to: "/upload", icon: PiDownload, role: "admin|user|manager" },
 ];
 
-const session =
-  sessionStorage.getItem("authorized")?.match("admin|user|manager") ?? "";
-
 export default function Aside() {
+  const session =
+    sessionStorage.getItem("authorized")?.match("admin|user|manager") ?? "";
   return (
     <aside className="bg-black flex flex-col w-14 pt-4 space-y-5">
       {routes

@@ -160,6 +160,8 @@ const PartMainTwo = ({
           isOpen={isModalAddShop}
           setIsOpen={setIsModalAddShop}
           shops={shops}
+          dispatch={dispatch}
+          fetchChangeShopStatus={fetchChangeShopStatus}
         />
       )}
     </div>

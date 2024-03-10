@@ -5,22 +5,30 @@ const sortOrder = ["asc", "desc", "del"];
 
 //toolkit
 const reCreateShops = (state, shops) => {
-  const index = state.data.products.findIndex(
+  const product = state.data.products.find(
     (el) => el.id == state.sortTableTwo.product_id,
   );
-  const notEmpty = state.data.shopsTableRows[index].filter(
-    (el) => el["parsed_price"],
-  );
-  const empty = state.data.shopsTableRows[index].filter(
-    (el) => !el["parsed_price"],
-  );
+  const notEmpty = [];
+  const empty = [];
+
+  shops.forEach((shop) => {
+    const findedIndex = product.shops_data.findIndex(
+      (shop_data) => shop_data.shop.id === shop.id,
+    );
+    if (
+      findedIndex != -1 &&
+      product.shops_data[findedIndex].parsed_price != null
+    )
+      notEmpty.push({
+        ...shop,
+        parsed_price: product.shops_data[findedIndex].parsed_price,
+      });
+    else empty.push(shop);
+  });
 
   // sorting not empty by `parsed_price`
   notEmpty.sort(sortByProperties(state.sort["tableTwo"]));
-  const newListShops = notEmpty.concat(empty).reduce((acc, el) => {
-    const finded = shops.find((shop) => shop.id === el.shop.id);
-    return finded ? [...acc, finded] : acc;
-  }, []);
+  const newListShops = notEmpty.concat(empty);
   return newListShops;
 };
 
