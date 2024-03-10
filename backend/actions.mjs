@@ -217,7 +217,7 @@ const getAllProductsInformation = async function () {
     left join categories on (categories.id = category_id)
     left join manufactures on (manufactures.id = manufacture_id)
     left join parsed_products on (parsed_products.product_id = products.id)
-    left join shops on (shops.id = parsed_products.shop_id and shops.active_status != '0')
+    left join shops on (shops.id = parsed_products.shop_id)
     order by id`;
     const groupProductsById = products.reduce((c, n) => {
       if (!Object.hasOwn(c, n.id)) {
@@ -267,34 +267,34 @@ const getAllProductsInformation = async function () {
       };
     });
 
-    const shopsTableRows = Object.keys(groupProductsById).map((id) => {
-      const row = [];
-      shops.forEach((shop) => {
-        if (shop.active_status != "0") {
-          const finded = groupProductsById[id].product.shops_data.find(
-            (shop_data) => shop_data.shop.id === shop.id,
-          );
-          row.push(
-            finded ?? {
-              product_id: id,
-              shop: {
-                id: shop.id,
-                title: shop.title,
-                active_status: shop.active_status,
-              },
-            },
-          );
-        }
-      });
+    // const shopsTableRows = Object.keys(groupProductsById).map((id) => {
+    //   const row = [];
+    //   shops.forEach((shop) => {
+    //     if (shop.active_status != "0") {
+    //       const finded = groupProductsById[id].product.shops_data.find(
+    //         (shop_data) => shop_data.shop.id === shop.id,
+    //       );
+    //       row.push(
+    //         finded ?? {
+    //           product_id: id,
+    //           shop: {
+    //             id: shop.id,
+    //             title: shop.title,
+    //             active_status: shop.active_status,
+    //           },
+    //         },
+    //       );
+    //     }
+    //   });
 
-      return row;
-    });
+    //   return row;
+    // });
 
     const resultedProducts = Object.entries(groupProductsById).map(
       ([_, value]) => ({ ...value.product, ...value.info }),
     );
 
-    return { products: resultedProducts, shops, shopsTableRows };
+    return { products: resultedProducts, shops };
   } catch (e) {
     return { error: e?.detail ?? "Something went wrong. Please, try later" };
   }
@@ -358,10 +358,20 @@ const getCommentsHistory = async function ({ id }) {
   }
 };
 
-const changeShopStatus = async function ({ id, active_status }) {
+const changeShopStatus = async function (status) {
   try {
-    const [result] =
-      await sql`update shops set active_status = ${Number(!active_status)} where id = ${id} returning id, active_status`;
+    let result = [];
+    if (!Array.isArray(status)) {
+      [result] =
+        await sql`update shops set active_status = ${Number(!status.active_status)} where id = ${status.id} returning id, active_status`;
+    } else {
+      const shopsForUpdate = status.map((el) => [el.id, el.active_status]);
+      result = await sql`
+        update shops set active_status = (update_data.active_status)::active_status
+        from (values ${sql(shopsForUpdate)}) as update_data(id, active_status)
+        where shops.id = (update_data.id)::int
+        returning shops.id, shops.active_status`;
+    }
     return result;
   } catch (e) {
     return { error: e?.detail ?? "Something went wrong. Please, try later" };

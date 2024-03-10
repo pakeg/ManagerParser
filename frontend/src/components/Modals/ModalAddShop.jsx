@@ -5,7 +5,13 @@ import useScroll from "../../hooks/useScroll.jsx";
 
 import Modal from "./Modal.jsx";
 
-const ModalAddShop = ({ isOpen, setIsOpen, shops }) => {
+const ModalAddShop = ({
+  isOpen,
+  setIsOpen,
+  shops,
+  dispatch,
+  fetchChangeShopStatus,
+}) => {
   const [shopsForChangeStatus, setShopsForChangeStatus] = useState(shops);
   const { isScroll, boxScroll, buttonScroll } = useScroll(true);
 
@@ -20,10 +26,10 @@ const ModalAddShop = ({ isOpen, setIsOpen, shops }) => {
   };
 
   const changeStatus = () => {
-    const diff = shops.filter(
-      (el, i) => shopsForChangeStatus[i].active_status != el.active_status,
+    const diff = shopsForChangeStatus.filter(
+      (el, i) => shops[i].active_status != el.active_status,
     );
-    console.log(diff);
+    dispatch(fetchChangeShopStatus(diff));
   };
 
   return (

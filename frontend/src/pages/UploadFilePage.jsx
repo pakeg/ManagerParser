@@ -6,8 +6,7 @@ import { PiDownloadSimpleBold } from "react-icons/pi";
 export const UploadFilePage = () => {
   const [files, setFiles] = useState([]);
 
-  const removeFiles = () => {
-    const fileName = event.target.innerText.split(" ")[0];
+  const removeFiles = (fileName) => {
     setFiles((state) =>
       Array.prototype.filter.call(state, (file) => file.name != fileName),
     );
@@ -37,15 +36,13 @@ export const UploadFilePage = () => {
       {files.length != 0 && (
         <div>
           <div>
-            <ul
-              className="text-[#606060] list-decimal text-lg"
-              onClick={removeFiles}
-            >
-              {[...files].map((file) => (
+            <ul className="text-[#606060] list-decimal text-lg">
+              {files.map((file) => (
                 <li
                   key={file.name}
                   className="relative after:content-[''] hover:cursor-pointer hover:bg-red-300 after:absolute after:left-0 after:right-0 after:bottom-0 after:h-[1px] after:bg-[#606060]"
                   title="Удалить"
+                  onClick={() => removeFiles(file.name)}
                 >
                   {file.name}{" "}
                   <span className="text-xs">{formatSize(file.size)}</span>

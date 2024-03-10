@@ -62,7 +62,7 @@ const usersSlice = createSliceWithThunks({
         },
         fulfilled: (state, action) => {
           state.loading = false;
-          state.users.push(action.payload);
+          state.data.users.push(action.payload);
         },
       },
     ),
@@ -80,7 +80,7 @@ const usersSlice = createSliceWithThunks({
         },
         fulfilled: (state, action) => {
           state.loading = false;
-          state.users = state.users.map((user) => {
+          state.data.users = state.data.users.map((user) => {
             if (user.id == action.payload.id) return action.payload;
             return user;
           });

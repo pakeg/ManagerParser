@@ -180,10 +180,19 @@ const mainPageSlice = createSliceWithThunks({
         rejected: (state, action) => {
           state.loading = false;
         },
-        fulfilled: (state, { payload: { id, active_status } }) => {
-          state.data.shops = state.data.shops.map((el) => {
-            return el.id === id ? { ...el, active_status } : el;
-          });
+        fulfilled: (state, { payload }) => {
+          if (!Array.isArray(payload)) {
+            state.data.shops = state.data.shops.map((el) => {
+              return el.id === payload.id
+                ? { ...el, active_status: payload.active_status }
+                : el;
+            });
+          } else {
+            state.data.shops = state.data.shops.map((el) => {
+              const find = payload.find((statusShop) => statusShop.id == el.id);
+              return find ? { ...el, active_status: find.active_status } : el;
+            });
+          }
         },
       },
     ),
