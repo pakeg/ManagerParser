@@ -9,7 +9,7 @@ import ModalNewProduct from "../components/Modals/ModalNewProduct.jsx";
 import { useSelector, useDispatch } from "react-redux";
 import {
   fetchDataCategories,
-  createNewProduct,
+  fetchCreateNewProduct,
   resetCreatedProd,
 } from "../store/reducers/newProductSlice.js";
 
@@ -69,7 +69,7 @@ export const NewProductPage = () => {
 
     if (disabled) {
       cleanError();
-      dispatch(createNewProduct(newProduct));
+      dispatch(fetchCreateNewProduct(newProduct));
     }
   };
 

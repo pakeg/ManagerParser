@@ -7,7 +7,7 @@ CREATE TABLE products (
 	purchase INT NOT NULL,	
 	price INT NOT NULL,
 	img_src VARCHAR ( 250 ) NULL DEFAULT NULL,
-	created_on DATE NOT NULL DEFAULT CURRENT_DATE,
+	created_on DATE DEFAULT CURRENT_DATE,
 	FOREIGN KEY (category_id) REFERENCES categories (id) ON DELETE SET NULL,
 	FOREIGN KEY (manufacture_id) REFERENCES manufactures (id) ON DELETE SET NULL
 );

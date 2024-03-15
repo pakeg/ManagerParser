@@ -12,5 +12,5 @@ CREATE TABLE users (
 	password CHAR ( 72 ) NOT NULL,
   role ROLES DEFAULT 'user',
   active_status ACTIVE_STATUS DEFAULT '1',
-	created_on DATE NOT NULL DEFAULT CURRENT_DATE
+	created_on DATE DEFAULT CURRENT_DATE
 );

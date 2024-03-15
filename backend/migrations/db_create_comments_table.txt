@@ -4,7 +4,7 @@ CREATE TABLE comments (
 	parsed_product_id INT NOT NULL,
 	price INT NULL,
 	text VARCHAR ( 250 ) NOT NULL,
-	created_on DATE NOT NULL DEFAULT CURRENT_DATE,
+	created_on DATE DEFAULT CURRENT_DATE,
 	FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE SET NULL
 	FOREIGN KEY (parsed_product_id) REFERENCES parsed_products (id) ON DELETE CASCADE
 );

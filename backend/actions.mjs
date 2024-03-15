@@ -24,14 +24,14 @@ const authorize = async function ({ nickname, password }) {
 
 const createNewItemCategory = async function ({ choosedElement, title }) {
   try {
-    const newItem = await sql`
+    const [project] = await sql`
     insert into ${sql(choosedElement)}
       (title)
     values
       (${title})
     returning id, title
   `;
-    return { newItem, choosedElement, created: true };
+    return { project, choosedElement, created: true };
   } catch (e) {
     return { error: e?.detail ?? "Something went wrong. Please, try later" };
   }
@@ -378,6 +378,31 @@ const changeShopStatus = async function (status) {
   }
 };
 
+const updateItemCategory = async function ({
+  choosedElement,
+  title,
+  id,
+  index,
+}) {
+  try {
+    const [project] =
+      await sql`update ${sql(choosedElement)} set title = ${title} where id = ${id} returning id, title`;
+    return { project, choosedElement, index };
+  } catch (e) {
+    return { error: e?.detail ?? "Something went wrong. Please, try later" };
+  }
+};
+
+const deleteItemCategory = async function ({ choosedElement, id, index }) {
+  try {
+    const project =
+      await sql`delete from ${sql(choosedElement)} where id = ${id} returning id`;
+    return { choosedElement, index };
+  } catch (e) {
+    return { error: e?.detail ?? "Something went wrong. Please, try later" };
+  }
+};
+
 export {
   authorize,
   createNewItemCategory,
@@ -392,4 +417,6 @@ export {
   addProductComment,
   getCommentsHistory,
   changeShopStatus,
+  updateItemCategory,
+  deleteItemCategory,
 };
