@@ -18,6 +18,8 @@ import {
   addProductComment,
   getCommentsHistory,
   changeShopStatus,
+  updateItemCategory,
+  deleteItemCategory,
 } from "./actions.mjs";
 
 const app = express();
@@ -168,6 +170,20 @@ app.post("/api/get-comments-history", async function (req, res) {
 
 app.post("/api/post-change-shop-status", async function (req, res) {
   const data = await changeShopStatus(req.body);
+  if (!data?.error) {
+    res.status(201).json(data);
+  } else res.status(500).send(data.error);
+});
+
+app.post("/api/post-update-item-category", async function (req, res) {
+  const data = await updateItemCategory(req.body);
+  if (!data?.error) {
+    res.status(201).json(data);
+  } else res.status(500).send(data.error);
+});
+
+app.post("/api/post-delete-item-category", async function (req, res) {
+  const data = await deleteItemCategory(req.body);
   if (!data?.error) {
     res.status(201).json(data);
   } else res.status(500).send(data.error);

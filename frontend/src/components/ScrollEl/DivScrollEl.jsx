@@ -1,13 +1,21 @@
 import { useEffect, useRef } from "react";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 
 import useScroll from "../../hooks/useScroll.jsx";
 import Field from "./Field";
+
+import {
+  fetchCreateNewItemCategory,
+  fetchUpdateItemCategory,
+  fetchDeleteItemCategory,
+} from "../../store/reducers/newProductSlice.js";
 
 function DivScrollEl() {
   const {
     data: { projects },
   } = useSelector((state) => state.newProductReducer);
+  const dispatch = useDispatch();
+
   let boxContent = useRef(null);
 
   useEffect(() => {
@@ -34,10 +42,23 @@ function DivScrollEl() {
           ref={boxScroll}
         >
           <div className="space-y-0.5 grow" ref={boxContent}>
-            <Field text="" newInput />
+            <Field
+              value=""
+              newItem
+              fetchCreateNewItemCategory={fetchCreateNewItemCategory}
+              dispatch={dispatch}
+            />
             {projects &&
-              projects.map((project) => (
-                <Field key={project.id} text={project.title} />
+              projects.map((project, i) => (
+                <Field
+                  key={project.id}
+                  id={project.id}
+                  index={i}
+                  value={project.title}
+                  fetchUpdateItemCategory={fetchUpdateItemCategory}
+                  fetchDeleteItemCategory={fetchDeleteItemCategory}
+                  dispatch={dispatch}
+                />
               ))}
           </div>
         </div>

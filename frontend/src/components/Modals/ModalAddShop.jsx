@@ -29,7 +29,8 @@ const ModalAddShop = ({
     const diff = shopsForChangeStatus.filter(
       (el, i) => shops[i].active_status != el.active_status,
     );
-    dispatch(fetchChangeShopStatus(diff));
+    if (diff.length > 0) dispatch(fetchChangeShopStatus(diff));
+    setIsOpen(!isOpen);
   };
 
   return (

@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { GoAlertFill } from "react-icons/go";
 import Modal from "./Modal.jsx";
 
-import { createNewItemCategory } from "../../store/reducers/newProductSlice.js";
+import { fetchCreateNewItemCategory } from "../../store/reducers/newProductSlice.js";
 
 const fields = {
   categories: "категории",
@@ -29,7 +29,7 @@ const ModalNewProduct = ({
 
   const addChooseElement = () => {
     if (title.length >= 0) {
-      dispatch(createNewItemCategory({ choosedElement, title }));
+      dispatch(fetchCreateNewItemCategory({ choosedElement, title }));
     }
   };
 

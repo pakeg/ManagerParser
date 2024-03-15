@@ -1,4 +1,3 @@
-import { useState } from "react";
 import ProductShopCellEmpty from "./ProductShopCellEmpty.jsx";
 import ProductShopCellFull from "./ProductShopCellFull.jsx";
 

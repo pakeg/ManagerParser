@@ -3,6 +3,8 @@ import {
   fetchCategoriesItem,
   actionCreateNewProduct,
   actionCreateNewItemCategory,
+  actionUpdateItemCategory,
+  actionDeleteItemCategory,
 } from "../actions/actionsNewProductPage";
 
 const initialState = {
@@ -46,7 +48,7 @@ const newProductSlice = createSliceWithThunks({
         },
       },
     ),
-    createNewProduct: create.asyncThunk(
+    fetchCreateNewProduct: create.asyncThunk(
       async (newProduct, { signal }) => {
         const res = await actionCreateNewProduct(newProduct, signal);
         return res;
@@ -65,7 +67,7 @@ const newProductSlice = createSliceWithThunks({
         },
       },
     ),
-    createNewItemCategory: create.asyncThunk(
+    fetchCreateNewItemCategory: create.asyncThunk(
       async (details, { signal }) => {
         const items = await actionCreateNewItemCategory(details, signal);
         return items;
@@ -80,12 +82,47 @@ const newProductSlice = createSliceWithThunks({
         },
         fulfilled: (state, action) => {
           state.loading = false;
-          const { newItem, choosedElement, created } = action.payload;
+          const { project, choosedElement, created } = action.payload;
           state.createdCatItem = created;
-          state.data[choosedElement] = [
-            newItem[0],
-            ...state.data[choosedElement],
-          ];
+          state.data[choosedElement] = [project, ...state.data[choosedElement]];
+        },
+      },
+    ),
+    fetchUpdateItemCategory: create.asyncThunk(
+      async (details, { signal }) => {
+        const items = await actionUpdateItemCategory(details, signal);
+        return items;
+      },
+      {
+        pending: (state) => {
+          state.loading = true;
+          state.createdCatItem = false;
+        },
+        rejected: (state) => {
+          state.loading = false;
+        },
+        fulfilled: (state, { payload: { project, choosedElement, index } }) => {
+          state.loading = false;
+          state.data[choosedElement][index] = project;
+        },
+      },
+    ),
+    fetchDeleteItemCategory: create.asyncThunk(
+      async (details, { signal }) => {
+        const items = await actionDeleteItemCategory(details, signal);
+        return items;
+      },
+      {
+        pending: (state) => {
+          state.loading = true;
+          state.createdCatItem = false;
+        },
+        rejected: (state) => {
+          state.loading = false;
+        },
+        fulfilled: (state, { payload: { choosedElement, index } }) => {
+          state.loading = false;
+          state.data[choosedElement].splice(index, 1);
         },
       },
     ),
@@ -97,8 +134,10 @@ const newProductSlice = createSliceWithThunks({
 
 export const {
   fetchDataCategories,
-  createNewProduct,
-  createNewItemCategory,
+  fetchCreateNewProduct,
+  fetchCreateNewItemCategory,
+  fetchUpdateItemCategory,
+  fetchDeleteItemCategory,
   resetCreatedProd,
 } = newProductSlice.actions;
 export default newProductSlice.reducer;
