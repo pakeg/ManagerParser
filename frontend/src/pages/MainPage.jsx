@@ -8,7 +8,6 @@ import { getSortedDataSelector } from "../store/actions/createdActions.js";
 import PartMainOne from "../components/PartMainOne.jsx";
 import PartMainTwo from "../components/PartMainTwo.jsx";
 import PartMainThree from "../components/PartMainThree.jsx";
-import ModalDelete from "../components/Modals/ModalDelete.jsx";
 
 import useScroll from "../hooks/useScroll.jsx";
 import useScrollHorizontal from "../hooks/useScrollHorizontal";
@@ -88,7 +87,6 @@ export const MainPage = () => {
           ></div>
         </div>
       </div>
-      <ModalDelete />
     </div>
   );
 };

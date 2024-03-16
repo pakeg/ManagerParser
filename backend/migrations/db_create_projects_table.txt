@@ -2,4 +2,8 @@ CREATE TABLE projects (
 	id serial PRIMARY KEY,
   title VARCHAR ( 100 ) UNIQUE NOT NULL,
 	created_on DATE DEFAULT CURRENT_DATE
+<<<<<<< HEAD
 );
+=======
+);
+>>>>>>> 344541f1629d68a7da3311531280c7865fd38081

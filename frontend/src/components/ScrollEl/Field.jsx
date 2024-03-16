@@ -9,8 +9,9 @@ function Field({
   newItem,
   fetchCreateNewItemCategory,
   fetchUpdateItemCategory,
-  fetchDeleteItemCategory,
   dispatch,
+  setInfo,
+  setIsOpen,
 }) {
   const [title, setTitle] = useState(value);
   const [visible, setVisible] = useState(false);
@@ -40,9 +41,8 @@ function Field({
   };
 
   const deleteProject = () => {
-    dispatch(
-      fetchDeleteItemCategory({ choosedElement: "projects", id, index }),
-    );
+    setInfo({ title, choosedElement: "projects", id, index });
+    setIsOpen(true);
   };
 
   return (
@@ -92,7 +92,7 @@ function Field({
           )}
         </div>
         <div className="mr-2 w-5 h-5">
-          {title !== value ? (
+          {title !== value && (
             <div className="hover:bg-red-500 bg-[#a1a1a1] rounded-sm cursor-pointer">
               <LuCross
                 size={20}
@@ -105,7 +105,8 @@ function Field({
                 onClick={cancelChange}
               />
             </div>
-          ) : (
+          )}
+          {title == value && !newItem && (
             <div className="hover:bg-red-500 bg-[#a1a1a1] rounded-sm cursor-pointer">
               <LuCross
                 size={20}

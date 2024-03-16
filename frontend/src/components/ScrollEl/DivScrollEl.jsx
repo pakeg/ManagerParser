@@ -1,8 +1,9 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 
 import useScroll from "../../hooks/useScroll.jsx";
 import Field from "./Field";
+import ModalDelete from "../Modals/ModalDelete.jsx";
 
 import {
   fetchCreateNewItemCategory,
@@ -16,6 +17,8 @@ function DivScrollEl() {
   } = useSelector((state) => state.newProductReducer);
   const dispatch = useDispatch();
 
+  const [isOpen, setIsOpen] = useState(false);
+  const [info, setInfo] = useState(null);
   let boxContent = useRef(null);
 
   useEffect(() => {
@@ -30,6 +33,17 @@ function DivScrollEl() {
   const { isScroll, boxScroll, buttonScroll } = useScroll(
     Boolean(projects.length),
   );
+
+  const deleteProject = () => {
+    dispatch(
+      fetchDeleteItemCategory({
+        choosedElement: info.choosedElement,
+        id: info.id,
+        index: info.index,
+      }),
+    );
+    setIsOpen(false);
+  };
 
   return (
     <div
@@ -56,8 +70,9 @@ function DivScrollEl() {
                   index={i}
                   value={project.title}
                   fetchUpdateItemCategory={fetchUpdateItemCategory}
-                  fetchDeleteItemCategory={fetchDeleteItemCategory}
                   dispatch={dispatch}
+                  setInfo={setInfo}
+                  setIsOpen={setIsOpen}
                 />
               ))}
           </div>
@@ -69,6 +84,13 @@ function DivScrollEl() {
           className="w-5 bg-white ml-1 rounded-3xl cursor-grabbing shadow-[1px_1px_4px_0_black]"
         ></div>
       )}
+
+      <ModalDelete
+        item={info?.title}
+        isOpen={isOpen}
+        setIsOpen={setIsOpen}
+        actionAccept={deleteProject}
+      />
     </div>
   );
 }

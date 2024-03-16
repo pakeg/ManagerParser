@@ -1,10 +1,14 @@
-import { useState } from "react";
 import { GoAlertFill } from "react-icons/go";
 
 import Modal from "./Modal.jsx";
 
-const ModalDelete = ({ shop }) => {
-  const [isOpen, setIsOpen] = useState(false);
+const ModalDelete = ({
+  item,
+  isOpen,
+  setIsOpen,
+  actionAccept,
+  actionDecline,
+}) => {
   return (
     <Modal isOpen={isOpen} setIsOpen={setIsOpen}>
       <div className="w-96 h-48">
@@ -14,10 +18,13 @@ const ModalDelete = ({ shop }) => {
         </div>
         <div className="bg-[#ebebeb] p-6 rounded-b-md text-center">
           <span className="font-extrabold text-black text-sm">
-            Вы уверенны, что хотите удалить {shop}?
+            Вы уверенны, что хотите удалить "{item}"?
           </span>
           <div className="flex justify-evenly mt-2">
-            <button className="bg-green-500 rounded py-0.5 px-5 font-extrabold">
+            <button
+              className="bg-green-500 rounded py-0.5 px-5 font-extrabold"
+              onClick={actionAccept}
+            >
               Дааа!
             </button>
             <button
