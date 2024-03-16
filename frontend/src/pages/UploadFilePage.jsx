@@ -7,9 +7,7 @@ export const UploadFilePage = () => {
   const [files, setFiles] = useState([]);
 
   const removeFiles = (fileName) => {
-    setFiles((state) =>
-      Array.prototype.filter.call(state, (file) => file.name != fileName),
-    );
+    setFiles((state) => state.filter((file) => file.name != fileName));
   };
 
   const uploadFiles = () => {
@@ -27,7 +25,7 @@ export const UploadFilePage = () => {
             name="prices"
             hidden
             multiple
-            onChange={(e) => setFiles(e.target.files)}
+            onChange={(e) => setFiles([...e.target.files])}
           />
           <span>Загрузить файлы</span>
         </label>
