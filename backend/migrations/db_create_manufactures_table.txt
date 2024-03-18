@@ -1,5 +1,5 @@
 CREATE TABLE manufactures (
 	id serial PRIMARY KEY,
-  title VARCHAR ( 100 ) UNIQUE NOT NULL,
+  	title VARCHAR ( 100 ) UNIQUE NOT NULL,
 	created_on DATE DEFAULT CURRENT_DATE
 );

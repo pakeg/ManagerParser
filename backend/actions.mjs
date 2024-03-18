@@ -135,16 +135,20 @@ const createNewProduct = async function ({
 
 const getCategoriesProduct = async function () {
   const data = await sql`
-    select  id, title, 'categories' as source from categories
+    select  id, title, active_status,  'categories' as source from categories where active_status = '1'
         union all
-    select  id, title, 'manufactures' as source from manufactures
+    select  id, title, active_status, 'manufactures' as source from manufactures where active_status = '1'
         union all
-    select  id, title, 'projects' as source from projects
+    select  id, title, active_status, 'projects' as source from projects where active_status = '1'
     `;
 
   const items = data.reduce((c, n) => {
     if (!Object.hasOwn(c, n.source)) c[n.source] = [];
-    c[n.source].push({ id: n.id, title: n.title });
+    c[n.source].push({
+      id: n.id,
+      title: n.title,
+      active_status: n.active_status,
+    });
     return c;
   }, {});
 

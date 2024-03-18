@@ -1,9 +1,8 @@
+// if not exist CREATE TYPE ACTIVE_STATUS AS ENUM ('0', '1');
+
 CREATE TABLE projects (
 	id serial PRIMARY KEY,
-  title VARCHAR ( 100 ) UNIQUE NOT NULL,
+  	title VARCHAR ( 100 ) UNIQUE NOT NULL,
+	active_status ACTIVE_STATUS DEFAULT '1', 
 	created_on DATE DEFAULT CURRENT_DATE
-<<<<<<< HEAD
 );
-=======
-);
->>>>>>> 344541f1629d68a7da3311531280c7865fd38081

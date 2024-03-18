@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { memoize } from "proxy-memoize";
 
@@ -8,6 +8,8 @@ import { getSortedDataSelector } from "../store/actions/createdActions.js";
 import PartMainOne from "../components/PartMainOne.jsx";
 import PartMainTwo from "../components/PartMainTwo.jsx";
 import PartMainThree from "../components/PartMainThree.jsx";
+import Button from "../components/Button";
+import ModalAdding from "../components/Modals/ModalAdding.jsx";
 
 import useScroll from "../hooks/useScroll.jsx";
 import useScrollHorizontal from "../hooks/useScrollHorizontal";
@@ -22,6 +24,7 @@ export const MainPage = () => {
       },
     })),
   );
+  const [isOpen, setIsOpen] = useState(false);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -34,6 +37,10 @@ export const MainPage = () => {
     boxScroll: boxScrollHor,
     buttonScroll: buttonScrollHor,
   } = useScrollHorizontal();
+
+  const addProductsToProjects = (diff) => {
+    console.log(diff);
+  };
 
   return (
     <div>
@@ -87,6 +94,34 @@ export const MainPage = () => {
           ></div>
         </div>
       </div>
+
+      {/* bottom menu */}
+      <div className="fixed bottom-3.5 w-full">
+        <div className="flex">
+          <div className="flex grow ml-20 text-sm space-x-4">
+            <Button text="Обновить" />
+            <Button text="Экспорт" />
+            <Button
+              text="Добавить в проэкт"
+              actionButton={() => setIsOpen(!isOpen)}
+            />
+            <Button text="Удалить выбранные" />
+          </div>
+          <div className="grow-[2]">Пагинация...</div>
+        </div>
+      </div>
+
+      {/* -----M AddShop -----*/}
+      {isOpen && (
+        <ModalAdding
+          isOpen={isOpen}
+          setIsOpen={setIsOpen}
+          caption={"Добавить в проэкт"}
+          items={data.projects}
+          action={addProductsToProjects}
+          invert
+        />
+      )}
     </div>
   );
 };

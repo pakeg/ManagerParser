@@ -5,31 +5,25 @@ import useScroll from "../../hooks/useScroll.jsx";
 
 import Modal from "./Modal.jsx";
 
-const ModalAddShop = ({
-  isOpen,
-  setIsOpen,
-  shops,
-  dispatch,
-  fetchChangeShopStatus,
-}) => {
-  const [shopsForChangeStatus, setShopsForChangeStatus] = useState(shops);
+const ModalAdding = ({ isOpen, setIsOpen, caption, items, action, invert }) => {
+  const [itemsForChangeStatus, setItemsForChangeStatus] = useState(items);
   const { isScroll, boxScroll, buttonScroll } = useScroll(true);
 
-  const changingStatus = (id) => {
-    setShopsForChangeStatus(
-      shopsForChangeStatus.map((shop) =>
-        id === shop.id
-          ? { ...shop, active_status: Number(!+shop.active_status) }
-          : shop,
+  const switchingStatus = (id) => {
+    setItemsForChangeStatus(
+      itemsForChangeStatus.map((el) =>
+        id === el.id
+          ? { ...el, active_status: Number(!+el.active_status) }
+          : el,
       ),
     );
   };
 
   const changeStatus = () => {
-    const diff = shopsForChangeStatus.filter(
-      (el, i) => shops[i].active_status != el.active_status,
+    const diff = itemsForChangeStatus.filter(
+      (el, i) => items[i].active_status != el.active_status,
     );
-    if (diff.length > 0) dispatch(fetchChangeShopStatus(diff));
+    if (diff.length > 0) action(diff);
     setIsOpen(!isOpen);
   };
 
@@ -37,7 +31,7 @@ const ModalAddShop = ({
     <Modal isOpen={isOpen} setIsOpen={setIsOpen}>
       <div className="w-80 bg-white pb-5 rounded-b-md rounded-t-md">
         <div className="bg-black text-white px-4 rounded-t-md py-1.5">
-          <p>Добавить магазин</p>
+          <p>{caption}</p>
         </div>
         <div className="min-h-[300px] p-4 pr-1 flex">
           <div className="grow overflow-hidden">
@@ -48,8 +42,8 @@ const ModalAddShop = ({
               ref={boxScroll}
             >
               <div className="text-black pr-2 space-y-1">
-                {shopsForChangeStatus.length > 0 &&
-                  shopsForChangeStatus.map((shop, i) => (
+                {itemsForChangeStatus.length > 0 &&
+                  itemsForChangeStatus.map((shop, i) => (
                     <div
                       key={shop.id}
                       className="flex items-center justify-between"
@@ -62,8 +56,12 @@ const ModalAddShop = ({
                         <input
                           id={`${shop.title}_${shop.id}`}
                           type="checkbox"
-                          onChange={() => changingStatus(shop.id)}
-                          checked={Boolean(+shop.active_status)}
+                          onChange={() => switchingStatus(shop.id)}
+                          checked={
+                            !invert
+                              ? Boolean(+shop.active_status)
+                              : !Boolean(+shop.active_status)
+                          }
                           className="opacity-0 select-none peer hidden"
                         />
                         <BsCheck
@@ -104,4 +102,4 @@ const ModalAddShop = ({
     </Modal>
   );
 };
-export default ModalAddShop;
+export default ModalAdding;

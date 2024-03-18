@@ -4,7 +4,7 @@ import { MdOutlineHistory } from "react-icons/md";
 import ProductShop from "./Product/ProductShop.jsx";
 import MenuItemShop from "./Menu/MenuItemShop.jsx";
 import ModalComments from "./Modals/ModalComments.jsx";
-import ModalAddShop from "../components/Modals/ModalAddShop.jsx";
+import ModalAdding from "./Modals/ModalAdding.jsx";
 
 import {
   fetchAddProductComment,
@@ -29,7 +29,7 @@ const PartMainTwo = ({
   const commentPopUp = useRef(null);
 
   const [isOpenModalComments, setIsOpenModalComments] = useState(false);
-  const [isModalAddShop, setIsModalAddShop] = useState(false);
+  const [isModalAdding, setIsModalAdding] = useState(false);
   const [isPopUpOpen, setIsPopUpOpen] = useState(false);
 
   const positionDivComment = useCallback((e, id, price) => {
@@ -54,6 +54,11 @@ const PartMainTwo = ({
     return;
   };
 
+  const changingStatusShops = (diff) => {
+    dispatch(fetchChangeShopStatus(diff));
+    return;
+  };
+
   return (
     <div className="relative">
       <div className="overflow-hidden">
@@ -67,7 +72,7 @@ const PartMainTwo = ({
                 <td className="py-1.5 px-2.5">
                   <div
                     className="flex items-center cursor-pointer text-xl leading-[0.5px]"
-                    onClick={() => setIsModalAddShop(!isModalAddShop)}
+                    onClick={() => setIsModalAdding(!isModalAdding)}
                   >
                     +
                   </div>
@@ -155,13 +160,13 @@ const PartMainTwo = ({
         />
       )}
       {/* -----M AddShop -----*/}
-      {isModalAddShop && (
-        <ModalAddShop
-          isOpen={isModalAddShop}
-          setIsOpen={setIsModalAddShop}
-          shops={shops}
-          dispatch={dispatch}
-          fetchChangeShopStatus={fetchChangeShopStatus}
+      {isModalAdding && (
+        <ModalAdding
+          isOpen={isModalAdding}
+          setIsOpen={setIsModalAdding}
+          caption={"Добавить мазазин"}
+          items={shops}
+          action={changingStatusShops}
         />
       )}
     </div>
