@@ -1,6 +1,6 @@
 CREATE TABLE products (
 	id serial PRIMARY KEY,
-  category_id INT NULL,
+  	category_id INT NULL,
 	manufacture_id INT NULL,
 	title VARCHAR ( 250 ) NOT NULL,
 	part_number TEXT UNIQUE NOT NULL,

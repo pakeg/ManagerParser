@@ -1,6 +1,6 @@
 CREATE TABLE parsed_products (
 	id serial PRIMARY KEY,
-  product_id INT NOT NULL,
+  	product_id INT NOT NULL,
 	shop_id INT NOT NULL,
 	link VARCHAR ( 250 ) NULL DEFAULT NULL,
 	parsed_price INT DEFAULT NULL,

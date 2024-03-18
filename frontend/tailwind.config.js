@@ -6,7 +6,7 @@ export default {
   theme: {
     extend: {
       height: {
-        fscreen: "calc(100vh - 61px)",
+        fscreen: "calc(100vh - 56.8px)",
       },
     },
   },
