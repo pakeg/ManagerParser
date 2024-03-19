@@ -67,7 +67,7 @@ const PartMainTwo = ({
           ref={boxScrollHor}
         >
           <table className="text-center border-separate text-black font-semibold text-xs border-spacing-1">
-            <thead>
+            <thead className="h-8">
               <tr className="bg-[#c1c1c1]">
                 <td className="py-1.5 px-2.5">
                   <div

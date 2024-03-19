@@ -407,6 +407,22 @@ const deleteItemCategory = async function ({ choosedElement, id, index }) {
   }
 };
 
+const addProductsToProjects = async function ({ products_id, projects_id }) {
+  try {
+    let props = [];
+    for (let i = 0; i < products_id.length; i++) {
+      for (let k = 0; k < projects_id.length; k++) {
+        props.push([products_id[i], projects_id[k].id]);
+      }
+    }
+
+    await sql`insert into products_projects (product_id, project_id) values ${sql(props)}`;
+    return true;
+  } catch (e) {
+    return { error: e?.detail ?? "Something went wrong. Please, try later" };
+  }
+};
+
 export {
   authorize,
   createNewItemCategory,
@@ -423,4 +439,5 @@ export {
   changeShopStatus,
   updateItemCategory,
   deleteItemCategory,
+  addProductsToProjects,
 };

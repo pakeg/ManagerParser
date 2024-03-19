@@ -6,11 +6,10 @@ import Product from "./Product/Product.jsx";
 import MenuItem from "./Menu/MenuItem.jsx";
 import { useCallback, useRef } from "react";
 
-const PartMainOne = ({ products, categories, manufactures }) => {
-  const tBody = useRef(null);
+const PartMainOne = ({ tBody, products, categories, manufactures }) => {
   const mainCheckbox = useRef(null);
 
-  const checkboxAll = useCallback(() => {
+  const checkAllBox = useCallback(() => {
     tBody.current
       .querySelectorAll('input[type="checkbox"]')
       .forEach((element) => {
@@ -43,7 +42,7 @@ const PartMainOne = ({ products, categories, manufactures }) => {
                 value="checkall"
                 name="product"
                 ref={mainCheckbox}
-                onClick={() => checkboxAll()}
+                onClick={() => checkAllBox()}
               />
               <MdOutlineDone
                 size="30"

@@ -11,6 +11,7 @@ import {
   addPostProductComment,
   getCommentsHistory,
   postChangeShopStatus,
+  actionAddProductsToProjects,
 } from "../actions/actionsMainPage";
 import { fetchDataCategories } from "./newProductSlice";
 import { sortReducer } from "../actions/createdActions";
@@ -181,6 +182,7 @@ const mainPageSlice = createSliceWithThunks({
           state.loading = false;
         },
         fulfilled: (state, { payload }) => {
+          state.loading = false;
           if (!Array.isArray(payload)) {
             state.data.shops = state.data.shops.map((el) => {
               return el.id === payload.id
@@ -193,6 +195,24 @@ const mainPageSlice = createSliceWithThunks({
               return find ? { ...el, active_status: find.active_status } : el;
             });
           }
+        },
+      },
+    ),
+    fetchAddProductsToProjects: create.asyncThunk(
+      async (data, { signal }) => {
+        const res = await actionAddProductsToProjects(data, signal);
+        return res;
+      },
+      {
+        pending: (state) => {
+          state.loading = true;
+        },
+        rejected: (state, action) => {
+          state.loading = false;
+        },
+        fulfilled: (state, { payload }) => {
+          state.loading = false;
+          console.log(payload, "---payload---to Projects");
         },
       },
     ),
@@ -246,6 +266,7 @@ export const {
   fetchAddProductComment,
   fetchGetCommentsHistory,
   fetchChangeShopStatus,
+  fetchAddProductsToProjects,
   setFiltersReducer,
   setSearchReducer,
   middlewareSort,
