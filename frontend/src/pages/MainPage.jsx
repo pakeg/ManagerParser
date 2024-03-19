@@ -1,8 +1,11 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { memoize } from "proxy-memoize";
 
-import { fetchGeneralData } from "../store/reducers/mainPageSlice.js";
+import {
+  fetchGeneralData,
+  fetchAddProductsToProjects,
+} from "../store/reducers/mainPageSlice.js";
 import { getSortedDataSelector } from "../store/actions/createdActions.js";
 
 import PartMainOne from "../components/PartMainOne.jsx";
@@ -24,12 +27,12 @@ export const MainPage = () => {
       },
     })),
   );
-  const [isOpen, setIsOpen] = useState(false);
   const dispatch = useDispatch();
 
-  useEffect(() => {
-    if (typeof data.products === "undefined") dispatch(fetchGeneralData());
-  }, []);
+  const [isOpen, setIsOpen] = useState(false);
+  const [checkedProducts, setCheckedProducts] = useState(null);
+  const contentRef = useRef(null);
+  const tBody = useRef(null);
 
   const { isScroll, boxScroll, buttonScroll } = useScroll(true);
   const {
@@ -38,23 +41,57 @@ export const MainPage = () => {
     buttonScroll: buttonScrollHor,
   } = useScrollHorizontal();
 
-  const addProductsToProjects = (diff) => {
-    console.log(diff);
+  useEffect(() => {
+    if (typeof data.products === "undefined") dispatch(fetchGeneralData());
+  }, []);
+
+  useEffect(() => {
+    if (contentRef.current) {
+      // window height, header component, fixed bottom menu(height&bottom-margin)
+      const availableHidth = window.innerHeight - 58.6 - 28 - 14;
+      const heightEl =
+        contentRef.current.firstChild.getElementsByTagName("thead")[0]
+          .offsetHeight;
+      const countedHeight = Math.floor(availableHidth / heightEl) * heightEl;
+      boxScroll.current.style.maxHeight = `${countedHeight}px`;
+    }
+  }, [contentRef.current]);
+
+  const openModalIfProductsChecked = () => {
+    const products_id = Array.from(
+      tBody.current.querySelectorAll('input[type="checkbox"]:checked'),
+      (el) => el.value,
+    );
+    if (products_id.length) {
+      setIsOpen(!isOpen);
+      setCheckedProducts(products_id);
+    } else {
+      alert("Отметьте товары");
+    }
+  };
+
+  const addProductsToProjects = (projects_id) => {
+    console.log(projects_id);
+    console.log(checkedProducts);
+    dispatch(
+      fetchAddProductsToProjects({ products_id: checkedProducts, projects_id }),
+    );
   };
 
   return (
-    <div>
+    <div className="mx-auto">
       <div className="flex">
         <div className="overflow-hidden">
           <div
             ref={boxScroll}
-            className={`max-h-[300px] overflow-y-auto overflow-x-hidden ${
-              isScroll && "-mr-[17px]"
+            className={`overflow-y-auto overflow-x-hidden ${
+              isScroll ? "-mr-[17px]" : ""
             }`}
           >
-            <div className="flex">
+            <div className="flex" ref={contentRef}>
               {/* -------Table N. 1--------- */}
               <PartMainOne
+                tBody={tBody}
                 products={data.products}
                 categories={data.categories}
                 manufactures={data.manufactures}
@@ -103,7 +140,7 @@ export const MainPage = () => {
             <Button text="Экспорт" />
             <Button
               text="Добавить в проэкт"
-              actionButton={() => setIsOpen(!isOpen)}
+              actionButton={openModalIfProductsChecked}
             />
             <Button text="Удалить выбранные" />
           </div>

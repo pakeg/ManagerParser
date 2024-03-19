@@ -20,6 +20,7 @@ import {
   changeShopStatus,
   updateItemCategory,
   deleteItemCategory,
+  addProductsToProjects,
 } from "./actions.mjs";
 
 const app = express();
@@ -188,6 +189,14 @@ app.post("/api/post-delete-item-category", async function (req, res) {
     res.status(201).json(data);
   } else res.status(500).send(data.error);
 });
+
+app.post("/api/add-products-to-projects", async function (req, res) {
+  const data = await addProductsToProjects(req.body);
+  if (!data?.error) {
+    res.status(201).json(data);
+  } else res.status(500).send(data.error);
+});
+
 //---------------------
 
 app.listen(port, () => {
