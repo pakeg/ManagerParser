@@ -46,7 +46,7 @@ export const AdminPage = () => {
   };
 
   return (
-    <div>
+    <div className="mx-auto">
       <table className="text-center border-separate text-black font-semibold text-xs border-spacing-1">
         <thead>
           <tr className="bg-[#c1c1c1]">
