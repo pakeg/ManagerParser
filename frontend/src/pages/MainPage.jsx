@@ -71,8 +71,6 @@ export const MainPage = () => {
   };
 
   const addProductsToProjects = (projects_id) => {
-    console.log(projects_id);
-    console.log(checkedProducts);
     dispatch(
       fetchAddProductsToProjects({ products_id: checkedProducts, projects_id }),
     );

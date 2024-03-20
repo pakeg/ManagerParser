@@ -47,7 +47,7 @@ const Product = ({ product, checkMainInput }) => {
             id={`checkbox${product.id}`}
             className="opacity-0 select-none peer"
             type="checkbox"
-            value={product.id}
+            value={[product.id, product.projects_id]}
             name="checkedProduct[]"
             onClick={() => checkMainInput()}
           />

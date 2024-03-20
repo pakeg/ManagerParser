@@ -203,6 +203,7 @@ const getAllProductsInformation = async function () {
     const shops = await sql`select id, title, active_status from shops`;
     const products = await sql`select
     products.id,
+    products_projects.project_id as project_id,
     parsed_products.id as parsed_id,
     categories.title as category,
     manufactures.title as manufacture,
@@ -221,27 +222,37 @@ const getAllProductsInformation = async function () {
     left join categories on (categories.id = category_id)
     left join manufactures on (manufactures.id = manufacture_id)
     left join parsed_products on (parsed_products.product_id = products.id)
+    left join products_projects on (products_projects.product_id = products.id)
     left join shops on (shops.id = parsed_products.shop_id)
     order by id`;
     const groupProductsById = products.reduce((c, n) => {
       if (!Object.hasOwn(c, n.id)) {
-        c[n.id] = { product: { ...n, shops_data: [] } };
+        c[n.id] = { product: { ...n, shops_data: [], projects_id: [] } };
       }
-      c[n.id].product.shops_data.push({
-        id: n.parsed_id,
-        product_id: n.id,
-        shop: {
-          id: n.shop_id,
-          title: n.shop,
-          active_status: n.shop_active_status,
-        },
-        product_price: n.price,
-        date: n.date,
-        link: n.link,
-        parsed_price: n.parsed_price,
-      });
+      const findShopData = c[n.id].product.shops_data.find(
+        (el) => el.id == n.parsed_id,
+      );
+      if (!findShopData) {
+        c[n.id].product.shops_data.push({
+          id: n.parsed_id,
+          product_id: n.id,
+          shop: {
+            id: n.shop_id,
+            title: n.shop,
+            active_status: n.shop_active_status,
+          },
+          product_price: n.price,
+          date: n.date,
+          link: n.link,
+          parsed_price: n.parsed_price,
+        });
+      }
+      c[n.id].product.projects_id = [
+        ...new Set([...c[n.id].product.projects_id, n.project_id]),
+      ];
       c[n.id].info = { count: 0, min: 0, max: 0 };
 
+      delete c[n.id].product.project_id;
       delete c[n.id].product.parsed_id;
       delete c[n.id].product.shop;
       delete c[n.id].product.shop_id;
@@ -270,29 +281,6 @@ const getAllProductsInformation = async function () {
         max: +info.max ?? 0,
       };
     });
-
-    // const shopsTableRows = Object.keys(groupProductsById).map((id) => {
-    //   const row = [];
-    //   shops.forEach((shop) => {
-    //     if (shop.active_status != "0") {
-    //       const finded = groupProductsById[id].product.shops_data.find(
-    //         (shop_data) => shop_data.shop.id === shop.id,
-    //       );
-    //       row.push(
-    //         finded ?? {
-    //           product_id: id,
-    //           shop: {
-    //             id: shop.id,
-    //             title: shop.title,
-    //             active_status: shop.active_status,
-    //           },
-    //         },
-    //       );
-    //     }
-    //   });
-
-    //   return row;
-    // });
 
     const resultedProducts = Object.entries(groupProductsById).map(
       ([_, value]) => ({ ...value.product, ...value.info }),
@@ -410,13 +398,30 @@ const deleteItemCategory = async function ({ choosedElement, id, index }) {
 const addProductsToProjects = async function ({ products_id, projects_id }) {
   try {
     let props = [];
-    for (let i = 0; i < products_id.length; i++) {
+    const newArr = products_id.map((el) => {
+      const splitted = el.split(",");
+      return [splitted[0], splitted.splice(1)];
+    });
+    for (let i = 0; i < newArr.length; i++) {
       for (let k = 0; k < projects_id.length; k++) {
-        props.push([products_id[i], projects_id[k].id]);
+        if (newArr[i][1].includes(`${projects_id[k].id}`)) continue;
+        props.push([newArr[i][0], projects_id[k].id]);
       }
     }
+    if (props.length > 0) {
+      const relations =
+        await sql`insert into products_projects (product_id, project_id) values ${sql(props)} returning product_id, project_id`;
 
-    await sql`insert into products_projects (product_id, project_id) values ${sql(props)}`;
+      const groupByProductId = relations.reduce((acc, curr) => {
+        if (!acc[curr.product_id]) {
+          acc[curr.product_id] = [];
+        }
+        acc[curr.product_id].push(curr.project_id);
+        return acc;
+      }, {});
+      return groupByProductId;
+    }
+
     return true;
   } catch (e) {
     return { error: e?.detail ?? "Something went wrong. Please, try later" };

@@ -212,7 +212,12 @@ const mainPageSlice = createSliceWithThunks({
         },
         fulfilled: (state, { payload }) => {
           state.loading = false;
-          console.log(payload, "---payload---to Projects");
+          for (let c in payload) {
+            const productIndex = state.data.products.findIndex(
+              (product) => product.id == c,
+            );
+            state.data.products[productIndex].projects_id.push(...payload[c]);
+          }
         },
       },
     ),
