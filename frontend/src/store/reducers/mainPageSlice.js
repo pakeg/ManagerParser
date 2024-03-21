@@ -12,6 +12,8 @@ import {
   getCommentsHistory,
   postChangeShopStatus,
   actionAddProductsToProjects,
+  actionDeleteProducts,
+  actionExportToExcell,
 } from "../actions/actionsMainPage";
 import { fetchDataCategories } from "./newProductSlice";
 import { sortReducer } from "../actions/createdActions";
@@ -108,6 +110,7 @@ const mainPageSlice = createSliceWithThunks({
           state.loading = false;
         },
         fulfilled: (state, action) => {
+          state.loading = false;
           const { colIndex, productId, shopId, date, link, parsed_price } =
             action.payload;
 
@@ -142,6 +145,7 @@ const mainPageSlice = createSliceWithThunks({
           state.loading = false;
         },
         fulfilled: (state, action) => {
+          state.loading = false;
           if (action.payload) {
             const { parsed_product_id } = action.payload;
             if (Object.hasOwn(state.comments, parsed_product_id)) {
@@ -165,6 +169,7 @@ const mainPageSlice = createSliceWithThunks({
           state.loading = false;
         },
         fulfilled: (state, action) => {
+          state.loading = false;
           state.comments[action.payload.id] = action.payload.comments;
         },
       },
@@ -221,6 +226,64 @@ const mainPageSlice = createSliceWithThunks({
         },
       },
     ),
+    fetchDeleteProducts: create.asyncThunk(
+      async (data, { signal }) => {
+        const res = await actionDeleteProducts(data, signal);
+        return res;
+      },
+      {
+        pending: (state) => {
+          state.loading = true;
+        },
+        rejected: (state, action) => {
+          state.loading = false;
+        },
+        fulfilled: (state, { payload }) => {
+          state.loading = false;
+          for (let c of payload) {
+            const productIndex = state.data.products.findIndex(
+              (product) => product.id == c,
+            );
+            state.data.products.splice(productIndex, 1);
+          }
+        },
+      },
+    ),
+    fetchExportToExcell: create.asyncThunk(
+      async (data, { signal, getState }) => {
+        const {
+          mainPageReducer: {
+            data: { products },
+          },
+        } = getState();
+        // data = products.filter((product) => data.includes(product.id));
+        data = products.reduce((acc, product) => {
+          if (data.includes(product.id)) {
+            acc.push({
+              part_number: product.part_number,
+              title: product.title,
+              purchase: product.purchase,
+              price: product.price,
+            });
+          }
+          return acc;
+        }, []);
+        const res = await actionExportToExcell(data, signal);
+        return res;
+      },
+      {
+        pending: (state) => {
+          state.loading = true;
+        },
+        rejected: (state, action) => {
+          state.loading = false;
+        },
+        fulfilled: (state, { payload }) => {
+          state.loading = false;
+          console.log(payload, "exported to Excel");
+        },
+      },
+    ),
     setSort: sortReducer(create),
     _setSortTableTwo: create.reducer(
       (state, { payload: { product_id, sortIndex } }) => {
@@ -272,6 +335,8 @@ export const {
   fetchGetCommentsHistory,
   fetchChangeShopStatus,
   fetchAddProductsToProjects,
+  fetchDeleteProducts,
+  fetchExportToExcell,
   setFiltersReducer,
   setSearchReducer,
   middlewareSort,

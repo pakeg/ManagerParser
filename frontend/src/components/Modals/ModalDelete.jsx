@@ -2,13 +2,7 @@ import { GoAlertFill } from "react-icons/go";
 
 import Modal from "./Modal.jsx";
 
-const ModalDelete = ({
-  item,
-  isOpen,
-  setIsOpen,
-  actionAccept,
-  actionDecline,
-}) => {
+const ModalDelete = ({ item, isOpen, setIsOpen, actionAccept }) => {
   return (
     <Modal isOpen={isOpen} setIsOpen={setIsOpen}>
       <div className="w-96 h-48">

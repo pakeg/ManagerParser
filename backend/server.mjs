@@ -21,6 +21,8 @@ import {
   updateItemCategory,
   deleteItemCategory,
   addProductsToProjects,
+  deleteProducts,
+  exportToExcel,
 } from "./actions.mjs";
 
 const app = express();
@@ -197,6 +199,19 @@ app.post("/api/add-products-to-projects", async function (req, res) {
   } else res.status(500).send(data.error);
 });
 
+app.post("/api/delete-products", async function (req, res) {
+  const data = await deleteProducts(req.body);
+  if (!data?.error) {
+    res.status(201).json(data);
+  } else res.status(500).send(data.error);
+});
+
+app.post("/api/export-to-excell", async function (req, res) {
+  const data = await exportToExcel(req.body);
+  if (!data?.error) {
+    res.status(201).send(data);
+  } else res.status(500).send(data.error);
+});
 //---------------------
 
 app.listen(port, () => {

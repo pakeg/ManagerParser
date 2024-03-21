@@ -85,12 +85,14 @@ function DivScrollEl() {
         ></div>
       )}
 
-      <ModalDelete
-        item={info?.title}
-        isOpen={isOpen}
-        setIsOpen={setIsOpen}
-        actionAccept={deleteProject}
-      />
+      {isOpen && (
+        <ModalDelete
+          item={info?.title}
+          isOpen={isOpen}
+          setIsOpen={setIsOpen}
+          actionAccept={deleteProject}
+        />
+      )}
     </div>
   );
 }

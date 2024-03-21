@@ -428,6 +428,23 @@ const addProductsToProjects = async function ({ products_id, projects_id }) {
   }
 };
 
+const deleteProducts = async function (products_id) {
+  try {
+    await sql`delete from products where id in ${sql(products_id)}`;
+    return products_id;
+  } catch (e) {
+    return { error: e?.detail ?? "Something went wrong. Please, try later" };
+  }
+};
+
+const exportToExcel = async function (products_id) {
+  try {
+    return products_id;
+  } catch (e) {
+    return { error: e?.detail ?? "Something went wrong. Please, try later" };
+  }
+};
+
 export {
   authorize,
   createNewItemCategory,
@@ -445,4 +462,6 @@ export {
   updateItemCategory,
   deleteItemCategory,
   addProductsToProjects,
+  deleteProducts,
+  exportToExcel,
 };

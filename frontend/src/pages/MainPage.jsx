@@ -5,6 +5,8 @@ import { memoize } from "proxy-memoize";
 import {
   fetchGeneralData,
   fetchAddProductsToProjects,
+  fetchDeleteProducts,
+  fetchExportToExcell,
 } from "../store/reducers/mainPageSlice.js";
 import { getSortedDataSelector } from "../store/actions/createdActions.js";
 
@@ -13,6 +15,7 @@ import PartMainTwo from "../components/PartMainTwo.jsx";
 import PartMainThree from "../components/PartMainThree.jsx";
 import Button from "../components/Button";
 import ModalAdding from "../components/Modals/ModalAdding.jsx";
+import ModalDelete from "../components/Modals/ModalDelete.jsx";
 
 import useScroll from "../hooks/useScroll.jsx";
 import useScrollHorizontal from "../hooks/useScrollHorizontal";
@@ -30,6 +33,7 @@ export const MainPage = () => {
   const dispatch = useDispatch();
 
   const [isOpen, setIsOpen] = useState(false);
+  const [isOpenDelete, setIsOpenDelete] = useState(false);
   const [checkedProducts, setCheckedProducts] = useState(null);
   const contentRef = useRef(null);
   const tBody = useRef(null);
@@ -63,8 +67,8 @@ export const MainPage = () => {
       (el) => el.value,
     );
     if (products_id.length) {
-      setIsOpen(!isOpen);
       setCheckedProducts(products_id);
+      setIsOpen(!isOpen);
     } else {
       alert("Отметьте товары");
     }
@@ -74,6 +78,36 @@ export const MainPage = () => {
     dispatch(
       fetchAddProductsToProjects({ products_id: checkedProducts, projects_id }),
     );
+  };
+
+  const openModalDeleteIfProductsChecked = () => {
+    const products_id = Array.from(
+      tBody.current.querySelectorAll('input[type="checkbox"]:checked'),
+      (el) => el.value.split(",")[0],
+    );
+    if (products_id.length) {
+      setCheckedProducts(products_id);
+      setIsOpenDelete(!isOpenDelete);
+    } else {
+      alert("Отметьте товары");
+    }
+  };
+
+  const deleteProducts = () => {
+    dispatch(fetchDeleteProducts(checkedProducts));
+    setIsOpenDelete(!isOpenDelete);
+  };
+
+  const exportToExcell = () => {
+    const products_id = Array.from(
+      tBody.current.querySelectorAll('input[type="checkbox"]:checked'),
+      (el) => +el.value.split(",")[0],
+    );
+    if (products_id.length) {
+      dispatch(fetchExportToExcell(products_id));
+    } else {
+      alert("Отметьте товары");
+    }
   };
 
   return (
@@ -135,12 +169,15 @@ export const MainPage = () => {
         <div className="flex">
           <div className="flex grow ml-20 text-sm space-x-4">
             <Button text="Обновить" />
-            <Button text="Экспорт" />
+            <Button text="Экспорт" actionButton={exportToExcell} />
             <Button
               text="Добавить в проэкт"
               actionButton={openModalIfProductsChecked}
             />
-            <Button text="Удалить выбранные" />
+            <Button
+              text="Удалить выбранные"
+              actionButton={openModalDeleteIfProductsChecked}
+            />
           </div>
           <div className="grow-[2]">Пагинация...</div>
         </div>
@@ -155,6 +192,15 @@ export const MainPage = () => {
           items={data.projects}
           action={addProductsToProjects}
           invert
+        />
+      )}
+      {/* -----M AddShop -----*/}
+      {isOpenDelete && (
+        <ModalDelete
+          item="выбраныe товары"
+          isOpen={isOpenDelete}
+          setIsOpen={setIsOpenDelete}
+          actionAccept={deleteProducts}
         />
       )}
     </div>
