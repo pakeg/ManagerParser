@@ -299,7 +299,7 @@ export const actionExportToExcell = async (data, signal) => {
     method: "POST",
     signal,
     headers: {
-      Accept: "application/json",
+      Accept: "*/*",
       "Content-Type": "application/json;charset=utf-8",
     },
     credentials: "include",
@@ -325,6 +325,7 @@ export const actionExportToExcell = async (data, signal) => {
     });
   }
 
-  const res = await req.json();
-  return res;
+  const blob = await req.blob();
+  const url = window.URL.createObjectURL(blob);
+  return url;
 };

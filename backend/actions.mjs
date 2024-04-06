@@ -1,5 +1,7 @@
 import sql from "./db.mjs";
 import bcrypt from "bcryptjs";
+import exceljs from "exceljs";
+import { createFolderIfNotExists } from "./utils.mjs";
 
 const authorize = async function ({ nickname, password }) {
   try {
@@ -439,7 +441,26 @@ const deleteProducts = async function (products_id) {
 
 const exportToExcel = async function (products_id) {
   try {
-    return products_id;
+    const path = "./files";
+    createFolderIfNotExists(path);
+    const workbook = new exceljs.Workbook();
+    workbook.created = new Date();
+
+    const worksheet = workbook.addWorksheet("Products");
+
+    worksheet.columns = Object.keys(products_id[0]).map((key) => {
+      const str = key.split("_").join(" ");
+      const header = str.charAt(0).toUpperCase() + str.slice(1);
+      return { header, key, width: 20 };
+    });
+
+    for (let row of products_id) {
+      worksheet.addRow(row);
+    }
+    worksheet.getRow(1).font = { bold: true };
+
+    const data = await workbook.xlsx.writeFile(`${path}/products.xlsx`);
+    return `${path}/products.xlsx`;
   } catch (e) {
     return { error: e?.detail ?? "Something went wrong. Please, try later" };
   }

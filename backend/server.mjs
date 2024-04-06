@@ -3,6 +3,8 @@ import helmet from "helmet";
 import compression from "compression";
 import cors from "cors";
 import cookieParser from "cookie-parser";
+import { fileURLToPath } from "node:url";
+import { dirname, join } from "node:path";
 
 import {
   authorize,
@@ -24,6 +26,9 @@ import {
   deleteProducts,
   exportToExcel,
 } from "./actions.mjs";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
 const app = express();
 const port = 3000;
@@ -209,8 +214,16 @@ app.post("/api/delete-products", async function (req, res) {
 app.post("/api/export-to-excell", async function (req, res) {
   const data = await exportToExcel(req.body);
   if (!data?.error) {
-    res.status(201).send(data);
+    res.status(201).sendFile(data, { root: __dirname });
   } else res.status(500).send(data.error);
+});
+
+//---download file----
+app.get("/download/:filename", (req, res) => {
+  const filename = req.params.filename;
+  const filePath = join(__dirname, "files", filename);
+
+  res.download(filePath);
 });
 //---------------------
 
