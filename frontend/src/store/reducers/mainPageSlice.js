@@ -280,7 +280,13 @@ const mainPageSlice = createSliceWithThunks({
         },
         fulfilled: (state, { payload }) => {
           state.loading = false;
-          console.log(payload, "exported to Excel");
+          const a = document.createElement("a");
+          a.href = payload;
+          a.download = "products.xlsx";
+          document.body.appendChild(a);
+          a.click();
+          window.URL.revokeObjectURL(payload);
+          document.body.removeChild(a);
         },
       },
     ),
