@@ -1,24 +1,16 @@
-import { useEffect, useState } from 'react';
-import Modal from './Modal.jsx';
+import { useEffect, useState } from "react";
+import Modal from "./Modal.jsx";
 
-import { GoAlertFill } from 'react-icons/go';
+import { GoAlertFill } from "react-icons/go";
 
 const ModalNewShop = ({ isOpen, setIsOpen, done, setDone, addShop }) => {
-  const [title, setTitle] = useState('');
+  const [title, setTitle] = useState("");
 
-  useEffect(() => {
-    if (done) {
-      setTitle('');
-      const timer = setTimeout(() => {
-        setDone(null);
-        setIsOpen(!isOpen);
-      }, 5000);
-
-      return () => {
-        clearTimeout(timer);
-      };
-    }
-  }, [done]);
+  const closeModal = () => {
+    setTitle("");
+    setIsOpen(!isOpen);
+    setDone(null);
+  };
 
   return (
     <Modal isOpen={isOpen} setIsOpen={setIsOpen}>
@@ -48,7 +40,7 @@ const ModalNewShop = ({ isOpen, setIsOpen, done, setDone, addShop }) => {
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
               />
-              <div className={`${!done ? 'text-center' : 'text-end'}`}>
+              <div className={`${!done ? "text-center" : "text-end"}`}>
                 <button
                   className="px-10 mt-5 bg-[#cccccc] rounded shadow-xl"
                   onClick={addShop.bind(null, title)}
@@ -60,10 +52,10 @@ const ModalNewShop = ({ isOpen, setIsOpen, done, setDone, addShop }) => {
           ) : (
             <>
               <p className="text-center">{`Магазин "${done.title}" добавлен.`}</p>
-              <div className={`${!done ? 'text-center' : 'text-end'}`}>
+              <div className={`${!done ? "text-center" : "text-end"}`}>
                 <button
                   className="px-10 mt-5 bg-[#cccccc] rounded shadow-xl"
-                  onClick={() => setIsOpen(!isOpen)}
+                  onClick={closeModal}
                 >
                   OK
                 </button>

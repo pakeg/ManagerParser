@@ -21,7 +21,7 @@ import useScroll from "../hooks/useScroll.jsx";
 import useScrollHorizontal from "../hooks/useScrollHorizontal";
 
 export const MainPage = () => {
-  const { loading, errors, data, comments, sortTableTwo } = useSelector(
+  const { loading, data, comments, sortTableTwo } = useSelector(
     memoize((state) => ({
       ...state.mainPageReducer,
       data: {
@@ -183,7 +183,7 @@ export const MainPage = () => {
         </div>
       </div>
 
-      {/* -----M AddShop -----*/}
+      {/* -----M AddProducts -----*/}
       {isOpen && (
         <ModalAdding
           isOpen={isOpen}
@@ -194,7 +194,7 @@ export const MainPage = () => {
           invert
         />
       )}
-      {/* -----M AddShop -----*/}
+      {/* -----M DeleteProducts -----*/}
       {isOpenDelete && (
         <ModalDelete
           item="выбраныe товары"

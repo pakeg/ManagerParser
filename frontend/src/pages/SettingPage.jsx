@@ -1,61 +1,52 @@
 import { useEffect, useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
 import { LuCross } from "react-icons/lu";
 
 import useScroll from "../hooks/useScroll";
 import ModalNewShop from "../components/Modals/ModalNewShop.jsx";
+import ModalDelete from "../components/Modals/ModalDelete.jsx";
+
+import { fetchAddNewShop } from "../store/reducers/mainPageSlice.js";
+import { isValidUrl } from "../utils/utilsFun";
 
 export const SettingPage = () => {
-  const [shops, setShops] = useState(null);
+  const {
+    loading,
+    data: { shops = [] },
+  } = useSelector((state) => state.mainPageReducer);
+  const dispatch = useDispatch();
   const [isOpen, setIsOpen] = useState(false);
+  const [isOpenDelete, setIsOpenDelete] = useState(false);
+  const [shopToDelete, setShopToDelete] = useState(null);
   const [done, setDone] = useState(null);
   const { boxScroll, buttonScroll, isScroll } = useScroll(false);
 
-  const deleteShops = (id) => {
+  const addShopDeleteHandler = (item) => {
+    setShopToDelete(item);
+    setIsOpenDelete(!isOpenDelete);
+  };
+
+  const deleteShops = () => {
     // if delete from server
     if (true) {
-      setShops((state) => state.filter((shop) => shop.id != id));
+      console.log(shopToDelete);
+      setIsOpenDelete(!isOpenDelete);
       console.log("shop deleted");
     }
   };
 
   const addShop = (title) => {
-    console.log(title, "create new Shop");
-    if (title.length > 1) {
-      const req = { id: Math.random(), title };
-      setShops((state) => [...state, req]);
-      setDone({
-        is: true,
-        title,
-      });
-    }
+    if (title.length > 0) {
+      if (isValidUrl(title)) {
+        dispatch(fetchAddNewShop({ url: title }));
+        setDone({
+          title,
+        });
+      } else {
+        alert("Некорректная ссылка");
+      }
+    } else setIsOpen(!isOpen);
   };
-
-  useEffect(() => {
-    const data = [
-      {
-        id: 0,
-        title: "allo.ua",
-      },
-      {
-        id: 1,
-        title: "rozetka.ua",
-      },
-      {
-        id: 2,
-        title: "eldorado.ua",
-      },
-      {
-        id: 3,
-        title: "foxtrot.ua",
-      },
-      {
-        id: 4,
-        title: "storgrom.ua",
-      },
-    ];
-
-    setShops(data);
-  }, []);
 
   return (
     <div>
@@ -97,7 +88,7 @@ export const SettingPage = () => {
                       <p>{item.title}</p>
                       <div
                         className="hover:bg-red-500 bg-[#a1a1a1] rounded-sm cursor-pointer border border-white p-0.5"
-                        onClick={deleteShops.bind(null, item.id)}
+                        onClick={addShopDeleteHandler.bind(null, item)}
                       >
                         <LuCross
                           size={10}
@@ -135,6 +126,14 @@ export const SettingPage = () => {
         setDone={setDone}
         addShop={addShop}
       />
+      {isOpenDelete && (
+        <ModalDelete
+          item={shopToDelete?.title}
+          isOpen={isOpenDelete}
+          setIsOpen={setIsOpenDelete}
+          actionAccept={deleteShops}
+        />
+      )}
     </div>
   );
 };

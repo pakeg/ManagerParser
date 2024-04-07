@@ -14,6 +14,7 @@ import {
   actionAddProductsToProjects,
   actionDeleteProducts,
   actionExportToExcell,
+  actionAddNewShop,
 } from "../actions/actionsMainPage";
 import { fetchDataCategories } from "./newProductSlice";
 import { sortReducer } from "../actions/createdActions";
@@ -290,6 +291,28 @@ const mainPageSlice = createSliceWithThunks({
         },
       },
     ),
+    fetchAddNewShop: create.asyncThunk(
+      async (data, { signal }) => {
+        const res = await actionAddNewShop(data, signal);
+        return res;
+      },
+      {
+        pending: (state) => {
+          state.loading = true;
+        },
+        rejected: (state, action) => {
+          state.loading = false;
+        },
+        fulfilled: (state, { payload }) => {
+          state.loading = false;
+          if (typeof payload.msg === "undefined") {
+            state.data.shops.push(payload);
+            return;
+          }
+          alert(payload.msg);
+        },
+      },
+    ),
     setSort: sortReducer(create),
     _setSortTableTwo: create.reducer(
       (state, { payload: { product_id, sortIndex } }) => {
@@ -343,6 +366,7 @@ export const {
   fetchAddProductsToProjects,
   fetchDeleteProducts,
   fetchExportToExcell,
+  fetchAddNewShop,
   setFiltersReducer,
   setSearchReducer,
   middlewareSort,
