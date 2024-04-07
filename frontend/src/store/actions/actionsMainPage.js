@@ -329,3 +329,41 @@ export const actionExportToExcell = async (data, signal) => {
   const url = window.URL.createObjectURL(blob);
   return url;
 };
+
+export const actionAddNewShop = async (data, signal) => {
+  const req = await fetch(
+    import.meta.env.VITE_URL + "/api/add-new-shop?df=2134234213442",
+    {
+      method: "POST",
+      signal,
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json;charset=utf-8",
+      },
+      credentials: "include",
+      body: JSON.stringify(data),
+    },
+  );
+
+  if (req.status === 401) {
+    const info = await req.json();
+    throw new Response(JSON.stringify({ msg: info.msg, path: info.path }), {
+      status: req.status,
+      statusText: info.statusText,
+      headers: {
+        "Content-Type": "application/json; utf-8",
+      },
+    });
+  }
+
+  if (!req.ok) {
+    const error = await req.text();
+    throw new Response(error, {
+      status: req.status,
+      statusText: "error",
+    });
+  }
+
+  const res = await req.json();
+  return res;
+};

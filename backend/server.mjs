@@ -25,6 +25,7 @@ import {
   addProductsToProjects,
   deleteProducts,
   exportToExcel,
+  addNewShop,
 } from "./actions.mjs";
 
 const __filename = fileURLToPath(import.meta.url);
@@ -215,6 +216,13 @@ app.post("/api/export-to-excell", async function (req, res) {
   const data = await exportToExcel(req.body);
   if (!data?.error) {
     res.status(201).sendFile(data, { root: __dirname });
+  } else res.status(500).send(data.error);
+});
+
+app.post("/api/add-new-shop", async function (req, res) {
+  const data = await addNewShop(req.body);
+  if (!data?.error) {
+    res.status(201).json(data);
   } else res.status(500).send(data.error);
 });
 

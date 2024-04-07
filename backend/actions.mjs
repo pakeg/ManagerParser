@@ -1,7 +1,7 @@
 import sql from "./db.mjs";
 import bcrypt from "bcryptjs";
 import exceljs from "exceljs";
-import { createFolderIfNotExists } from "./utils.mjs";
+import { createFolderIfNotExists, isValidUrl } from "./utils.mjs";
 
 const authorize = async function ({ nickname, password }) {
   try {
@@ -466,6 +466,35 @@ const exportToExcel = async function (products_id) {
   }
 };
 
+const addNewShop = async function ({ url }) {
+  try {
+    if (isValidUrl(url)) {
+      const uri = new URL(url);
+      const shop = {
+        link: uri.origin,
+        title: uri.hostname,
+        href: uri.href,
+      };
+
+      const [oldShop] =
+        await sql`select * from shops where link = ${shop.link}`;
+      if (oldShop) return { msg: "Магазин уже существует" };
+
+      const [newShop] = await sql`insert into shops ${sql(
+        shop,
+        "title",
+        "link",
+      )} returning id, title, active_status`;
+
+      return newShop;
+    }
+
+    return { msg: "Некорректная ссылка" };
+  } catch (e) {
+    return { error: e?.detail ?? "Something went wrong. Please, try later" };
+  }
+};
+
 export {
   authorize,
   createNewItemCategory,
@@ -485,4 +514,5 @@ export {
   addProductsToProjects,
   deleteProducts,
   exportToExcel,
+  addNewShop,
 };
