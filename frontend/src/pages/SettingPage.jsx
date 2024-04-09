@@ -3,11 +3,17 @@ import { useSelector, useDispatch } from "react-redux";
 import { LuCross } from "react-icons/lu";
 
 import useScroll from "../hooks/useScroll";
+import { isValidUrl } from "../utils/utilsFun";
+
+import {
+  fetchGeneralData,
+  fetchAddNewShop,
+  fetchDeleteShop,
+} from "../store/reducers/mainPageSlice.js";
+
 import ModalNewShop from "../components/Modals/ModalNewShop.jsx";
 import ModalDelete from "../components/Modals/ModalDelete.jsx";
-
-import { fetchAddNewShop } from "../store/reducers/mainPageSlice.js";
-import { isValidUrl } from "../utils/utilsFun";
+import ShopInformation from "../components/ShopInformation.jsx";
 
 export const SettingPage = () => {
   const {
@@ -15,11 +21,16 @@ export const SettingPage = () => {
     data: { shops = [] },
   } = useSelector((state) => state.mainPageReducer);
   const dispatch = useDispatch();
-  const [isOpen, setIsOpen] = useState(false);
+  const [isOpenNewShop, setIsOpenNewShop] = useState(false);
   const [isOpenDelete, setIsOpenDelete] = useState(false);
   const [shopToDelete, setShopToDelete] = useState(null);
+  const [shopSettings, setShopSettings] = useState(null);
   const [done, setDone] = useState(null);
   const { boxScroll, buttonScroll, isScroll } = useScroll(false);
+
+  useEffect(() => {
+    if (shops.length === 0) dispatch(fetchGeneralData());
+  }, []);
 
   const addShopDeleteHandler = (item) => {
     setShopToDelete(item);
@@ -27,12 +38,9 @@ export const SettingPage = () => {
   };
 
   const deleteShops = () => {
-    // if delete from server
-    if (true) {
-      console.log(shopToDelete);
-      setIsOpenDelete(!isOpenDelete);
-      console.log("shop deleted");
-    }
+    dispatch(fetchDeleteShop({ id: shopToDelete.id }));
+    setIsOpenDelete(!isOpenDelete);
+    setShopToDelete(null);
   };
 
   const addShop = (title) => {
@@ -45,7 +53,7 @@ export const SettingPage = () => {
       } else {
         alert("Некорректная ссылка");
       }
-    } else setIsOpen(!isOpen);
+    } else setIsOpenNewShop(!isOpenNewShop);
   };
 
   return (
@@ -55,20 +63,13 @@ export const SettingPage = () => {
       </div>
       <div className="flex gap-x-6">
         <div className="grow">
-          <div className="pl-6 mb-2">
-            <div className="flex items-center">
-              <p className="underline mr-5 font-semibold">Добавить магазин</p>
-              <div
-                className="hover:bg-[#a1a1a1] bg-black rounded-sm cursor-pointer border border-white p-0.5"
-                onClick={() => setIsOpen(!isOpen)}
-              >
-                <LuCross
-                  size={10}
-                  strokeWidth="1"
-                  fill="white"
-                  title="cancel"
-                />
-              </div>
+          <div className="flex items-center">
+            <p className="underline mr-5 font-semibold">Добавить магазин</p>
+            <div
+              className="hover:bg-[#a1a1a1] bg-black rounded-sm cursor-pointer border border-white p-0.5"
+              onClick={() => setIsOpenNewShop(!isOpenNewShop)}
+            >
+              <LuCross size={10} strokeWidth="1" fill="white" title="cancel" />
             </div>
           </div>
           <div className="flex">
@@ -85,7 +86,12 @@ export const SettingPage = () => {
                       key={item.id}
                       className="hover:bg-[#959595] hover:text-white mt-1.5 pl-6 pr-3 flex items-center justify-between"
                     >
-                      <p>{item.title}</p>
+                      <p
+                        className="cursor-pointer"
+                        onClick={() => setShopSettings(item)}
+                      >
+                        {item.title}
+                      </p>
                       <div
                         className="hover:bg-red-500 bg-[#a1a1a1] rounded-sm cursor-pointer border border-white p-0.5"
                         onClick={addShopDeleteHandler.bind(null, item)}
@@ -97,7 +103,7 @@ export const SettingPage = () => {
                           style={{
                             transform: "rotateZ(45deg)",
                           }}
-                          title="deleteShops"
+                          title="delete shop"
                         />
                       </div>
                     </div>
@@ -114,18 +120,22 @@ export const SettingPage = () => {
             )}
           </div>
         </div>
-        <div className="grow-[4]">
-          <p className="font-semibold mb-2">Редактирование</p>
-          <div className="border-2 border-[#5e5e5e] bg-[#dfdfdf] min-h-[550px]"></div>
-        </div>
+        {shopSettings && (
+          <div className="grow-[4]">
+            <ShopInformation shop={shopSettings} />
+          </div>
+        )}
       </div>
-      <ModalNewShop
-        isOpen={isOpen}
-        setIsOpen={setIsOpen}
-        done={done}
-        setDone={setDone}
-        addShop={addShop}
-      />
+
+      {isOpenNewShop && (
+        <ModalNewShop
+          isOpen={isOpenNewShop}
+          setIsOpen={setIsOpenNewShop}
+          done={done}
+          setDone={setDone}
+          addShop={addShop}
+        />
+      )}
       {isOpenDelete && (
         <ModalDelete
           item={shopToDelete?.title}

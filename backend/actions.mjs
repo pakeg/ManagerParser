@@ -202,7 +202,7 @@ const getAllUser = async function () {
 
 const getAllProductsInformation = async function () {
   try {
-    const shops = await sql`select id, title, active_status from shops`;
+    const shops = await sql`select * from shops`;
     const products = await sql`select
     products.id,
     products_projects.project_id as project_id,
@@ -216,8 +216,8 @@ const getAllProductsInformation = async function () {
     shops.title as shop,
     shops.id as shop_id,
     shops.active_status as shop_active_status,
-    parsed_products.created_on as date,
     parsed_products.link as link,
+    parsed_products.created_on as date,
     parsed_price
   from
     products
@@ -495,6 +495,17 @@ const addNewShop = async function ({ url }) {
   }
 };
 
+const deleteShop = async function ({ id }) {
+  try {
+    const [deletedShopId] =
+      await sql`delete from shops where id = ${id} returning id`;
+
+    return { id: deletedShopId.id };
+  } catch (e) {
+    return { error: e?.detail ?? "Something went wrong. Please, try later" };
+  }
+};
+
 export {
   authorize,
   createNewItemCategory,
@@ -515,4 +526,5 @@ export {
   deleteProducts,
   exportToExcel,
   addNewShop,
+  deleteShop,
 };
