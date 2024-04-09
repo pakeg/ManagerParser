@@ -26,6 +26,7 @@ import {
   deleteProducts,
   exportToExcel,
   addNewShop,
+  deleteShop,
 } from "./actions.mjs";
 
 const __filename = fileURLToPath(import.meta.url);
@@ -221,6 +222,13 @@ app.post("/api/export-to-excell", async function (req, res) {
 
 app.post("/api/add-new-shop", async function (req, res) {
   const data = await addNewShop(req.body);
+  if (!data?.error) {
+    res.status(201).json(data);
+  } else res.status(500).send(data.error);
+});
+
+app.post("/api/delete-shop", async function (req, res) {
+  const data = await deleteShop(req.body);
   if (!data?.error) {
     res.status(201).json(data);
   } else res.status(500).send(data.error);
