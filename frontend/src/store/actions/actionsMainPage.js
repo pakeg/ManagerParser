@@ -1,6 +1,6 @@
-export const fetchAllInformation = async (signal) => {
+export const actionAllInformation = async (page, signal) => {
   const req = await fetch(
-    import.meta.env.VITE_URL + "/api/get-all-information",
+    import.meta.env.VITE_URL + "/api/get-all-information/" + page,
     {
       method: "POST",
       signal,

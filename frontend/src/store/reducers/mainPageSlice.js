@@ -5,7 +5,7 @@ import {
 } from "@reduxjs/toolkit";
 
 import {
-  fetchAllInformation,
+  actionAllInformation,
   updatePrice,
   addParseLink,
   addPostProductComment,
@@ -40,19 +40,15 @@ const mainPageSlice = createSliceWithThunks({
   initialState,
   reducers: (create) => ({
     fetchGeneralData: create.asyncThunk(
-      async (_, { signal, getState, dispatch }) => {
+      async (page, { signal, getState, dispatch }) => {
         const {
-          mainPageReducer: { revalidate },
           newProductReducer: { data: categories },
         } = getState();
         if (Object.keys(categories).length === 0) {
           dispatch(fetchDataCategories());
         }
-        if (revalidate == null || revalidate < Date.now()) {
-          const data = await fetchAllInformation(signal);
-          return data;
-        }
-        return {};
+        const data = await actionAllInformation(page, signal);
+        return data;
       },
       {
         pending: (state) => {

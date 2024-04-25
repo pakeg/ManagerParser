@@ -200,10 +200,12 @@ const getAllUser = async function () {
   return { users };
 };
 
-const getAllProductsInformation = async function () {
+const getAllProductsInformation = async function (page) {
   try {
+    const limitRows = 10;
     const shops = await sql`select * from shops`;
     const products = await sql`select
+    (select count(*) from products) as count_row,
     products.id,
     products_projects.project_id as project_id,
     parsed_products.id as parsed_id,
@@ -226,7 +228,8 @@ const getAllProductsInformation = async function () {
     left join parsed_products on (parsed_products.product_id = products.id)
     left join products_projects on (products_projects.product_id = products.id)
     left join shops on (shops.id = parsed_products.shop_id)
-    order by id`;
+    where products.id in (select id from products order by id limit ${limitRows} offset ${page * limitRows})
+    order by products.id`;
     const groupProductsById = products.reduce((c, n) => {
       if (!Object.hasOwn(c, n.id)) {
         c[n.id] = { product: { ...n, shops_data: [], projects_id: [] } };
@@ -287,8 +290,9 @@ const getAllProductsInformation = async function () {
     const resultedProducts = Object.entries(groupProductsById).map(
       ([_, value]) => ({ ...value.product, ...value.info }),
     );
+    const pages = Math.ceil(products[0].count_row / limitRows);
 
-    return { products: resultedProducts, shops };
+    return { products: resultedProducts, shops, pages };
   } catch (e) {
     return { error: e?.detail ?? "Something went wrong. Please, try later" };
   }

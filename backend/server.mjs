@@ -143,8 +143,9 @@ app.post("/api/getall-user", async function (req, res) {
 });
 //---------------------
 //------main page-----------
-app.post("/api/get-all-information", async function (req, res) {
-  const data = await getAllProductsInformation();
+app.post("/api/get-all-information/:page", async function (req, res) {
+  const page = +req.params.page - 1;
+  const data = await getAllProductsInformation(page);
   if (!data?.error) {
     res.status(201).json(data);
   } else res.status(500).send(data.error);
