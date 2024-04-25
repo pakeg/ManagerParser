@@ -16,6 +16,7 @@ import PartMainThree from "../components/PartMainThree.jsx";
 import Button from "../components/Button";
 import ModalAdding from "../components/Modals/ModalAdding.jsx";
 import ModalDelete from "../components/Modals/ModalDelete.jsx";
+import Pagination from "../components/Pagination.jsx";
 
 import useScroll from "../hooks/useScroll.jsx";
 import useScrollHorizontal from "../hooks/useScrollHorizontal";
@@ -46,7 +47,11 @@ export const MainPage = () => {
   } = useScrollHorizontal();
 
   useEffect(() => {
-    if (typeof data.products === "undefined") dispatch(fetchGeneralData());
+    if (typeof data.products === "undefined") {
+      const search = new URLSearchParams(window.location.search);
+      const page = search.get("page") || 1;
+      dispatch(fetchGeneralData(page));
+    }
   }, []);
 
   useEffect(() => {
@@ -108,6 +113,10 @@ export const MainPage = () => {
     } else {
       alert("Отметьте товары");
     }
+  };
+
+  const pageChangingAndLoadData = (page) => {
+    dispatch(fetchGeneralData(page));
   };
 
   return (
@@ -179,7 +188,11 @@ export const MainPage = () => {
               actionButton={openModalDeleteIfProductsChecked}
             />
           </div>
-          <div className="grow-[2]">Пагинация...</div>
+          <div className="grow-[2]">
+            {data.pages > 1 && (
+              <Pagination pages={data.pages} action={pageChangingAndLoadData} />
+            )}
+          </div>
         </div>
       </div>
 
