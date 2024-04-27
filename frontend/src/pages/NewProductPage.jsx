@@ -50,19 +50,23 @@ export const NewProductPage = () => {
       //open modal
       setIsOpen(createdProd);
       //clear data of new product
-      setNewProduct({
-        title: "",
-        categories: null,
-        manufactures: null,
-        projects: null,
-        part_number: "",
-        purchase_price: "",
-        price: "",
-        shopsUrl: "",
-      });
+      handelCancel();
       dispatch(resetCreatedProd());
     }
   }, [createdProd]);
+
+  const handelCancel = () => {
+    setNewProduct({
+      title: "",
+      categories: null,
+      manufactures: null,
+      projects: null,
+      part_number: "",
+      purchase_price: "",
+      price: "",
+      shopsUrl: "",
+    });
+  };
 
   const addNewProduct = () => {
     const disabled = isErrors(newProduct);
@@ -161,13 +165,13 @@ export const NewProductPage = () => {
 
         <div className="flex justify-end text-white">
           <button
-            className="border border-black text-xs px-3 py-1 rounded mr-4"
-            onClick={() => {}}
+            className="bg-teal-500 text-sm font-bold px-3 py-1 rounded mr-4"
+            onClick={handelCancel}
           >
             Отмена
           </button>
           <div
-            className="flex items-center bg-[#4bc1b5] font-bold text-sm px-3 py-1 rounded mr-4"
+            className="flex items-center bg-teal-500 font-bold text-sm px-3 py-1 rounded mr-4"
             onClick={addNewProduct}
           >
             <button>Готово</button>

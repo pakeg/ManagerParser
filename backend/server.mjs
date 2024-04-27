@@ -144,7 +144,7 @@ app.post("/api/getall-user", async function (req, res) {
 //---------------------
 //------main page-----------
 app.post("/api/get-all-information/:page", async function (req, res) {
-  const page = +req.params.page - 1;
+  const page = !isNaN(+req.params.page - 1) ? +req.params.page - 1 : 0;
   const data = await getAllProductsInformation(page);
   if (!data?.error) {
     res.status(201).json(data);
