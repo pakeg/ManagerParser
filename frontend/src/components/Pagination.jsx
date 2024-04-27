@@ -7,7 +7,11 @@ const Pagination = ({ pages, action, limitPerPage = 5 }) => {
   const [searchParams, setSearchParams] = useSearchParams();
 
   useEffect(() => {
-    const page = searchParams.has("page") ? +searchParams.get("page") : 1;
+    const page = searchParams.has("page")
+      ? !isNaN(+searchParams.get("page"))
+        ? +searchParams.get("page")
+        : 1
+      : 1;
     setCurrentPage(page);
     setVisiblePages(updateVisiblePages(limitPerPage, pages));
   }, [searchParams]);
@@ -44,7 +48,7 @@ const Pagination = ({ pages, action, limitPerPage = 5 }) => {
           <li>
             <button
               onClick={() => handleChangingPage(Math.max(1, currentPage - 1))}
-              className="flex items-center justify-center px-3 h-8 ms-0 leading-tight text-gray-500 bg-white border border-e-0 border-gray-300 rounded-s-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
+              className="flex items-center justify-center px-3 h-8 ms-0 leading-tight border rounded-s-lg bg-teal-500 border-teal-500 text-white hover:bg-white hover:text-gray-500"
               disabled={currentPage === 1}
             >
               {"<"}
@@ -55,8 +59,9 @@ const Pagination = ({ pages, action, limitPerPage = 5 }) => {
               return (
                 <li key={page}>
                   <button
-                    className="flex items-center justify-center px-3 h-8 text-blue-600 border border-gray-300 bg-blue-50 hover:bg-blue-100 hover:text-blue-700 dark:border-gray-700 dark:bg-gray-700 dark:text-white"
+                    className="flex items-center justify-center px-3 h-8 border border-teal-500 bg-white text-gray-500"
                     onClick={() => handleChangingPage(page)}
+                    disabled
                   >
                     {page}
                   </button>
@@ -66,7 +71,7 @@ const Pagination = ({ pages, action, limitPerPage = 5 }) => {
             return (
               <li key={page}>
                 <button
-                  className="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
+                  className="flex items-center justify-center px-3 h-8 leading-tight border border-teal-500 bg-teal-500 hover:bg-white text-white hover:text-gray-500"
                   onClick={() => handleChangingPage(page)}
                 >
                   {page}
@@ -76,7 +81,7 @@ const Pagination = ({ pages, action, limitPerPage = 5 }) => {
           })}
           <li>
             <button
-              className="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 rounded-e-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
+              className="flex items-center justify-center px-3 h-8 leading-tight border border-teal-500 rounded-e-lg bg-teal-500 hover:bg-white text-white hover:text-gray-500"
               onClick={() =>
                 handleChangingPage(Math.min(pages, currentPage + 1))
               }

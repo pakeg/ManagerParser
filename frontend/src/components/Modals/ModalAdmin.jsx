@@ -2,6 +2,7 @@ import { LiaUserPlusSolid, LiaUserCogSolid } from "react-icons/lia";
 import { useEffect, useState } from "react";
 
 import Modal from "./Modal.jsx";
+import Button from "../Button.jsx";
 import InputTrans from "../InputTrans.jsx";
 import useErrors from "../../hooks/useErrors.jsx";
 import { addNewUser, updateUser } from "../../store/reducers/adminSlice";
@@ -115,13 +116,9 @@ const ModalAdmin = ({ isOpen, setIsOpen, editAbleUser, dispatch, loading }) => {
             errors={getError()}
           />
           {editAbleUser ? (
-            <div onClick={changeUser}>
-              <button>Готово!</button>
-            </div>
+            <Button text="Готово!" actionButton={changeUser} className="mx-8" />
           ) : (
-            <div onClick={createUser}>
-              <button>Готово!</button>
-            </div>
+            <Button text="Готово!" actionButton={createUser} className="mx-8" />
           )}
         </div>
       </div>

@@ -230,6 +230,10 @@ const getAllProductsInformation = async function (page) {
     left join shops on (shops.id = parsed_products.shop_id)
     where products.id in (select id from products order by id limit ${limitRows} offset ${page * limitRows})
     order by products.id`;
+    if (products.length == 0) {
+      return {};
+    }
+
     const groupProductsById = products.reduce((c, n) => {
       if (!Object.hasOwn(c, n.id)) {
         c[n.id] = { product: { ...n, shops_data: [], projects_id: [] } };
