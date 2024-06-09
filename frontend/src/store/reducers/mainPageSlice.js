@@ -16,6 +16,7 @@ import {
   actionExportToExcell,
   actionAddNewShop,
   actionDeleteShop,
+  actionParsedProductsListByShopId,
 } from "../actions/actionsMainPage";
 import { fetchDataCategories } from "./newProductSlice";
 import { sortReducer } from "../actions/createdActions";
@@ -30,6 +31,7 @@ const initialState = {
   sortTableTwo: {},
   search: { title: "", part_number: "" },
   filters: { category: [], manufacture: [] },
+  parsed_products_list: {},
 };
 const createSliceWithThunks = buildCreateSlice({
   creators: { asyncThunk: asyncThunkCreator },
@@ -330,6 +332,24 @@ const mainPageSlice = createSliceWithThunks({
         },
       },
     ),
+    fetchParsedProductsListByShopId: create.asyncThunk(
+      async (id, { signal }) => {
+        const res = await actionParsedProductsListByShopId(id, signal);
+        return res;
+      },
+      {
+        pending: (state) => {
+          state.loading = true;
+        },
+        rejected: (state, action) => {
+          state.loading = false;
+        },
+        fulfilled: (state, { payload }) => {
+          state.loading = false;
+          state.parsed_products_list[payload.shop_id] = payload.parsed_products;
+        },
+      },
+    ),
     setSort: sortReducer(create),
     _setSortTableTwo: create.reducer(
       (state, { payload: { product_id, sortIndex } }) => {
@@ -385,6 +405,7 @@ export const {
   fetchExportToExcell,
   fetchAddNewShop,
   fetchDeleteShop,
+  fetchParsedProductsListByShopId,
   setFiltersReducer,
   setSearchReducer,
   middlewareSort,

@@ -9,6 +9,7 @@ import {
   fetchGeneralData,
   fetchAddNewShop,
   fetchDeleteShop,
+  fetchParsedProductsListByShopId,
 } from "../store/reducers/mainPageSlice.js";
 
 import ModalNewShop from "../components/Modals/ModalNewShop.jsx";
@@ -19,6 +20,7 @@ export const SettingPage = () => {
   const {
     loading,
     data: { shops = [] },
+    parsed_products_list,
   } = useSelector((state) => state.mainPageReducer);
   const dispatch = useDispatch();
   const [isOpenNewShop, setIsOpenNewShop] = useState(false);
@@ -56,6 +58,14 @@ export const SettingPage = () => {
     } else setIsOpenNewShop(!isOpenNewShop);
   };
 
+  const handlerShopSettings = (item) => {
+    let parsed_products = parsed_products_list[item.id];
+    if (!parsed_products) {
+      dispatch(fetchParsedProductsListByShopId(item.id));
+    }
+    setShopSettings(item);
+  };
+
   return (
     <div>
       <div className="mb-8 font-semibold">
@@ -88,7 +98,7 @@ export const SettingPage = () => {
                     >
                       <p
                         className="cursor-pointer"
-                        onClick={() => setShopSettings(item)}
+                        onClick={() => handlerShopSettings(item)}
                       >
                         {item.title}
                       </p>
