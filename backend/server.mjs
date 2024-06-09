@@ -27,6 +27,7 @@ import {
   exportToExcel,
   addNewShop,
   deleteShop,
+  parsedProductsListByShopId,
 } from "./actions.mjs";
 
 const __filename = fileURLToPath(import.meta.url);
@@ -243,6 +244,15 @@ app.get("/download/:filename", (req, res) => {
   res.download(filePath);
 });
 //---------------------
+
+//----- setting page-----
+app.post("/api/parsed-products-list-by-shop-id", async function (req, res) {
+  const data = await parsedProductsListByShopId(req.body);
+  if (!data?.error) {
+    res.status(201).json(data);
+  } else res.status(500).send(data.error);
+});
+//----------------------
 
 app.listen(port, () => {
   console.log(`App listening on port ${port}`);

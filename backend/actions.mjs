@@ -514,6 +514,17 @@ const deleteShop = async function ({ id }) {
   }
 };
 
+const parsedProductsListByShopId = async function ({ id }) {
+  try {
+    const parsed_products =
+      await sql`select parsed_products.*, title from parsed_products left join products on parsed_products.product_id = products.id where shop_id = ${id}`;
+
+    return { shop_id: id, parsed_products };
+  } catch (e) {
+    return { error: e?.detail ?? "Something went wrong. Please, try later" };
+  }
+};
+
 export {
   authorize,
   createNewItemCategory,
@@ -535,4 +546,5 @@ export {
   exportToExcel,
   addNewShop,
   deleteShop,
+  parsedProductsListByShopId,
 };
