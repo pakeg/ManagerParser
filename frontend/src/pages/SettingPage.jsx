@@ -59,8 +59,7 @@ export const SettingPage = () => {
   };
 
   const handlerShopSettings = (item) => {
-    let parsed_products = parsed_products_list[item.id];
-    if (!parsed_products) {
+    if (!parsed_products_list[item.id]) {
       dispatch(fetchParsedProductsListByShopId(item.id));
     }
     setShopSettings(item);
@@ -71,8 +70,8 @@ export const SettingPage = () => {
       <div className="mb-8 font-semibold">
         <h1>Настройки магазина</h1>
       </div>
-      <div className="flex gap-x-6">
-        <div className="grow">
+      <div className="flex gap-x-2">
+        <div>
           <div className="flex items-center">
             <p className="underline mr-5 font-semibold">Добавить магазин</p>
             <div
@@ -83,7 +82,7 @@ export const SettingPage = () => {
             </div>
           </div>
           <div className="flex">
-            <div className="grow overflow-hidden border-2 border-[#5e5e5e] bg-[#dfdfdf]">
+            <div className="grow overflow-hidden border-2 border-[#5e5e5e]">
               <div
                 className={`h-[550px] text-[#a0a0a0] overflow-auto ${
                   isScroll && "-mr-[19px]"
@@ -131,7 +130,7 @@ export const SettingPage = () => {
           </div>
         </div>
         {shopSettings && (
-          <div className="grow-[4]">
+          <div>
             <ShopInformation shop={shopSettings} />
           </div>
         )}
