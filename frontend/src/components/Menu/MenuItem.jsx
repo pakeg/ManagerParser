@@ -53,7 +53,7 @@ const MenuItem = ({
   return (
     <td className="py-1.5 px-2.5 relative">
       <div
-        className={`flex items-center justify-center space-x-1 ${left && "flex-row-reverse"}`}
+        className={`flex items-center justify-center space-x-1 ${left ? "flex-row-reverse" : ""}`}
       >
         {Sort && (
           <Sort
