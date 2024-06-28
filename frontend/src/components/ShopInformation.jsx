@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { BsCheck } from "react-icons/bs";
 import { LuCross } from "react-icons/lu";
@@ -7,10 +7,22 @@ import { formatDate } from "../utils/utilsFun";
 
 const ShopInformation = ({ shop }) => {
   const parsed_products = useSelector(
-    (state) => state.mainPageReducer.parsed_products_list[shop.id],
+    (state) => state.mainPageReducer.parsed_products_list[shop.id]
   );
   const [editable, setEditable] = useState(false);
   const [selector, setSelector] = useState("");
+
+  const handlerAddShopSelector = () => {
+    if (selector.length > 0) {
+      setEditable(!editable);
+      setSelector("");
+    } else alert("Некорректный селектор");
+  };
+
+  useEffect(() => {
+    setEditable(false);
+    setSelector("");
+  }, [shop.id]);
 
   return (
     <>
@@ -67,7 +79,7 @@ const ShopInformation = ({ shop }) => {
                           strokeWidth="1"
                           fill="white"
                           title={`${selector ? "confirm change" : "cancel"}`}
-                          onClick={() => {}}
+                          onClick={handlerAddShopSelector}
                         />
                       </div>
                     </div>
