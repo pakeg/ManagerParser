@@ -19,7 +19,7 @@ import {
   addParseLink,
   addProductComment,
   getCommentsHistory,
-  changeShopStatus,
+  changingShopFields,
   updateItemCategory,
   deleteItemCategory,
   addProductsToProjects,
@@ -43,7 +43,7 @@ app.use(express.json());
 app.use(
   express.urlencoded({
     extended: true,
-  }),
+  })
 );
 const whitelist = [
   `https://lc6p8r-${port}.csb.app`,
@@ -180,8 +180,8 @@ app.post("/api/get-comments-history", async function (req, res) {
   } else res.status(500).send(data.error);
 });
 
-app.post("/api/post-change-shop-status", async function (req, res) {
-  const data = await changeShopStatus(req.body);
+app.post("/api/post-changing-shop-fields", async function (req, res) {
+  const data = await changingShopFields(req.body);
   if (!data?.error) {
     res.status(201).json(data);
   } else res.status(500).send(data.error);

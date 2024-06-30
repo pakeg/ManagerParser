@@ -8,7 +8,7 @@ export const actionAllInformation = async (page, signal) => {
         Accept: "application/json",
       },
       credentials: "include",
-    },
+    }
   );
 
   if (req.status === 401) {
@@ -81,7 +81,7 @@ export const addParseLink = async (data, signal) => {
       },
       credentials: "include",
       body: JSON.stringify(data),
-    },
+    }
   );
 
   if (req.status === 401) {
@@ -119,7 +119,7 @@ export const addPostProductComment = async (data, signal) => {
       },
       credentials: "include",
       body: JSON.stringify(data),
-    },
+    }
   );
 
   if (req.status === 401) {
@@ -157,7 +157,7 @@ export const getCommentsHistory = async (id, signal) => {
       },
       credentials: "include",
       body: JSON.stringify({ id }),
-    },
+    }
   );
 
   if (req.status === 401) {
@@ -183,9 +183,9 @@ export const getCommentsHistory = async (id, signal) => {
   return res;
 };
 
-export const postChangeShopStatus = async (data, signal) => {
+export const actionChangingShopFields = async (data, signal) => {
   const req = await fetch(
-    import.meta.env.VITE_URL + "/api/post-change-shop-status",
+    import.meta.env.VITE_URL + "/api/post-changing-shop-fields",
     {
       method: "POST",
       signal,
@@ -195,7 +195,7 @@ export const postChangeShopStatus = async (data, signal) => {
       },
       credentials: "include",
       body: JSON.stringify(data),
-    },
+    }
   );
 
   if (req.status === 401) {
@@ -233,7 +233,7 @@ export const actionAddProductsToProjects = async (data, signal) => {
       },
       credentials: "include",
       body: JSON.stringify(data),
-    },
+    }
   );
 
   if (req.status === 401) {
@@ -412,7 +412,7 @@ export const actionParsedProductsListByShopId = async (id, signal) => {
       },
       credentials: "include",
       body: JSON.stringify({ id }),
-    },
+    }
   );
 
   if (req.status === 401) {

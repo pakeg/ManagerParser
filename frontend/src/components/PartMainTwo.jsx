@@ -10,7 +10,7 @@ import {
   fetchAddProductComment,
   fetchGetCommentsHistory,
   middlewareSort,
-  fetchChangeShopStatus,
+  fetchChangingShopFields,
 } from "../store/reducers/mainPageSlice.js";
 
 const PartMainTwo = ({
@@ -46,7 +46,7 @@ const PartMainTwo = ({
   const addNewProductComment = () => {
     if (comment.text.length > 0) {
       dispatch(
-        fetchAddProductComment({ ...comment, text: comment.text.trim() }),
+        fetchAddProductComment({ ...comment, text: comment.text.trim() })
       );
       setComment({ parsed_product_id: null, price: 0, text: "" });
       setIsPopUpOpen(!isPopUpOpen);
@@ -55,7 +55,7 @@ const PartMainTwo = ({
   };
 
   const changingStatusShops = (diff) => {
-    dispatch(fetchChangeShopStatus(diff));
+    dispatch(fetchChangingShopFields(diff));
     return;
   };
 
@@ -84,7 +84,7 @@ const PartMainTwo = ({
                       <MenuItemShop
                         key={shop.id}
                         shopInfo={shop}
-                        fetchChangeShopStatus={fetchChangeShopStatus}
+                        action={fetchChangingShopFields}
                         dispatch={dispatch}
                       />
                     ))}
