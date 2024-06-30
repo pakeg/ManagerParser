@@ -112,7 +112,7 @@ const createNewProduct = async function ({
         newShop = await sql`insert into shops ${sql(
           notFoundedShops,
           "title",
-          "link",
+          "link"
         )} returning id, link`;
       }
 
@@ -126,7 +126,7 @@ const createNewProduct = async function ({
         final,
         "product_id",
         "shop_id",
-        "link",
+        "link"
       )}`;
     }
     return projectId;
@@ -228,7 +228,9 @@ const getAllProductsInformation = async function (page) {
     left join parsed_products on (parsed_products.product_id = products.id)
     left join products_projects on (products_projects.product_id = products.id)
     left join shops on (shops.id = parsed_products.shop_id)
-    where products.id in (select id from products order by id limit ${limitRows} offset ${page * limitRows})
+    where products.id in (select id from products order by id limit ${limitRows} offset ${
+      page * limitRows
+    })
     order by products.id`;
     if (products.length == 0) {
       return {};
@@ -239,7 +241,7 @@ const getAllProductsInformation = async function (page) {
         c[n.id] = { product: { ...n, shops_data: [], projects_id: [] } };
       }
       const findShopData = c[n.id].product.shops_data.find(
-        (el) => el.id == n.parsed_id,
+        (el) => el.id == n.parsed_id
       );
       if (!findShopData) {
         c[n.id].product.shops_data.push({
@@ -292,7 +294,7 @@ const getAllProductsInformation = async function (page) {
     });
 
     const resultedProducts = Object.entries(groupProductsById).map(
-      ([_, value]) => ({ ...value.product, ...value.info }),
+      ([_, value]) => ({ ...value.product, ...value.info })
     );
     const pages = Math.ceil(products[0].count_row / limitRows);
 
@@ -340,8 +342,10 @@ const addProductComment = async function (hash, data) {
     }
 
     data = { ...data, user_id: user.id };
-    const [comment] =
-      await sql`insert into comments ${sql(data, Object.keys(data))} returning *`;
+    const [comment] = await sql`insert into comments ${sql(
+      data,
+      Object.keys(data)
+    )} returning *`;
 
     return { comment, parsed_product_id: data.parsed_product_id };
   } catch (e) {
@@ -360,23 +364,34 @@ const getCommentsHistory = async function ({ id }) {
   }
 };
 
-const changeShopStatus = async function (status) {
+const changingShopFields = async function ({ shopsData, row }) {
+  const rowAndTypesForUpdate = {
+    active_status: "active_status",
+    selector: "text",
+    img_src: "varchar",
+  };
+  if (!Object.keys(rowAndTypesForUpdate).includes(row)) return;
   try {
-    let result = [];
-    if (!Array.isArray(status)) {
-      [result] =
-        await sql`update shops set active_status = ${Number(!status.active_status)} where id = ${status.id} returning id, active_status`;
+    let result;
+    if (!Array.isArray(shopsData)) {
+      [result] = await sql`update shops set ${sql(
+        rowAndTypesForUpdate[row]
+      )} = ${shopsData[row]} where id = ${shopsData.id} returning id, ${sql(
+        row
+      )}`;
     } else {
-      const shopsForUpdate = status.map((el) => [el.id, el.active_status]);
+      const shopsForUpdate = shopsData.map((el) => [el.id, el[row]]);
       result = await sql`
-        update shops set active_status = (update_data.active_status)::active_status
-        from (values ${sql(shopsForUpdate)}) as update_data(id, active_status)
+        update shops set ${sql(row)} = (update_data.${sql(row)})::${sql(
+        rowAndTypesForUpdate[row]
+      )}
+        from (values ${sql(shopsForUpdate)}) as update_data(id, ${sql(row)})
         where shops.id = (update_data.id)::int
-        returning shops.id, shops.active_status`;
+        returning shops.id, shops.${sql(row)}`;
     }
-    return result;
+    return { result, row };
   } catch (e) {
-    return { error: e?.detail ?? "Something went wrong. Please, try later" };
+    return { error: e?.detail ?? e };
   }
 };
 
@@ -387,8 +402,9 @@ const updateItemCategory = async function ({
   index,
 }) {
   try {
-    const [project] =
-      await sql`update ${sql(choosedElement)} set title = ${title} where id = ${id} returning id, title`;
+    const [project] = await sql`update ${sql(
+      choosedElement
+    )} set title = ${title} where id = ${id} returning id, title`;
     return { project, choosedElement, index };
   } catch (e) {
     return { error: e?.detail ?? "Something went wrong. Please, try later" };
@@ -397,8 +413,9 @@ const updateItemCategory = async function ({
 
 const deleteItemCategory = async function ({ choosedElement, id, index }) {
   try {
-    const project =
-      await sql`delete from ${sql(choosedElement)} where id = ${id} returning id`;
+    const project = await sql`delete from ${sql(
+      choosedElement
+    )} where id = ${id} returning id`;
     return { choosedElement, index };
   } catch (e) {
     return { error: e?.detail ?? "Something went wrong. Please, try later" };
@@ -420,7 +437,9 @@ const addProductsToProjects = async function ({ products_id, projects_id }) {
     }
     if (props.length > 0) {
       const relations =
-        await sql`insert into products_projects (product_id, project_id) values ${sql(props)} returning product_id, project_id`;
+        await sql`insert into products_projects (product_id, project_id) values ${sql(
+          props
+        )} returning product_id, project_id`;
 
       const groupByProductId = relations.reduce((acc, curr) => {
         if (!acc[curr.product_id]) {
@@ -491,7 +510,7 @@ const addNewShop = async function ({ url }) {
       const [newShop] = await sql`insert into shops ${sql(
         shop,
         "title",
-        "link",
+        "link"
       )} returning id, title, active_status`;
 
       return newShop;
@@ -538,7 +557,7 @@ export {
   addParseLink,
   addProductComment,
   getCommentsHistory,
-  changeShopStatus,
+  changingShopFields,
   updateItemCategory,
   deleteItemCategory,
   addProductsToProjects,

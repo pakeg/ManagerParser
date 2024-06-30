@@ -12,18 +12,16 @@ const ModalAdding = ({ isOpen, setIsOpen, caption, items, action, invert }) => {
   const switchingStatus = (id) => {
     setItemsForChangeStatus(
       itemsForChangeStatus.map((el) =>
-        id === el.id
-          ? { ...el, active_status: Number(!+el.active_status) }
-          : el,
-      ),
+        id === el.id ? { ...el, active_status: Number(!+el.active_status) } : el
+      )
     );
   };
 
   const changeStatus = () => {
     const diff = itemsForChangeStatus.filter(
-      (el, i) => items[i].active_status != el.active_status,
+      (el, i) => items[i].active_status != el.active_status
     );
-    if (diff.length > 0) action(diff);
+    if (diff.length > 0) action({ shopsData: diff, row: "active_status" });
     setIsOpen(!isOpen);
   };
 

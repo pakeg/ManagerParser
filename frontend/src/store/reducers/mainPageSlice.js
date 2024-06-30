@@ -10,7 +10,7 @@ import {
   addParseLink,
   addPostProductComment,
   getCommentsHistory,
-  postChangeShopStatus,
+  actionChangingShopFields,
   actionAddProductsToProjects,
   actionDeleteProducts,
   actionExportToExcell,
@@ -64,7 +64,7 @@ const mainPageSlice = createSliceWithThunks({
           state.revalidate = Date.now() + 60 * 60 * 1000;
           state.data = action.payload;
         },
-      },
+      }
     ),
     fetchUpdatePrice: create.asyncThunk(
       async ({ id, price }, { signal }) => {
@@ -81,7 +81,7 @@ const mainPageSlice = createSliceWithThunks({
         fulfilled: (state, action) => {
           state.loading = false;
           const findedProductsIndex = state.data.products.findIndex(
-            (product) => product.id === action.payload.id,
+            (product) => product.id === action.payload.id
           );
 
           state.data.products[findedProductsIndex] = {
@@ -91,11 +91,11 @@ const mainPageSlice = createSliceWithThunks({
               (el) => ({
                 ...el,
                 product_price: action.payload.price,
-              }),
+              })
             ),
           };
         },
-      },
+      }
     ),
     fetchAddParseLink: create.asyncThunk(
       async (data, { signal }) => {
@@ -130,7 +130,7 @@ const mainPageSlice = createSliceWithThunks({
             ],
           };
         },
-      },
+      }
     ),
     fetchAddProductComment: create.asyncThunk(
       async (data, { signal }) => {
@@ -154,7 +154,7 @@ const mainPageSlice = createSliceWithThunks({
           }
           return;
         },
-      },
+      }
     ),
     fetchGetCommentsHistory: create.asyncThunk(
       async (id, { signal }) => {
@@ -172,11 +172,11 @@ const mainPageSlice = createSliceWithThunks({
           state.loading = false;
           state.comments[action.payload.id] = action.payload.comments;
         },
-      },
+      }
     ),
-    fetchChangeShopStatus: create.asyncThunk(
+    fetchChangingShopFields: create.asyncThunk(
       async (data, { signal }) => {
-        const res = await postChangeShopStatus(data, signal);
+        const res = await actionChangingShopFields(data, signal);
         return res;
       },
       {
@@ -188,20 +188,20 @@ const mainPageSlice = createSliceWithThunks({
         },
         fulfilled: (state, { payload }) => {
           state.loading = false;
-          if (!Array.isArray(payload)) {
+          if (!Array.isArray(payload.result)) {
             state.data.shops = state.data.shops.map((el) => {
-              return el.id === payload.id
-                ? { ...el, active_status: payload.active_status }
+              return el.id === payload.result.id
+                ? { ...el, [payload.row]: payload.result.active_status }
                 : el;
             });
           } else {
             state.data.shops = state.data.shops.map((el) => {
-              const find = payload.find((statusShop) => statusShop.id == el.id);
-              return find ? { ...el, active_status: find.active_status } : el;
+              const find = payload.result.find((shop) => shop.id == el.id);
+              return find ? { ...el, [payload.row]: find.active_status } : el;
             });
           }
         },
-      },
+      }
     ),
     fetchAddProductsToProjects: create.asyncThunk(
       async (data, { signal }) => {
@@ -219,12 +219,12 @@ const mainPageSlice = createSliceWithThunks({
           state.loading = false;
           for (let c in payload) {
             const productIndex = state.data.products.findIndex(
-              (product) => product.id == c,
+              (product) => product.id == c
             );
             state.data.products[productIndex].projects_id.push(...payload[c]);
           }
         },
-      },
+      }
     ),
     fetchDeleteProducts: create.asyncThunk(
       async (data, { signal }) => {
@@ -242,12 +242,12 @@ const mainPageSlice = createSliceWithThunks({
           state.loading = false;
           for (let c of payload) {
             const productIndex = state.data.products.findIndex(
-              (product) => product.id == c,
+              (product) => product.id == c
             );
             state.data.products.splice(productIndex, 1);
           }
         },
-      },
+      }
     ),
     fetchExportToExcell: create.asyncThunk(
       async (data, { signal, getState }) => {
@@ -288,7 +288,7 @@ const mainPageSlice = createSliceWithThunks({
           window.URL.revokeObjectURL(payload);
           document.body.removeChild(a);
         },
-      },
+      }
     ),
     fetchAddNewShop: create.asyncThunk(
       async (data, { signal }) => {
@@ -310,7 +310,7 @@ const mainPageSlice = createSliceWithThunks({
           }
           alert(payload.msg);
         },
-      },
+      }
     ),
     fetchDeleteShop: create.asyncThunk(
       async (data, { signal }) => {
@@ -327,10 +327,10 @@ const mainPageSlice = createSliceWithThunks({
         fulfilled: (state, { payload }) => {
           state.loading = false;
           state.data.shops = state.data.shops.filter(
-            (shop) => shop.id != payload.id,
+            (shop) => shop.id != payload.id
           );
         },
-      },
+      }
     ),
     fetchParsedProductsListByShopId: create.asyncThunk(
       async (id, { signal }) => {
@@ -348,7 +348,7 @@ const mainPageSlice = createSliceWithThunks({
           state.loading = false;
           state.parsed_products_list[payload.shop_id] = payload.parsed_products;
         },
-      },
+      }
     ),
     setSort: sortReducer(create),
     _setSortTableTwo: create.reducer(
@@ -361,7 +361,7 @@ const mainPageSlice = createSliceWithThunks({
           return;
         }
         state.sortTableTwo = {};
-      },
+      }
     ),
     middlewareSort: create.asyncThunk(
       async ({ product_id, sortIndex, properties, table }, { dispatch }) => {
@@ -370,7 +370,7 @@ const mainPageSlice = createSliceWithThunks({
         dispatch(actionSetSortTableTwo({ product_id, sortIndex }));
         dispatch(actionSetSort({ properties, sortIndex, table }));
         return;
-      },
+      }
     ),
     setFiltersReducer: create.reducer(
       (state, { payload: { properties, filters } }) => {
@@ -379,7 +379,7 @@ const mainPageSlice = createSliceWithThunks({
           return;
         }
         state.filters = { ...state.filters, [properties]: filters };
-      },
+      }
     ),
     setSearchReducer: create.reducer(
       (state, { payload: { properties, querySearch } }) => {
@@ -388,7 +388,7 @@ const mainPageSlice = createSliceWithThunks({
           return;
         }
         state.search = { ...state.search, [properties]: querySearch };
-      },
+      }
     ),
   }),
 });
@@ -399,7 +399,7 @@ export const {
   fetchAddParseLink,
   fetchAddProductComment,
   fetchGetCommentsHistory,
-  fetchChangeShopStatus,
+  fetchChangingShopFields,
   fetchAddProductsToProjects,
   fetchDeleteProducts,
   fetchExportToExcell,

@@ -2,9 +2,14 @@ import { useCallback } from "react";
 import { BiRefresh } from "react-icons/bi";
 import { RxCrossCircled } from "react-icons/rx";
 
-const MenuItemShop = ({ shopInfo, dispatch, fetchChangeShopStatus }) => {
+const MenuItemShop = ({ shopInfo, dispatch, action }) => {
   const changeShopStatus = useCallback((id, active_status) => {
-    dispatch(fetchChangeShopStatus({ id, active_status }));
+    dispatch(
+      action({
+        shopsData: { id, active_status: Number(!active_status) },
+        row: "active_status",
+      })
+    );
   }, []);
 
   return (
