@@ -9,20 +9,32 @@ const ShopInformation = ({ shop }) => {
   const parsed_products = useSelector(
     (state) => state.mainPageReducer.parsed_products_list[shop.id]
   );
-  const [editable, setEditable] = useState(false);
-  const [selector, setSelector] = useState("");
+  const [editable, setEditable] = useState({
+    selector: { focus: false, value: "" },
+    imgSrc: { focus: false, value: "" },
+  });
+
+  useEffect(() => {
+    setEditable({
+      selector: { focus: false, value: "" },
+      imgSrc: { focus: false, value: "" },
+    });
+  }, [shop.id]);
 
   const handlerAddShopSelector = () => {
-    if (selector.length > 0) {
-      setEditable(!editable);
-      setSelector("");
+    if (editable.selector.value.length > 0) {
+      setEditable((prev) => ({
+        ...prev,
+        selector: { focus: false, value: "" },
+      }));
     } else alert("Некорректный селектор");
   };
 
-  useEffect(() => {
-    setEditable(false);
-    setSelector("");
-  }, [shop.id]);
+  const handlerAddImgSrc = () => {
+    if (editable.imgSrc.value) {
+      setEditable((prev) => ({ ...prev, imgSrc: { focus: false, value: "" } }));
+    } else alert("Выберите изображение");
+  };
 
   return (
     <>
@@ -50,16 +62,78 @@ const ShopInformation = ({ shop }) => {
                     {shop.link}
                   </a>
                 </td>
-                <td>
-                  <img src={shop.img_src} />
+                <td className="w-60 relative group">
+                  {!editable.imgSrc.focus ? (
+                    <div className="overflow-hidden whitespace-nowrap text-ellipsis">
+                      <span>{shop.img_src}</span>
+                      <div
+                        className="group-hover:opacity-90 absolute w-full h-full top-0 left-0 bg-[#f9f8f9] opacity-0 flex items-center justify-center cursor-pointer"
+                        onClick={() =>
+                          setEditable((prev) => ({
+                            ...prev,
+                            imgSrc: { ...prev.imgSrc, focus: true },
+                          }))
+                        }
+                      >
+                        <TiEdit size={20} className="text-[#a1a1a1]" />
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="overflow-hidden whitespace-nowrap text-ellipsis">
+                      <label for="imgSrc">
+                        <input
+                          id="imgSrc"
+                          type="file"
+                          hidden
+                          className="focus:outline-none rounded-sm peer w-full"
+                          placeholder="select img"
+                          onChange={(e) =>
+                            setEditable((prev) => ({
+                              ...prev,
+                              imgSrc: {
+                                ...prev.imgSrc,
+                                value: e.target.files[0],
+                              },
+                            }))
+                          }
+                        />
+                        <span className="cursor-pointer">
+                          {editable.imgSrc.value?.name ??
+                            "Выберите изображение"}
+                        </span>
+                      </label>
+                      <div
+                        className={`${
+                          editable.imgSrc.value
+                            ? "bg-green-500"
+                            : "bg-[#a1a1a1] hover:bg-red-600"
+                        } rounded-sm absolute bottom-0.5 right-1 cursor-pointer`}
+                      >
+                        <BsCheck
+                          size={15}
+                          strokeWidth="1"
+                          fill="white"
+                          title={`${
+                            editable.imgSrc.value ? "confirm change" : "cancel"
+                          }`}
+                          onClick={handlerAddImgSrc}
+                        />
+                      </div>
+                    </div>
+                  )}
                 </td>
                 <td className="w-60 relative group">
-                  {!editable ? (
+                  {!editable.selector.focus ? (
                     <div className="overflow-hidden whitespace-nowrap text-ellipsis">
                       <span>{shop.selector}</span>
                       <div
                         className="group-hover:opacity-90 absolute w-full h-full top-0 left-0 bg-[#f9f8f9] opacity-0 flex items-center justify-center cursor-pointer"
-                        onClick={() => setEditable(!editable)}
+                        onClick={() =>
+                          setEditable((prev) => ({
+                            ...prev,
+                            selector: { ...prev.selector, focus: true },
+                          }))
+                        }
                       >
                         <TiEdit size={20} className="text-[#a1a1a1]" />
                       </div>
@@ -70,15 +144,27 @@ const ShopInformation = ({ shop }) => {
                         type="text"
                         className="focus:outline-none rounded-sm peer w-full"
                         placeholder="put selector"
-                        value={selector}
-                        onChange={(e) => setSelector(e.target.value)}
+                        value={editable.selector.value}
+                        onChange={(e) =>
+                          setEditable((prev) => ({
+                            ...prev,
+                            selector: {
+                              ...prev.selector,
+                              value: e.target.value,
+                            },
+                          }))
+                        }
                       />
                       <div className="peer-placeholder-shown:bg-[#a1a1a1] peer-placeholder-shown:hover:bg-red-500 bg-green-500 rounded-sm absolute bottom-0.5 right-1 cursor-pointer">
                         <BsCheck
                           size={15}
                           strokeWidth="1"
                           fill="white"
-                          title={`${selector ? "confirm change" : "cancel"}`}
+                          title={`${
+                            editable.selector.value
+                              ? "confirm change"
+                              : "cancel"
+                          }`}
                           onClick={handlerAddShopSelector}
                         />
                       </div>

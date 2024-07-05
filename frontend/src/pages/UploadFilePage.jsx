@@ -42,7 +42,7 @@ export const UploadFilePage = () => {
                   title="Удалить"
                   onClick={() => removeFiles(file.name)}
                 >
-                  {file.name}{" "}
+                  {file.name}
                   <span className="text-xs">{formatSize(file.size)}</span>
                 </li>
               ))}
