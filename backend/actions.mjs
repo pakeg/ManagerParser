@@ -374,11 +374,9 @@ const changingShopFields = async function ({ shopsData, row }) {
   try {
     let result;
     if (!Array.isArray(shopsData)) {
-      [result] = await sql`update shops set ${sql(
-        rowAndTypesForUpdate[row]
-      )} = ${shopsData[row]} where id = ${shopsData.id} returning id, ${sql(
-        row
-      )}`;
+      [result] = await sql`update shops set ${sql(row)} = ${
+        shopsData[row]
+      } where id = ${shopsData.id} returning id, ${sql(row)}`;
     } else {
       const shopsForUpdate = shopsData.map((el) => [el.id, el[row]]);
       result = await sql`
