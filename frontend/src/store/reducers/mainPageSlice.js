@@ -191,13 +191,13 @@ const mainPageSlice = createSliceWithThunks({
           if (!Array.isArray(payload.result)) {
             state.data.shops = state.data.shops.map((el) => {
               return el.id === payload.result.id
-                ? { ...el, [payload.row]: payload.result.active_status }
+                ? { ...el, [payload.row]: payload.result[payload.row] }
                 : el;
             });
           } else {
             state.data.shops = state.data.shops.map((el) => {
               const find = payload.result.find((shop) => shop.id == el.id);
-              return find ? { ...el, [payload.row]: find.active_status } : el;
+              return find ? { ...el, [payload.row]: find[payload.row] } : el;
             });
           }
         },

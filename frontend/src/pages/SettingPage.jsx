@@ -10,6 +10,7 @@ import {
   fetchAddNewShop,
   fetchDeleteShop,
   fetchParsedProductsListByShopId,
+  fetchChangingShopFields,
 } from "../store/reducers/mainPageSlice.js";
 
 import ModalNewShop from "../components/Modals/ModalNewShop.jsx";
@@ -29,7 +30,7 @@ export const SettingPage = () => {
   const [shopSettings, setShopSettings] = useState(null);
   const [done, setDone] = useState(null);
   const { boxScroll, buttonScroll, isScroll } = useScroll(false);
-
+  console.log(shops);
   useEffect(() => {
     if (shops.length === 0) dispatch(fetchGeneralData());
   }, []);
@@ -131,7 +132,12 @@ export const SettingPage = () => {
         </div>
         {shopSettings && (
           <div>
-            <ShopInformation shop={shopSettings} />
+            <ShopInformation
+              shop={shopSettings}
+              setShopSettings={setShopSettings}
+              dispatch={dispatch}
+              changeShopFields={fetchChangingShopFields}
+            />
           </div>
         )}
       </div>

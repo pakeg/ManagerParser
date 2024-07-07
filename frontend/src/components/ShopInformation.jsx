@@ -5,7 +5,12 @@ import { LuCross } from "react-icons/lu";
 import { TiEdit } from "react-icons/ti";
 import { formatDate } from "../utils/utilsFun";
 
-const ShopInformation = ({ shop }) => {
+const ShopInformation = ({
+  shop,
+  setShopSettings,
+  dispatch,
+  changeShopFields,
+}) => {
   const parsed_products = useSelector(
     (state) => state.mainPageReducer.parsed_products_list[shop.id]
   );
@@ -19,21 +24,43 @@ const ShopInformation = ({ shop }) => {
       selector: { focus: false, value: "" },
       imgSrc: { focus: false, value: "" },
     });
-  }, [shop.id]);
+  }, [shop]);
 
-  const handlerAddShopSelector = () => {
+  const handlerChangeShopSelector = () => {
     if (editable.selector.value.length > 0) {
-      setEditable((prev) => ({
-        ...prev,
-        selector: { focus: false, value: "" },
-      }));
+      const updShop = { ...shop, selector: editable.selector.value };
+      dispatch(
+        changeShopFields({
+          shopsData: updShop,
+          row: "selector",
+        })
+      );
+      setShopSettings(updShop);
     } else alert("Некорректный селектор");
   };
 
-  const handlerAddImgSrc = () => {
+  const handlerChangeShopImgSrc = () => {
     if (editable.imgSrc.value) {
-      setEditable((prev) => ({ ...prev, imgSrc: { focus: false, value: "" } }));
+      const updShop = { ...shop, img_src: editable.imgSrc.value };
+      dispatch(
+        changeShopFields({
+          shopsData: updShop,
+          row: "img_src",
+        })
+      );
+      setShopSettings(updShop);
     } else alert("Выберите изображение");
+  };
+
+  const handlerChangeShopActiveStatus = () => {
+    const updShop = { ...shop, active_status: Number(!+shop.active_status) };
+    dispatch(
+      changeShopFields({
+        shopsData: updShop,
+        row: "active_status",
+      })
+    );
+    setShopSettings(updShop);
   };
 
   return (
@@ -80,10 +107,11 @@ const ShopInformation = ({ shop }) => {
                     </div>
                   ) : (
                     <div className="overflow-hidden whitespace-nowrap text-ellipsis">
-                      <label for="imgSrc">
+                      <label htmlFor="imgSrc">
                         <input
                           id="imgSrc"
                           type="file"
+                          accept="image/png, image/jpeg, image/x-icon, image/svg+xml, image/gif"
                           hidden
                           className="focus:outline-none rounded-sm peer w-full"
                           placeholder="select img"
@@ -116,7 +144,7 @@ const ShopInformation = ({ shop }) => {
                           title={`${
                             editable.imgSrc.value ? "confirm change" : "cancel"
                           }`}
-                          onClick={handlerAddImgSrc}
+                          onClick={handlerChangeShopImgSrc}
                         />
                       </div>
                     </div>
@@ -165,7 +193,7 @@ const ShopInformation = ({ shop }) => {
                               ? "confirm change"
                               : "cancel"
                           }`}
-                          onClick={handlerAddShopSelector}
+                          onClick={handlerChangeShopSelector}
                         />
                       </div>
                     </div>
@@ -180,7 +208,7 @@ const ShopInformation = ({ shop }) => {
                     <input
                       id={`${shop.title}_${shop.id}`}
                       type="checkbox"
-                      onChange={() => {}}
+                      onChange={handlerChangeShopActiveStatus}
                       checked={Boolean(+shop.active_status)}
                       className="opacity-0 select-none peer hidden"
                     />
