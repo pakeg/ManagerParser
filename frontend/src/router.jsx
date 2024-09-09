@@ -54,11 +54,11 @@ const router = createBrowserRouter([
             },
           },
           {
-            path: "comments",
+            path: "chat",
             async lazy() {
-              let { CommentsPage } = await import("./pages/CommentsPage");
+              let { ChatPage } = await import("./pages/ChatPage");
               return {
-                Component: CommentsPage,
+                Component: ChatPage,
               };
             },
           },
