@@ -30,7 +30,7 @@ export const SettingPage = () => {
   const [shopSettings, setShopSettings] = useState(null);
   const [done, setDone] = useState(null);
   const { boxScroll, buttonScroll, isScroll } = useScroll(false);
-  console.log(shops);
+
   useEffect(() => {
     if (shops.length === 0) dispatch(fetchGeneralData());
   }, []);
